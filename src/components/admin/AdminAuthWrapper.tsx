@@ -29,19 +29,30 @@ export default function AdminAuthWrapper({ children }: AdminAuthWrapperProps) {
       }
 
       // Check if user has admin role
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', session.user.id)
-        .single()
-
       let isAdmin = false
       
-      if (profileError) {
-        // If no profile exists, check user metadata
-        isAdmin = session.user.user_metadata?.role === 'admin'
-      } else {
-        isAdmin = profile.role === 'admin'
+      try {
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single()
+
+        if (profileError) {
+          // If no profile exists, check user metadata
+          isAdmin = session.user.user_metadata?.role === 'admin'
+          
+          // Fallback: Check if this is the specific admin email
+          if (!isAdmin && session.user.email === 'admin@techpinik.com') {
+            isAdmin = true
+          }
+        } else {
+          isAdmin = profile.role === 'admin'
+        }
+      } catch (error) {
+        // If profiles table doesn't exist, fallback to email check
+        console.warn('Profiles table not accessible, using fallback authentication')
+        isAdmin = session.user.email === 'admin@techpinik.com'
       }
 
       if (!isAdmin) {
