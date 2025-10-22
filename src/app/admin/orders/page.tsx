@@ -9,7 +9,8 @@ import {
   MoreHorizontal,
   ShoppingCart,
   Calendar,
-  Download
+  Download,
+  FileText
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -151,6 +152,106 @@ export default function AdminOrdersPage() {
       hour: '2-digit',
       minute: '2-digit'
     })
+  }
+
+  const generateInvoice = (order: Order) => {
+    // Create invoice content
+    const invoiceContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Invoice #${order.order_number}</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+          .header { text-align: center; margin-bottom: 30px; }
+          .company-name { font-size: 24px; font-weight: bold; color: #059669; }
+          .invoice-details { display: flex; justify-content: space-between; margin-bottom: 30px; }
+          .customer-info, .invoice-info { width: 45%; }
+          .table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+          .table th, .table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+          .table th { background-color: #f5f5f5; }
+          .total-section { text-align: right; margin-top: 20px; }
+          .total-row { display: flex; justify-content: space-between; margin: 5px 0; }
+          .grand-total { font-weight: bold; font-size: 18px; border-top: 2px solid #059669; padding-top: 10px; }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="company-name">TechPinik</div>
+          <p>Your Trusted Electronics Store</p>
+        </div>
+        
+        <div class="invoice-details">
+          <div class="customer-info">
+            <h3>Bill To:</h3>
+            <p><strong>${order.customer_name}</strong></p>
+            <p>${order.customer_email}</p>
+            <p>${order.customer_phone}</p>
+            <p>${order.shipping_address}</p>
+          </div>
+          <div class="invoice-info">
+            <h3>Invoice Details:</h3>
+            <p><strong>Invoice #:</strong> ${order.order_number}</p>
+            <p><strong>Date:</strong> ${formatDate(order.created_at)}</p>
+            <p><strong>Payment Method:</strong> ${order.payment_method}</p>
+            <p><strong>Status:</strong> ${order.status}</p>
+          </div>
+        </div>
+        
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Quantity</th>
+              <th>Unit Price</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${(order as any).order_items?.map((item: any) => `
+              <tr>
+                <td>${item.product_name || 'Product'}</td>
+                <td>${item.quantity}</td>
+                <td>${formatCurrency(item.unit_price)}</td>
+                <td>${formatCurrency(item.total_price || item.unit_price * item.quantity)}</td>
+              </tr>
+            `).join('') || ''}
+          </tbody>
+        </table>
+        
+        <div class="total-section">
+          <div class="total-row">
+            <span>Subtotal:</span>
+            <span>${formatCurrency(order.total_amount - order.shipping_cost)}</span>
+          </div>
+          <div class="total-row">
+            <span>Shipping:</span>
+            <span>${formatCurrency(order.shipping_cost)}</span>
+          </div>
+          <div class="total-row grand-total">
+            <span>Total:</span>
+            <span>${formatCurrency(order.total_amount)}</span>
+          </div>
+        </div>
+        
+        <div style="margin-top: 50px; text-align: center; color: #666;">
+          <p>Thank you for your business!</p>
+          <p>For support, contact us at support@techpinik.com</p>
+        </div>
+      </body>
+      </html>
+    `
+
+    // Create and download the invoice
+    const blob = new Blob([invoiceContent], { type: 'text/html' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `invoice-${order.order_number}.html`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
   }
 
   const getStatusBadge = (status: string) => {
@@ -338,6 +439,10 @@ export default function AdminOrdersPage() {
                                     <Eye className="h-4 w-4 mr-2" />
                                     View Details
                                   </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => generateInvoice(order)}>
+                                  <FileText className="h-4 w-4 mr-2" />
+                                  Generate Invoice
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   onClick={() => updateOrderStatus(order.id, 'processing')}
