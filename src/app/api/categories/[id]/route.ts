@@ -3,13 +3,13 @@ import { supabase } from '@/lib/supabase';
 import { UpdateCategoryData } from '@/types';
 
 interface RouteParams {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 // GET /api/categories/[id] - Get a single category by ID
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const { searchParams } = new URL(request.url);
     const include_products = searchParams.get('include_products') === 'true';
 
