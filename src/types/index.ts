@@ -145,7 +145,9 @@ export interface CreateDistrictData {
   is_active?: boolean;
 }
 
-export interface UpdateDistrictData extends Partial<CreateDistrictData> {}
+export interface UpdateDistrictData extends Partial<CreateDistrictData> {
+  updated_at?: string;
+}
 
 // Slider Item Types
 export interface SliderItem {
@@ -187,20 +189,56 @@ export interface Cart {
 }
 
 // API Response Types
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   data?: T;
   error?: string;
   message?: string;
   success: boolean;
 }
 
-export interface PaginatedResponse<T = any> extends ApiResponse<T[]> {
+export interface PaginatedResponse<T = unknown> extends ApiResponse<T[]> {
   pagination?: {
     page: number;
     limit: number;
     total: number;
     total_pages: number;
   };
+}
+
+// Customer Types
+export interface Customer {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone?: string;
+  address_line_1?: string;
+  address_line_2?: string;
+  city?: string;
+  state?: string;
+  postal_code?: string;
+  country: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateCustomerData {
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone?: string;
+  address_line_1?: string;
+  address_line_2?: string;
+  city?: string;
+  state?: string;
+  postal_code?: string;
+  country?: string;
+  is_active?: boolean;
+}
+
+export interface UpdateCustomerData extends Partial<CreateCustomerData> {
+  updated_at?: string;
 }
 
 // Form Types
