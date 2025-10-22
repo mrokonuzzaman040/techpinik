@@ -307,7 +307,7 @@ export default function CheckoutPage() {
                     <Separator />
                     <div className="flex justify-between font-bold text-lg">
                       <span>Total</span>
-                      <span className="text-green-600">৳{total.toLocaleString()}</span>
+                      <span className="text-yellow-600">৳{total.toLocaleString()}</span>
                     </div>
                   </div>
 

@@ -65,7 +65,7 @@ export default function ContactPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <MapPin className="h-5 w-5 text-green-600" />
+                  <MapPin className="h-5 w-5 text-yellow-600" />
                   <span>Visit Our Store</span>
                 </CardTitle>
               </CardHeader>
@@ -82,7 +82,7 @@ export default function ContactPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <Phone className="h-5 w-5 text-green-600" />
+                  <Phone className="h-5 w-5 text-yellow-600" />
                   <span>Call Us</span>
                 </CardTitle>
               </CardHeader>
@@ -98,7 +98,7 @@ export default function ContactPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <Mail className="h-5 w-5 text-green-600" />
+                  <Mail className="h-5 w-5 text-yellow-600" />
                   <span>Email Us</span>
                 </CardTitle>
               </CardHeader>
@@ -114,7 +114,7 @@ export default function ContactPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <Clock className="h-5 w-5 text-green-600" />
+                  <Clock className="h-5 w-5 text-yellow-600" />
                   <span>Business Hours</span>
                 </CardTitle>
               </CardHeader>
@@ -159,7 +159,7 @@ export default function ContactPage() {
                       value={formData.name}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                       placeholder="Your full name"
                     />
                   </div>
@@ -174,7 +174,7 @@ export default function ContactPage() {
                       value={formData.email}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                       placeholder="your.email@example.com"
                     />
                   </div>
@@ -192,7 +192,7 @@ export default function ContactPage() {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                       placeholder="+880 1234-567890"
                     />
                   </div>
@@ -206,7 +206,7 @@ export default function ContactPage() {
                       value={formData.subject}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                     >
                       <option value="">Select a subject</option>
                       <option value="general">General Inquiry</option>
@@ -231,15 +231,15 @@ export default function ContactPage() {
                     onChange={handleInputChange}
                     required
                     rows={6}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-vertical"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent resize-vertical"
                     placeholder="Please describe your inquiry in detail..."
                   />
                 </div>
 
                 {/* Submit Status */}
                 {submitStatus === 'success' && (
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <p className="text-green-600">
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <p className="text-yellow-600">
                       Thank you for your message! We'll get back to you within 24 hours.
                     </p>
                   </div>

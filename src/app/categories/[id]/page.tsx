@@ -170,9 +170,9 @@ export default function CategoryDetailPage() {
       <div className="container mx-auto px-4 py-6">
         {/* Breadcrumb */}
         <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
-          <Link href="/" className="hover:text-green-600">Home</Link>
+          <Link href="/" className="hover:text-yellow-600">Home</Link>
           <span>/</span>
-          <Link href="/categories" className="hover:text-green-600">Categories</Link>
+          <Link href="/categories" className="hover:text-yellow-600">Categories</Link>
           <span>/</span>
           <span className="text-gray-900">{category?.name}</span>
         </nav>
@@ -297,7 +297,7 @@ export default function CategoryDetailPage() {
             {/* Products Grid */}
             {loading ? (
               <div className="flex items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
               </div>
             ) : products.length === 0 ? (
               <div className="text-center py-12">

@@ -276,7 +276,7 @@ export default function ProductsPage() {
             {/* Products Grid */}
             {loading ? (
               <div className="flex items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
               </div>
             ) : products.length === 0 ? (
               <div className="text-center py-12">

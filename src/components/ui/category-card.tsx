@@ -37,12 +37,12 @@ export default function CategoryCard({ category, className }: CategoryCardProps)
       <div className={`group hover:shadow-xl transition-all duration-300 hover:scale-105 rounded-2xl border-0 shadow-sm bg-white cursor-pointer ${className}`}>
         <div className="p-6 text-center">
           {/* Category Icon */}
-          <div className="relative w-20 h-20 md:w-24 md:h-24 mx-auto mb-4 overflow-hidden rounded-full bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center group-hover:from-green-100 group-hover:to-green-200 transition-all duration-300">
-            <IconComponent className="w-10 h-10 md:w-12 md:h-12 text-green-500 group-hover:text-green-600 transition-colors" />
+          <div className="relative w-20 h-20 md:w-24 md:h-24 mx-auto mb-4 overflow-hidden rounded-full bg-gradient-to-br from-yellow-50 to-yellow-100 flex items-center justify-center group-hover:from-yellow-100 group-hover:to-yellow-200 transition-all duration-300">
+            <IconComponent className="w-10 h-10 md:w-12 md:h-12 text-yellow-500 group-hover:text-yellow-600 transition-colors" />
           </div>
 
           {/* Category Name */}
-          <h3 className="font-semibold text-sm md:text-base text-gray-900 group-hover:text-green-600 transition-colors mb-2">
+          <h3 className="font-semibold text-sm md:text-base text-gray-900 group-hover:text-yellow-600 transition-colors mb-2">
             {category.name}
           </h3>
 

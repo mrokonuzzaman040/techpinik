@@ -52,7 +52,7 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm border-b">
       {/* Top Bar */}
-      <div className="bg-green-600 text-white py-2 px-4">
+      <div className="bg-yellow-600 text-white py-2 px-4">
         <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center text-sm">
           <div className="flex items-center space-x-4 mb-2 sm:mb-0">
             <div className="flex items-center space-x-1">
@@ -76,18 +76,18 @@ export default function Navbar() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="bg-green-600 text-white px-3 py-2 rounded-lg font-bold text-xl">
+            <div className="bg-yellow-600 text-white px-3 py-2 rounded-lg font-bold text-xl">
               TechPinik
             </div>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-6">
-            <Link href="/" className="text-gray-700 hover:text-green-600 font-medium">
+            <Link href="/" className="text-gray-700 hover:text-yellow-600 font-medium">
               Home
             </Link>
             <div className="relative group">
-              <button className="text-gray-700 hover:text-green-600 font-medium flex items-center">
+              <button className="text-gray-700 hover:text-yellow-600 font-medium flex items-center">
                 Categories
               </button>
               <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-lg rounded-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
@@ -111,13 +111,13 @@ export default function Navbar() {
                 </div>
               </div>
             </div>
-            <Link href="/products" className="text-gray-700 hover:text-green-600 font-medium">
+            <Link href="/products" className="text-gray-700 hover:text-yellow-600 font-medium">
               All Products
             </Link>
-            <Link href="/about" className="text-gray-700 hover:text-green-600 font-medium">
+            <Link href="/about" className="text-gray-700 hover:text-yellow-600 font-medium">
               About
             </Link>
-            <Link href="/contact" className="text-gray-700 hover:text-green-600 font-medium">
+            <Link href="/contact" className="text-gray-700 hover:text-yellow-600 font-medium">
               Contact
             </Link>
           </nav>
@@ -128,7 +128,7 @@ export default function Navbar() {
               <input
                 type="text"
                 placeholder="Search products..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
                     const query = (e.target as HTMLInputElement).value
@@ -196,7 +196,7 @@ export default function Navbar() {
                       <Link
                         key={category.id}
                         href={`/category/${category.slug}`}
-                        className="flex items-center space-x-2 py-2 pl-4 text-gray-600 hover:text-green-600"
+                        className="flex items-center space-x-2 py-2 pl-4 text-gray-600 hover:text-yellow-600"
                         onClick={() => setIsMenuOpen(false)}
                       >
                         {category.image_url && (
@@ -244,7 +244,7 @@ export default function Navbar() {
             <input
               type="text"
               placeholder="Search products..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
               onKeyPress={(e) => {
                 if (e.key === 'Enter') {
                   const query = (e.target as HTMLInputElement).value

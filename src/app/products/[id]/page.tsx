@@ -8,7 +8,6 @@ import { Star, ShoppingCart, Heart, Share2, Truck, Shield, RotateCcw, Minus, Plu
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import MainLayout from '@/components/layout/MainLayout'
 import ProductCard from '@/components/ui/product-card'
@@ -103,7 +102,7 @@ export default function ProductDetailPage() {
     return (
       <MainLayout>
         <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-green-600"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-yellow-600"></div>
         </div>
       </MainLayout>
     )
@@ -128,13 +127,13 @@ export default function ProductDetailPage() {
       <div className="container mx-auto px-4 py-6">
         {/* Breadcrumb */}
         <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
-          <Link href="/" className="hover:text-green-600">Home</Link>
+          <Link href="/" className="hover:text-yellow-600">Home</Link>
           <span>/</span>
-          <Link href="/products" className="hover:text-green-600">Products</Link>
+          <Link href="/products" className="hover:text-yellow-600">Products</Link>
           {category && (
             <>
               <span>/</span>
-              <Link href={`/categories/${category.id}`} className="hover:text-green-600">
+              <Link href={`/categories/${category.id}`} className="hover:text-yellow-600">
                 {category.name}
               </Link>
             </>
@@ -175,7 +174,7 @@ export default function ProductDetailPage() {
                     key={index}
                     onClick={() => setSelectedImage(index)}
                     className={`relative w-20 h-20 rounded-lg overflow-hidden border-2 ${
-                      selectedImage === index ? 'border-green-600' : 'border-gray-200'
+                      selectedImage === index ? 'border-yellow-600' : 'border-gray-200'
                     }`}
                   >
                     <Image
@@ -222,7 +221,7 @@ export default function ProductDetailPage() {
             {/* Price */}
             <div className="space-y-2">
               <div className="flex items-center gap-3">
-                <span className="text-3xl font-bold text-green-600">
+                <span className="text-3xl font-bold text-yellow-600">
                   ৳{(product.sale_price || product.price).toLocaleString()}
                 </span>
                 {product.sale_price && (
@@ -232,7 +231,7 @@ export default function ProductDetailPage() {
                 )}
               </div>
               {discountPercentage > 0 && (
-                <p className="text-sm text-green-600">
+                <p className="text-sm text-yellow-600">
                   You save ৳{(product.price - (product.sale_price || product.price)).toLocaleString()} ({discountPercentage}%)
                 </p>
               )}
@@ -243,7 +242,7 @@ export default function ProductDetailPage() {
               <span className="text-sm font-medium">Availability:</span>
               <Badge 
                 variant={product.stock_quantity > 0 ? 'default' : 'secondary'}
-                className={product.stock_quantity > 0 ? 'bg-green-100 text-green-800' : ''}
+                className={product.stock_quantity > 0 ? 'bg-yellow-100 text-yellow-800' : ''}
               >
                 {product.stock_quantity > 0 ? 'In Stock' : 'Out of Stock'}
                 {product.stock_quantity > 0 && product.stock_quantity <= 5 && ' (Limited)'}
@@ -290,7 +289,7 @@ export default function ProductDetailPage() {
                       <ShoppingCart className="h-4 w-4 mr-2" />
                       Add to Cart
                     </Button>
-                    <Button onClick={handleOrderNow} className="flex-1 bg-green-600 hover:bg-green-700">
+                    <Button onClick={handleOrderNow} className="flex-1 bg-yellow-600 hover:bg-yellow-700">
                       <Zap className="h-4 w-4 mr-2" />
                       Order Now
                     </Button>
@@ -310,15 +309,15 @@ export default function ProductDetailPage() {
             {/* Features */}
             <div className="grid grid-cols-3 gap-4 pt-6 border-t">
               <div className="text-center">
-                <Truck className="h-6 w-6 text-green-600 mx-auto mb-2" />
+                <Truck className="h-6 w-6 text-yellow-600 mx-auto mb-2" />
                 <p className="text-xs text-gray-600">Free Delivery</p>
               </div>
               <div className="text-center">
-                <Shield className="h-6 w-6 text-green-600 mx-auto mb-2" />
+                <Shield className="h-6 w-6 text-yellow-600 mx-auto mb-2" />
                 <p className="text-xs text-gray-600">Warranty</p>
               </div>
               <div className="text-center">
-                <RotateCcw className="h-6 w-6 text-green-600 mx-auto mb-2" />
+                <RotateCcw className="h-6 w-6 text-yellow-600 mx-auto mb-2" />
                 <p className="text-xs text-gray-600">Easy Return</p>
               </div>
             </div>

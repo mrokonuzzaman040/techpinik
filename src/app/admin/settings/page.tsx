@@ -20,7 +20,7 @@ export default function AdminSettingsPage() {
       description: 'Manage delivery districts and shipping charges',
       icon: MapPin,
       href: '/admin/settings/districts',
-      color: 'bg-green-500'
+      color: 'bg-yellow-500'
     },
     {
       title: 'General Settings',
@@ -96,7 +96,7 @@ export default function AdminSettingsPage() {
                       <p className="text-sm text-gray-600">Delivery Districts</p>
                       <p className="text-2xl font-bold text-gray-900">-</p>
                     </div>
-                    <MapPin className="h-8 w-8 text-green-500" />
+                    <MapPin className="h-8 w-8 text-yellow-500" />
                   </div>
                 </CardContent>
               </Card>
@@ -106,7 +106,7 @@ export default function AdminSettingsPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm text-gray-600">Site Status</p>
-                      <p className="text-lg font-semibold text-green-600">Active</p>
+                      <p className="text-lg font-semibold text-yellow-600">Active</p>
                     </div>
                     <Globe className="h-8 w-8 text-purple-500" />
                   </div>

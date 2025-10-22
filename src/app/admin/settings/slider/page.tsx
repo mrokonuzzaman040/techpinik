@@ -260,7 +260,7 @@ export default function SliderManagementPage() {
       <div className="flex h-screen bg-gray-50">
         <AdminSidebar />
         <div className="flex-1 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
         </div>
       </div>
     )
@@ -355,8 +355,8 @@ export default function SliderManagementPage() {
                           >
                             {slider.is_active ? (
                               <>
-                                <Eye className="h-4 w-4 text-green-600" />
-                                <Badge className="bg-green-100 text-green-800">Active</Badge>
+                                <Eye className="h-4 w-4 text-yellow-600" />
+                                <Badge className="bg-yellow-100 text-yellow-800">Active</Badge>
                               </>
                             ) : (
                               <>

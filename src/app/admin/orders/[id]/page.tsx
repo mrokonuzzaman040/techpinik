@@ -145,7 +145,7 @@ export default function AdminOrderDetailPage() {
       pending: 'bg-yellow-100 text-yellow-800',
       processing: 'bg-blue-100 text-blue-800',
       shipped: 'bg-purple-100 text-purple-800',
-      delivered: 'bg-green-100 text-green-800',
+      delivered: 'bg-yellow-100 text-yellow-800',
       cancelled: 'bg-red-100 text-red-800'
     }
 
@@ -159,7 +159,7 @@ export default function AdminOrderDetailPage() {
   const getPaymentStatusBadge = (status: string) => {
     const statusColors = {
       pending: 'bg-yellow-100 text-yellow-800',
-      paid: 'bg-green-100 text-green-800',
+      paid: 'bg-yellow-100 text-yellow-800',
       failed: 'bg-red-100 text-red-800',
       refunded: 'bg-gray-100 text-gray-800'
     }
@@ -180,7 +180,7 @@ export default function AdminOrderDetailPage() {
       <div className="flex h-screen bg-gray-50">
         <AdminSidebar />
         <div className="flex-1 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
         </div>
       </div>
     )
@@ -428,7 +428,7 @@ export default function AdminOrderDetailPage() {
                 <CardContent>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
-                      <div className="h-2 w-2 bg-green-600 rounded-full"></div>
+                      <div className="h-2 w-2 bg-yellow-600 rounded-full"></div>
                       <div>
                         <p className="text-sm font-medium">Order Placed</p>
                         <p className="text-xs text-gray-600">{formatDate(order.created_at)}</p>

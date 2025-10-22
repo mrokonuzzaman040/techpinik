@@ -22,7 +22,7 @@ export default function Footer() {
         <div className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="flex items-center space-x-3">
-              <div className="bg-green-600 p-3 rounded-full">
+              <div className="bg-yellow-600 p-3 rounded-full">
                 <Truck className="h-6 w-6" />
               </div>
               <div>
@@ -32,7 +32,7 @@ export default function Footer() {
             </div>
             
             <div className="flex items-center space-x-3">
-              <div className="bg-green-600 p-3 rounded-full">
+              <div className="bg-yellow-600 p-3 rounded-full">
                 <CreditCard className="h-6 w-6" />
               </div>
               <div>
@@ -42,7 +42,7 @@ export default function Footer() {
             </div>
             
             <div className="flex items-center space-x-3">
-              <div className="bg-green-600 p-3 rounded-full">
+              <div className="bg-yellow-600 p-3 rounded-full">
                 <RotateCcw className="h-6 w-6" />
               </div>
               <div>
@@ -52,7 +52,7 @@ export default function Footer() {
             </div>
             
             <div className="flex items-center space-x-3">
-              <div className="bg-green-600 p-3 rounded-full">
+              <div className="bg-yellow-600 p-3 rounded-full">
                 <Shield className="h-6 w-6" />
               </div>
               <div>
@@ -70,7 +70,7 @@ export default function Footer() {
           {/* Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <div className="bg-green-600 text-white px-3 py-2 rounded-lg font-bold text-xl">
+              <div className="bg-yellow-600 text-white px-3 py-2 rounded-lg font-bold text-xl">
                 TechPinik
               </div>
             </div>
@@ -79,16 +79,16 @@ export default function Footer() {
               We provide authentic products with excellent customer service.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-green-400 transition-colors">
+              <a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-green-400 transition-colors">
+              <a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-green-400 transition-colors">
+              <a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">
                 <Twitter className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-green-400 transition-colors">
+              <a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">
                 <Youtube className="h-5 w-5" />
               </a>
             </div>
@@ -168,7 +168,7 @@ export default function Footer() {
             <h3 className="text-lg font-semibold">Contact Info</h3>
             <div className="space-y-3">
               <div className="flex items-start space-x-3">
-                <MapPin className="h-5 w-5 text-green-400 mt-0.5 flex-shrink-0" />
+                <MapPin className="h-5 w-5 text-yellow-400 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-sm text-gray-400">
                     123 Tech Street, Dhanmondi<br />
@@ -178,7 +178,7 @@ export default function Footer() {
               </div>
               
               <div className="flex items-center space-x-3">
-                <Phone className="h-5 w-5 text-green-400 flex-shrink-0" />
+                <Phone className="h-5 w-5 text-yellow-400 flex-shrink-0" />
                 <div>
                   <p className="text-sm text-gray-400">+880 1234-567890</p>
                   <p className="text-sm text-gray-400">+880 9876-543210</p>
@@ -186,12 +186,12 @@ export default function Footer() {
               </div>
               
               <div className="flex items-center space-x-3">
-                <Mail className="h-5 w-5 text-green-400 flex-shrink-0" />
+                <Mail className="h-5 w-5 text-yellow-400 flex-shrink-0" />
                 <p className="text-sm text-gray-400">info@techpinik.com</p>
               </div>
               
               <div className="flex items-center space-x-3">
-                <Clock className="h-5 w-5 text-green-400 flex-shrink-0" />
+                <Clock className="h-5 w-5 text-yellow-400 flex-shrink-0" />
                 <div>
                   <p className="text-sm text-gray-400">Mon - Sat: 9:00 AM - 8:00 PM</p>
                   <p className="text-sm text-gray-400">Sunday: 10:00 AM - 6:00 PM</p>

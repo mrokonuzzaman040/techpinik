@@ -117,7 +117,7 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
       {/* Logo */}
       <div className="p-6 border-b border-gray-200">
         <Link href="/admin" className="flex items-center space-x-2">
-          <div className="bg-green-600 text-white px-3 py-2 rounded-lg font-bold text-lg">
+          <div className="bg-yellow-600 text-white px-3 py-2 rounded-lg font-bold text-lg">
             TechPinik
           </div>
           <span className="text-sm text-gray-500">Admin</span>
@@ -157,7 +157,7 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
                         className={cn(
                           "flex items-center space-x-3 px-3 py-2 text-sm rounded-lg transition-colors",
                           isActive(child.href!)
-                            ? "bg-green-100 text-green-700 font-medium"
+                            ? "bg-yellow-100 text-yellow-700 font-medium"
                             : "text-gray-600 hover:bg-gray-100"
                         )}
                         onClick={() => setIsMobileOpen(false)}
@@ -175,7 +175,7 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
                 className={cn(
                   "flex items-center space-x-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors",
                   isActive(item.href!)
-                    ? "bg-green-100 text-green-700"
+                    ? "bg-yellow-100 text-yellow-700"
                     : "text-gray-700 hover:bg-gray-100"
                 )}
                 onClick={() => setIsMobileOpen(false)}

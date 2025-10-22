@@ -34,11 +34,11 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
 
   if (slides.length === 0) {
     return (
-      <div className="relative h-64 md:h-96 lg:h-[500px] bg-linear-to-r from-green-400 to-blue-500 flex items-center justify-center">
+      <div className="relative h-64 md:h-96 lg:h-[500px] bg-linear-to-r from-yellow-400 to-blue-500 flex items-center justify-center">
         <div className="text-center text-white">
           <h1 className="text-3xl md:text-5xl font-bold mb-4">Welcome to TechPinik</h1>
           <p className="text-lg md:text-xl mb-6">Your trusted electronics store in Bangladesh</p>
-          <Button size="lg" className="bg-white text-green-600 hover:bg-gray-100">
+          <Button size="lg" className="bg-white text-yellow-600 hover:bg-gray-100">
             Shop Now
           </Button>
         </div>
@@ -75,7 +75,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
                 )}
                 {slide.link_url && (
                   <Link href={slide.link_url}>
-                    <Button size="lg" className="bg-green-600 hover:bg-green-700">
+                    <Button size="lg" className="bg-yellow-600 hover:bg-yellow-700">
                       Shop Now
                     </Button>
                   </Link>

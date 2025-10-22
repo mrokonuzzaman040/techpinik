@@ -215,7 +215,7 @@ export default function AdminCategoriesPage() {
             <CardContent>
               {loading ? (
                 <div className="flex items-center justify-center py-12">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600"></div>
                 </div>
               ) : categories.length === 0 ? (
                 <div className="text-center py-12">

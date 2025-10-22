@@ -142,7 +142,7 @@ export default function AdminCustomersPage() {
               <CardContent>
                 {loading ? (
                   <div className="flex items-center justify-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600"></div>
                   </div>
                 ) : customers.length === 0 ? (
                   <div className="text-center py-8">
@@ -168,8 +168,8 @@ export default function AdminCustomersPage() {
                           <tr key={customer.id} className="border-b hover:bg-gray-50">
                             <td className="py-4 px-4">
                               <div className="flex items-center space-x-3">
-                                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                                  <User className="h-5 w-5 text-green-600" />
+                                <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
+                                  <User className="h-5 w-5 text-yellow-600" />
                                 </div>
                                 <div>
                                   <div className="font-medium text-gray-900">

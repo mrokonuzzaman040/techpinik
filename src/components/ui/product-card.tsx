@@ -62,13 +62,13 @@ export default function ProductCard({ product, className }: ProductCardProps) {
           {/* Product Info */}
           <div className="p-3">
             {/* Product Name */}
-            <h3 className="font-medium text-sm line-clamp-2 mb-2 group-hover:text-green-600 transition-colors">
+            <h3 className="font-medium text-sm line-clamp-2 mb-2 group-hover:text-yellow-600 transition-colors">
               {product.name}
             </h3>
 
             {/* Price */}
             <div className="flex items-center gap-2 mb-2">
-              <span className="font-bold text-green-600 text-sm">
+              <span className="font-bold text-yellow-600 text-sm">
                 ৳{(product.sale_price || product.price).toLocaleString()}
               </span>
               {product.sale_price && (

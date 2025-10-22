@@ -105,7 +105,7 @@ export default function HomePage() {
     return (
       <MainLayout>
         <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-green-600"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-yellow-600"></div>
         </div>
       </MainLayout>
     )
@@ -125,7 +125,7 @@ export default function HomePage() {
             {features.map((feature, index) => (
               <Card key={index} className="text-center border-0 shadow-sm">
                 <CardContent className="p-6">
-                  <feature.icon className="h-12 w-12 text-green-600 mx-auto mb-4" />
+                  <feature.icon className="h-12 w-12 text-yellow-600 mx-auto mb-4" />
                   <h3 className="font-semibold text-gray-900 mb-2">{feature.title}</h3>
                   <p className="text-sm text-gray-600">{feature.description}</p>
                 </CardContent>
@@ -144,7 +144,7 @@ export default function HomePage() {
               <p className="text-gray-600">Discover products by category</p>
             </div>
             <Link href="/categories">
-              <Button variant="outline" className="hidden md:flex border-green-200 text-green-600 hover:bg-green-50">
+              <Button variant="outline" className="hidden md:flex border-yellow-200 text-yellow-600 hover:bg-yellow-50">
                 View All <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
@@ -158,7 +158,7 @@ export default function HomePage() {
 
           <div className="text-center mt-8 md:hidden">
             <Link href="/categories">
-              <Button variant="outline" className="border-green-200 text-green-600 hover:bg-green-50">
+              <Button variant="outline" className="border-yellow-200 text-yellow-600 hover:bg-yellow-50">
                 View All Categories <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
@@ -204,8 +204,8 @@ export default function HomePage() {
             <div className="container mx-auto px-4">
               {/* Category Header */}
               <div className="flex items-center gap-4 mb-8">
-                <div className="w-16 h-16 rounded-full bg-linear-to-br from-green-50 to-green-100 flex items-center justify-center">
-                  <Package className="w-8 h-8 text-green-500" />
+                <div className="w-16 h-16 rounded-full bg-linear-to-br from-yellow-50 to-yellow-100 flex items-center justify-center">
+                  <Package className="w-8 h-8 text-yellow-500" />
                 </div>
                 <div>
                   <h2 className="text-2xl md:text-3xl font-bold text-gray-900">{category.name}</h2>

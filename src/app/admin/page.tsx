@@ -152,7 +152,7 @@ export default function AdminDashboard() {
       pending: 'bg-yellow-100 text-yellow-800',
       processing: 'bg-blue-100 text-blue-800',
       shipped: 'bg-purple-100 text-purple-800',
-      delivered: 'bg-green-100 text-green-800',
+      delivered: 'bg-yellow-100 text-yellow-800',
       cancelled: 'bg-red-100 text-red-800'
     }
 
@@ -168,7 +168,7 @@ export default function AdminDashboard() {
       <div className="flex h-screen bg-gray-50">
         <AdminSidebar />
         <div className="flex-1 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
         </div>
       </div>
     )
@@ -210,8 +210,8 @@ export default function AdminDashboard() {
                     <p className="text-sm font-medium text-gray-600">Total Products</p>
                     <p className="text-2xl font-bold text-gray-900">{stats.totalProducts}</p>
                   </div>
-                  <div className="h-12 w-12 bg-green-100 rounded-lg flex items-center justify-center">
-                    <Package className="h-6 w-6 text-green-600" />
+                  <div className="h-12 w-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                    <Package className="h-6 w-6 text-yellow-600" />
                   </div>
                 </div>
               </CardContent>
@@ -332,9 +332,9 @@ export default function AdminDashboard() {
                     <p className="text-gray-500 text-center py-4">No sales data yet</p>
                   ) : (
                     stats.topProducts.map((product, index) => (
-                      <div key={product.product_id} className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                      <div key={product.product_id} className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
                         <div className="flex items-center gap-3">
-                          <div className="h-8 w-8 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                          <div className="h-8 w-8 bg-yellow-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
                             {index + 1}
                           </div>
                           <div>

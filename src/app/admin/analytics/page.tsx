@@ -188,7 +188,7 @@ export default function AdminAnalyticsPage() {
         <div className="flex h-screen bg-gray-50">
           <AdminSidebar />
           <div className="flex-1 flex items-center justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
           </div>
         </div>
       </AdminAuthWrapper>
@@ -322,8 +322,8 @@ export default function AdminAnalyticsPage() {
                     {analyticsData?.topProducts.map((product: any, index) => (
                       <div key={product.product_id} className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
-                          <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                            <span className="text-sm font-medium text-green-600">#{index + 1}</span>
+                          <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                            <span className="text-sm font-medium text-yellow-600">#{index + 1}</span>
                           </div>
                           <div>
                             <p className="font-medium">{product.name}</p>
@@ -366,7 +366,7 @@ export default function AdminAnalyticsPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold text-green-600">
+                  <div className="text-3xl font-bold text-yellow-600">
                     {analyticsData?.deliveredOrders || 0}
                   </div>
                   <p className="text-sm text-gray-500">Successfully completed</p>

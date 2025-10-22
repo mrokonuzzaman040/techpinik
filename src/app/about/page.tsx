@@ -34,25 +34,25 @@ export default function AboutPage() {
             to meet the evolving needs of our customers in the digital age.
           </p>
         </div>
-        <div className="bg-green-50 p-8 rounded-lg">
+        <div className="bg-yellow-50 p-8 rounded-lg">
           <h3 className="text-xl font-semibold text-gray-900 mb-6">Why Choose TechPinik?</h3>
           <div className="space-y-4">
             <div className="flex items-start space-x-3">
-              <Award className="h-6 w-6 text-green-600 mt-1" />
+              <Award className="h-6 w-6 text-yellow-600 mt-1" />
               <div>
                 <h4 className="font-medium text-gray-900">Authentic Products</h4>
                 <p className="text-sm text-gray-600">100% genuine products with official warranty</p>
               </div>
             </div>
             <div className="flex items-start space-x-3">
-              <Truck className="h-6 w-6 text-green-600 mt-1" />
+              <Truck className="h-6 w-6 text-yellow-600 mt-1" />
               <div>
                 <h4 className="font-medium text-gray-900">Fast Delivery</h4>
                 <p className="text-sm text-gray-600">Quick delivery across Bangladesh</p>
               </div>
             </div>
             <div className="flex items-start space-x-3">
-              <Users className="h-6 w-6 text-green-600 mt-1" />
+              <Users className="h-6 w-6 text-yellow-600 mt-1" />
               <div>
                 <h4 className="font-medium text-gray-900">Expert Support</h4>
                 <p className="text-sm text-gray-600">Knowledgeable customer service team</p>
@@ -69,19 +69,19 @@ export default function AboutPage() {
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           <div>
-            <div className="text-3xl font-bold text-green-600 mb-2">10K+</div>
+            <div className="text-3xl font-bold text-yellow-600 mb-2">10K+</div>
             <div className="text-gray-600">Happy Customers</div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-green-600 mb-2">500+</div>
+            <div className="text-3xl font-bold text-yellow-600 mb-2">500+</div>
             <div className="text-gray-600">Products</div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-green-600 mb-2">64</div>
+            <div className="text-3xl font-bold text-yellow-600 mb-2">64</div>
             <div className="text-gray-600">Districts Covered</div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-green-600 mb-2">5+</div>
+            <div className="text-3xl font-bold text-yellow-600 mb-2">5+</div>
             <div className="text-gray-600">Years Experience</div>
           </div>
         </div>
@@ -94,8 +94,8 @@ export default function AboutPage() {
         </h2>
         <div className="grid md:grid-cols-3 gap-8">
           <div className="text-center">
-            <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-              <MapPin className="h-8 w-8 text-green-600" />
+            <div className="bg-yellow-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <MapPin className="h-8 w-8 text-yellow-600" />
             </div>
             <h3 className="font-semibold text-gray-900 mb-2">Visit Our Store</h3>
             <p className="text-gray-600 text-sm">
@@ -105,8 +105,8 @@ export default function AboutPage() {
             </p>
           </div>
           <div className="text-center">
-            <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Phone className="h-8 w-8 text-green-600" />
+            <div className="bg-yellow-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Phone className="h-8 w-8 text-yellow-600" />
             </div>
             <h3 className="font-semibold text-gray-900 mb-2">Call Us</h3>
             <p className="text-gray-600 text-sm">
@@ -116,8 +116,8 @@ export default function AboutPage() {
             </p>
           </div>
           <div className="text-center">
-            <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Mail className="h-8 w-8 text-green-600" />
+            <div className="bg-yellow-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Mail className="h-8 w-8 text-yellow-600" />
             </div>
             <h3 className="font-semibold text-gray-900 mb-2">Email Us</h3>
             <p className="text-gray-600 text-sm">

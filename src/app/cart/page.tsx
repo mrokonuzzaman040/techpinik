@@ -104,7 +104,7 @@ export default function CartPage() {
                       <h3 className="font-medium text-gray-900 line-clamp-2 mb-2">
                         {item.product.name}
                       </h3>
-                      <p className="text-lg font-bold text-green-600 mb-3">
+                      <p className="text-lg font-bold text-yellow-600 mb-3">
                         ৳{(item.product.sale_price || item.product.price).toLocaleString()}
                       </p>
 
@@ -172,7 +172,7 @@ export default function CartPage() {
                     <span className="text-gray-600">Delivery Charge</span>
                     <span className="font-medium">
                       {deliveryCharge === 0 ? (
-                        <span className="text-green-600">Free</span>
+                        <span className="text-yellow-600">Free</span>
                       ) : (
                         `৳${deliveryCharge}`
                       )}
@@ -189,7 +189,7 @@ export default function CartPage() {
                   
                   <div className="flex justify-between text-lg font-bold">
                     <span>Total</span>
-                    <span className="text-green-600">৳{total.toLocaleString()}</span>
+                    <span className="text-yellow-600">৳{total.toLocaleString()}</span>
                   </div>
                 </div>
 

@@ -56,7 +56,7 @@ export default function OrderConfirmationPage() {
     return (
       <MainLayout>
         <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-green-600"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-yellow-600"></div>
         </div>
       </MainLayout>
     )
@@ -81,7 +81,7 @@ export default function OrderConfirmationPage() {
       case 'pending': return 'bg-yellow-100 text-yellow-800'
       case 'confirmed': return 'bg-blue-100 text-blue-800'
       case 'shipped': return 'bg-purple-100 text-purple-800'
-      case 'delivered': return 'bg-green-100 text-green-800'
+      case 'delivered': return 'bg-yellow-100 text-yellow-800'
       case 'cancelled': return 'bg-red-100 text-red-800'
       default: return 'bg-gray-100 text-gray-800'
     }
@@ -90,7 +90,7 @@ export default function OrderConfirmationPage() {
   const getPaymentStatusColor = (status: string) => {
     switch (status) {
       case 'pending': return 'bg-yellow-100 text-yellow-800'
-      case 'paid': return 'bg-green-100 text-green-800'
+      case 'paid': return 'bg-yellow-100 text-yellow-800'
       case 'failed': return 'bg-red-100 text-red-800'
       default: return 'bg-gray-100 text-gray-800'
     }
@@ -101,7 +101,7 @@ export default function OrderConfirmationPage() {
       <div className="container mx-auto px-4 py-6">
         {/* Success Header */}
         <div className="text-center mb-8">
-          <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
+          <CheckCircle className="h-16 w-16 text-yellow-600 mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Order Confirmed!</h1>
           <p className="text-gray-600">
             Thank you for your order. We'll send you a confirmation email shortly.
@@ -230,7 +230,7 @@ export default function OrderConfirmationPage() {
                   <Separator />
                   <div className="flex justify-between font-bold text-lg">
                     <span>Total</span>
-                    <span className="text-green-600">৳{(typeof order.total_amount === 'string' ? parseFloat(order.total_amount) : order.total_amount || 0).toLocaleString()}</span>
+                    <span className="text-yellow-600">৳{(typeof order.total_amount === 'string' ? parseFloat(order.total_amount) : order.total_amount || 0).toLocaleString()}</span>
                   </div>
                 </div>
 
@@ -275,8 +275,8 @@ export default function OrderConfirmationPage() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center">
-                <div className="bg-green-100 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
-                  <CheckCircle className="h-6 w-6 text-green-600" />
+                <div className="bg-yellow-100 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
+                  <CheckCircle className="h-6 w-6 text-yellow-600" />
                 </div>
                 <h3 className="font-medium mb-2">Order Confirmed</h3>
                 <p className="text-sm text-gray-600">

@@ -260,7 +260,7 @@ export default function AdminProductsPage() {
             <CardContent>
               {loading ? (
                 <div className="flex items-center justify-center py-12">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600"></div>
                 </div>
               ) : products.length === 0 ? (
                 <div className="text-center py-12">
@@ -321,7 +321,7 @@ export default function AdminProductsPage() {
                             <div>
                               <p className="font-medium">{formatCurrency(product.price)}</p>
                               {product.sale_price && product.sale_price < product.price && (
-                                <p className="text-sm text-green-600">
+                                <p className="text-sm text-yellow-600">
                                   Sale: {formatCurrency(product.sale_price)}
                                 </p>
                               )}
