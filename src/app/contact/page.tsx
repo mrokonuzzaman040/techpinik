@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import MainLayout from '@/components/layout/MainLayout'
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -45,7 +46,8 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <MainLayout>
+      <div className="container mx-auto px-4 py-8">
       {/* Header */}
       <div className="text-center mb-12">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -277,5 +279,6 @@ export default function ContactPage() {
         </div>
       </div>
     </div>
+    </MainLayout>
   )
 }

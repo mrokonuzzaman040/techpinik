@@ -1,8 +1,10 @@
 import { MapPin, Phone, Mail, Clock, Users, Award, Truck } from 'lucide-react'
+import MainLayout from '@/components/layout/MainLayout'
 
 export default function AboutPage() {
   return (
-    <div className="container mx-auto px-4 py-8">
+    <MainLayout>
+      <div className="container mx-auto px-4 py-8">
       {/* Hero Section */}
       <div className="text-center mb-12">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -129,5 +131,6 @@ export default function AboutPage() {
         </div>
       </div>
     </div>
+    </MainLayout>
   )
 }
