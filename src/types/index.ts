@@ -74,17 +74,22 @@ export interface UpdateCategoryData extends Partial<CreateCategoryData> {
 }
 
 // Order Types
-export type OrderStatus = 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
+export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
 
 export interface Order {
   id: string;
+  order_number: string;
   customer_name: string;
+  customer_email: string;
   customer_phone: string;
   customer_address: string;
+  shipping_address: string;
   district_id: string;
   notes?: string;
   total_amount: number;
   delivery_charge: number;
+  payment_method: string;
+  payment_status: string;
   status: OrderStatus;
   created_at: string;
   updated_at: string;

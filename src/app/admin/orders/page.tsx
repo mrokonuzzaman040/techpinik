@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { 
   Search, 
-  Filter, 
   Eye,
   MoreHorizontal,
   ShoppingCart,
@@ -88,7 +87,7 @@ export default function AdminOrdersPage() {
 
       if (error) throw error
 
-      setOrders(data || [])
+      setOrders((data || []) as Order[])
     } catch (error) {
       console.error('Error fetching orders:', error)
     } finally {
@@ -136,12 +135,15 @@ export default function AdminOrdersPage() {
     }
   }
 
-  const formatCurrency = (amount: number) => {
+  const formatCurrency = (amount: number | string | undefined) => {
+    if (amount === undefined || amount === null) return '৳0'
+    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount
+    if (isNaN(numAmount)) return '৳0'
     return new Intl.NumberFormat('en-BD', {
       style: 'currency',
       currency: 'BDT',
       minimumFractionDigits: 0
-    }).format(amount)
+    }).format(numAmount)
   }
 
   const formatDate = (dateString: string) => {
@@ -155,88 +157,296 @@ export default function AdminOrdersPage() {
   }
 
   const generateInvoice = (order: Order) => {
+    // Helper function to safely format currency
+    const safeFormatCurrency = (amount: number | string | undefined) => {
+      if (amount === undefined || amount === null) return '৳0'
+      const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount
+      if (isNaN(numAmount)) return '৳0'
+      return new Intl.NumberFormat('en-BD', {
+        style: 'currency',
+        currency: 'BDT',
+        minimumFractionDigits: 0
+      }).format(numAmount)
+    }
+
+    // Calculate safe totals
+    const totalAmount = typeof order.total_amount === 'string' ? parseFloat(order.total_amount) : order.total_amount || 0
+    const shippingCost = typeof order.delivery_charge === 'string' ? parseFloat(order.delivery_charge) : order.delivery_charge || 0
+    const subtotal = totalAmount - shippingCost
+
     // Create invoice content
     const invoiceContent = `
       <!DOCTYPE html>
       <html>
       <head>
         <title>Invoice #${order.order_number}</title>
+        <meta charset="UTF-8">
         <style>
-          body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
-          .header { text-align: center; margin-bottom: 30px; }
-          .company-name { font-size: 24px; font-weight: bold; color: #059669; }
-          .invoice-details { display: flex; justify-content: space-between; margin-bottom: 30px; }
-          .customer-info, .invoice-info { width: 45%; }
-          .table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
-          .table th, .table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-          .table th { background-color: #f5f5f5; }
-          .total-section { text-align: right; margin-top: 20px; }
-          .total-row { display: flex; justify-content: space-between; margin: 5px 0; }
-          .grand-total { font-weight: bold; font-size: 18px; border-top: 2px solid #059669; padding-top: 10px; }
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            background: #f8f9fa;
+            padding: 20px;
+          }
+          .invoice-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+          }
+          .header {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+            padding: 40px;
+            text-align: center;
+          }
+          .company-name {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 8px;
+          }
+          .company-tagline {
+            font-size: 16px;
+            opacity: 0.9;
+          }
+          .invoice-details {
+            display: flex;
+            padding: 40px;
+            gap: 40px;
+            background: #f8f9fa;
+          }
+          .customer-info, .invoice-info {
+            flex: 1;
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+          }
+          .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #059669;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e5e7eb;
+          }
+          .info-row {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+          }
+          .info-label {
+            font-weight: 600;
+            color: #6b7280;
+            min-width: 120px;
+          }
+          .info-value {
+            color: #111827;
+            font-weight: 500;
+          }
+          .table-container {
+            padding: 40px;
+            background: white;
+          }
+          .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+          }
+          .table th {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+          .table td {
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+            background: white;
+          }
+          .table tr:nth-child(even) td {
+            background: #f9fafb;
+          }
+          .table tr:hover td {
+            background: #f3f4f6;
+          }
+          .total-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+          }
+          .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e7eb;
+          }
+          .total-row:last-child {
+            border-bottom: none;
+          }
+          .total-label {
+            font-weight: 600;
+            color: #374151;
+          }
+          .total-value {
+            font-weight: 600;
+            color: #111827;
+          }
+          .grand-total {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+          }
+          .grand-total .total-label,
+          .grand-total .total-value {
+            color: white;
+          }
+          .footer {
+            background: #f8f9fa;
+            padding: 40px;
+            text-align: center;
+            color: #6b7280;
+          }
+          .footer h3 {
+            color: #059669;
+            margin-bottom: 16px;
+            font-size: 18px;
+          }
+          .footer p {
+            margin-bottom: 8px;
+          }
+          .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+          .status-pending { background: #fef3c7; color: #92400e; }
+          .status-processing { background: #dbeafe; color: #1e40af; }
+          .status-shipped { background: #e0e7ff; color: #3730a3; }
+          .status-delivered { background: #d1fae5; color: #065f46; }
+          .status-cancelled { background: #fee2e2; color: #991b1b; }
         </style>
       </head>
       <body>
-        <div class="header">
-          <div class="company-name">TechPinik</div>
-          <p>Your Trusted Electronics Store</p>
-        </div>
-        
-        <div class="invoice-details">
-          <div class="customer-info">
-            <h3>Bill To:</h3>
-            <p><strong>${order.customer_name}</strong></p>
-            <p>${order.customer_email}</p>
-            <p>${order.customer_phone}</p>
-            <p>${order.shipping_address}</p>
+        <div class="invoice-container">
+          <div class="header">
+            <div class="company-name">TechPinik</div>
+            <div class="company-tagline">Your Trusted Electronics Store in Bangladesh</div>
           </div>
-          <div class="invoice-info">
-            <h3>Invoice Details:</h3>
-            <p><strong>Invoice #:</strong> ${order.order_number}</p>
-            <p><strong>Date:</strong> ${formatDate(order.created_at)}</p>
-            <p><strong>Payment Method:</strong> ${order.payment_method}</p>
-            <p><strong>Status:</strong> ${order.status}</p>
+          
+          <div class="invoice-details">
+            <div class="customer-info">
+              <div class="section-title">Bill To</div>
+              <div class="info-row">
+                <div class="info-label">Name:</div>
+                <div class="info-value">${order.customer_name || 'N/A'}</div>
+              </div>
+              <div class="info-row">
+                <div class="info-label">Email:</div>
+                <div class="info-value">${order.customer_email || 'N/A'}</div>
+              </div>
+              <div class="info-row">
+                <div class="info-label">Phone:</div>
+                <div class="info-value">${order.customer_phone || 'N/A'}</div>
+              </div>
+              <div class="info-row">
+                <div class="info-label">Address:</div>
+                <div class="info-value">${order.shipping_address || 'N/A'}</div>
+              </div>
+            </div>
+            
+            <div class="invoice-info">
+              <div class="section-title">Invoice Details</div>
+              <div class="info-row">
+                <div class="info-label">Invoice #:</div>
+                <div class="info-value">${order.order_number || 'N/A'}</div>
+              </div>
+              <div class="info-row">
+                <div class="info-label">Date:</div>
+                <div class="info-value">${formatDate(order.created_at)}</div>
+              </div>
+              <div class="info-row">
+                <div class="info-label">Payment:</div>
+                <div class="info-value">${order.payment_method || 'N/A'}</div>
+              </div>
+              <div class="info-row">
+                <div class="info-label">Status:</div>
+                <div class="info-value">
+                  <span class="status-badge status-${order.status}">${order.status}</span>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Quantity</th>
-              <th>Unit Price</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${(order as any).order_items?.map((item: any) => `
-              <tr>
-                <td>${item.product_name || 'Product'}</td>
-                <td>${item.quantity}</td>
-                <td>${formatCurrency(item.unit_price)}</td>
-                <td>${formatCurrency(item.total_price || item.unit_price * item.quantity)}</td>
-              </tr>
-            `).join('') || ''}
-          </tbody>
-        </table>
-        
-        <div class="total-section">
-          <div class="total-row">
-            <span>Subtotal:</span>
-            <span>${formatCurrency(order.total_amount - order.shipping_cost)}</span>
+          
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Item Description</th>
+                  <th>Quantity</th>
+                  <th>Unit Price</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${(order as any).order_items?.map((item: { product_name?: string; quantity: number; unit_price: number; total_price?: number }) => `
+                  <tr>
+                    <td>${item.product_name || 'Product'}</td>
+                    <td>${item.quantity || 0}</td>
+                    <td>${safeFormatCurrency(item.unit_price)}</td>
+                    <td>${safeFormatCurrency(item.total_price || (item.unit_price * item.quantity))}</td>
+                  </tr>
+                `).join('') || '<tr><td colspan="4" style="text-align: center; color: #6b7280;">No items found</td></tr>'}
+              </tbody>
+            </table>
           </div>
-          <div class="total-row">
-            <span>Shipping:</span>
-            <span>${formatCurrency(order.shipping_cost)}</span>
+          
+          <div class="total-section">
+            <div class="total-row">
+              <div class="total-label">Subtotal:</div>
+              <div class="total-value">${safeFormatCurrency(subtotal)}</div>
+            </div>
+            <div class="total-row">
+              <div class="total-label">Shipping:</div>
+              <div class="total-value">${safeFormatCurrency(shippingCost)}</div>
+            </div>
+            <div class="total-row grand-total">
+              <div class="total-label">Total Amount:</div>
+              <div class="total-value">${safeFormatCurrency(totalAmount)}</div>
+            </div>
           </div>
-          <div class="total-row grand-total">
-            <span>Total:</span>
-            <span>${formatCurrency(order.total_amount)}</span>
+          
+          <div class="footer">
+            <h3>Thank You for Your Business!</h3>
+            <p>For any questions or support, please contact us:</p>
+            <p><strong>Email:</strong> support@techpinik.com</p>
+            <p><strong>Phone:</strong> +880 1234 567890</p>
+            <p><strong>Website:</strong> www.techpinik.com</p>
+            <p style="margin-top: 20px; font-size: 12px; color: #9ca3af;">
+              This is a computer-generated invoice. No signature required.
+            </p>
           </div>
-        </div>
-        
-        <div style="margin-top: 50px; text-align: center; color: #666;">
-          <p>Thank you for your business!</p>
-          <p>For support, contact us at support@techpinik.com</p>
         </div>
       </body>
       </html>
@@ -410,7 +620,7 @@ export default function AdminOrdersPage() {
                             <div>
                               <p className="font-medium">{formatCurrency(order.total_amount)}</p>
                               <p className="text-sm text-gray-600">
-                                Shipping: {formatCurrency(order.shipping_cost)}
+                                Shipping: {formatCurrency(order.delivery_charge)}
                               </p>
                             </div>
                           </TableCell>
