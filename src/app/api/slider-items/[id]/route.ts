@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { UpdateSliderItemData } from '@/types';
 
 interface RouteParams {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 // GET /api/slider-items/[id] - Get a single slider item by ID

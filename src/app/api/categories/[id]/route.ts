@@ -52,7 +52,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 // PUT /api/categories/[id] - Update a category
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body: UpdateCategoryData = await request.json();
 
     // Check if category exists
@@ -156,7 +156,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 // DELETE /api/categories/[id] - Delete a category
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     // Check if category exists
     const { data: existingCategory, error: fetchError } = await supabase
