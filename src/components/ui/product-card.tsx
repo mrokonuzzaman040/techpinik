@@ -56,65 +56,23 @@ export default function ProductCard({ product, className }: ProductCardProps) {
                   Out of Stock
                 </Badge>
               )}
-              {product.stock_quantity > 0 && product.stock_quantity <= 5 && (
-                <Badge variant="outline" className="text-xs bg-orange-100 text-orange-800">
-                  Limited Stock
-                </Badge>
-              )}
-            </div>
-
-            {/* Quick Actions */}
-            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <Button
-                size="icon"
-                variant="secondary"
-                className="h-8 w-8 bg-white hover:bg-gray-100"
-                onClick={(e) => {
-                  e.preventDefault()
-                  // Quick view functionality can be added here
-                }}
-              >
-                <Eye className="h-4 w-4" />
-              </Button>
             </div>
           </div>
 
           {/* Product Info */}
-          <div className="p-4">
-            {/* Brand */}
-            {product.brand && (
-              <p className="text-xs text-gray-500 mb-1">{product.brand}</p>
-            )}
-
+          <div className="p-3">
             {/* Product Name */}
-            <h3 className="font-medium text-sm md:text-base line-clamp-2 mb-2 group-hover:text-green-600 transition-colors">
+            <h3 className="font-medium text-sm line-clamp-2 mb-2 group-hover:text-green-600 transition-colors">
               {product.name}
             </h3>
 
-            {/* Rating */}
-            <div className="flex items-center gap-1 mb-2">
-              <div className="flex">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star
-                    key={star}
-                    className={`h-3 w-3 ${
-                      star <= 4 
-                        ? 'fill-yellow-400 text-yellow-400' 
-                        : 'text-gray-300'
-                    }`}
-                  />
-                ))}
-              </div>
-              <span className="text-xs text-gray-500">(4.0)</span>
-            </div>
-
             {/* Price */}
-            <div className="flex items-center gap-2 mb-3">
-              <span className="font-bold text-green-600">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="font-bold text-green-600 text-sm">
                 ৳{(product.sale_price || product.price).toLocaleString()}
               </span>
               {product.sale_price && (
-                <span className="text-sm text-gray-500 line-through">
+                <span className="text-xs text-gray-500 line-through">
                   ৳{product.price.toLocaleString()}
                 </span>
               )}
@@ -124,10 +82,10 @@ export default function ProductCard({ product, className }: ProductCardProps) {
             <Button
               onClick={handleAddToCart}
               disabled={product.stock_quantity === 0}
-              className="w-full h-9 text-sm"
+              className="w-full h-8 text-xs"
               variant={product.stock_quantity === 0 ? 'secondary' : 'default'}
             >
-              <ShoppingCart className="h-4 w-4 mr-2" />
+              <ShoppingCart className="h-3 w-3 mr-1" />
               {product.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
             </Button>
           </div>

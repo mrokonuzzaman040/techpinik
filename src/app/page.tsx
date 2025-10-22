@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight, Truck, Shield, RotateCcw, Award } from 'lucide-react'
+import { ArrowRight, Truck, Shield, RotateCcw, Award, Package } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import MainLayout from '@/components/layout/MainLayout'
@@ -16,6 +16,7 @@ export default function HomePage() {
   const [sliderItems, setSliderItems] = useState<SliderItem[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([])
+  const [categoryProducts, setCategoryProducts] = useState<Record<string, Product[]>>({})
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -45,9 +46,28 @@ export default function HomePage() {
           .order('created_at', { ascending: false })
           .limit(8)
 
+        // Fetch products for each category
+        const categoryProductsData: Record<string, Product[]> = {}
+        if (categoriesData && categoriesData.length > 0) {
+          for (const category of categoriesData.slice(0, 4)) { // Limit to 4 categories for homepage
+            const { data: categoryProducts } = await supabase
+              .from('products')
+              .select('*')
+              .eq('category_id', category.id)
+              .eq('is_active', true)
+              .order('created_at', { ascending: false })
+              .limit(10)
+            
+            if (categoryProducts && categoryProducts.length > 0) {
+              categoryProductsData[category.id] = categoryProducts
+            }
+          }
+        }
+
         setSliderItems(sliders || [])
         setCategories(categoriesData || [])
         setFeaturedProducts(productsData || [])
+        setCategoryProducts(categoryProductsData)
       } catch (error) {
         console.error('Error fetching data:', error)
       } finally {
@@ -116,7 +136,7 @@ export default function HomePage() {
       </section>
 
       {/* Categories */}
-      <section className="py-16 bg-gradient-to-br from-gray-50 to-white">
+      <section className="py-16 bg-linear-to-br from-gray-50 to-white">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-12">
             <div>
@@ -158,7 +178,7 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -174,49 +194,49 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Newsletter */}
-      <section className="relative bg-gradient-to-br from-green-600 via-green-700 to-green-800 py-16 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 25px 25px, rgba(255,255,255,0.1) 2px, transparent 0)`,
-            backgroundSize: '50px 50px'
-          }}></div>
-        </div>
-        
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <div className="max-w-4xl mx-auto">
-            <div className="mb-8">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
-                Stay Updated with 
-                <span className="block text-green-200">Latest Offers</span>
-              </h2>
-              <p className="text-green-100 text-lg md:text-xl mb-8 max-w-2xl mx-auto leading-relaxed">
-                Subscribe to our newsletter and get exclusive deals, new product announcements, and tech tips delivered to your inbox.
-              </p>
-            </div>
-            
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 md:p-10 border border-white/20 shadow-2xl">
-              <div className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
-                <div className="flex-1 relative">
-                  <input
-                    type="email"
-                    placeholder="Enter your email address"
-                    className="w-full px-6 py-4 rounded-xl border-0 bg-white/90 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-white focus:ring-opacity-50 outline-none transition-all duration-300 text-lg"
-                  />
+      {/* Category-based Product Sections */}
+      {Object.entries(categoryProducts).map(([categoryId, products]) => {
+        const category = categories.find(cat => cat.id === categoryId)
+        if (!category || products.length === 0) return null
+
+        return (
+          <section key={categoryId} className="py-12">
+            <div className="container mx-auto px-4">
+              {/* Category Header */}
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-16 h-16 rounded-full bg-linear-to-br from-green-50 to-green-100 flex items-center justify-center">
+                  <Package className="w-8 h-8 text-green-500" />
                 </div>
-                <Button className="bg-white text-green-700 hover:bg-green-50 hover:text-green-800 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap">
-                  Subscribe Now
-                </Button>
+                <div>
+                  <h2 className="text-2xl md:text-3xl font-bold text-gray-900">{category.name}</h2>
+                  <p className="text-gray-600">{category.description}</p>
+                </div>
+                <div className="flex-1 h-px bg-gray-200"></div>
+                <Link href={`/products?category=${categoryId}`}>
+                  <Button variant="outline" className="hidden md:flex">
+                    View All <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
               </div>
-              
-              <p className="text-green-200 text-sm mt-4">
-                🔒 We respect your privacy. Unsubscribe at any time.
-              </p>
+
+              {/* Products Grid */}
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                {products.slice(0, 10).map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+
+              <div className="text-center mt-6 md:hidden">
+                <Link href={`/products?category=${categoryId}`}>
+                  <Button variant="outline">
+                    View All {category.name} <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
+        )
+      })}
     </MainLayout>
   )
 }
