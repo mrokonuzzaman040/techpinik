@@ -51,6 +51,8 @@ export interface Category {
   name: string;
   description?: string;
   icon?: string;
+  icon_url?: string;
+  banner_url?: string;
   slug: string;
   parent_id?: string;
   created_at: string;
@@ -65,12 +67,22 @@ export interface CreateCategoryData {
   name: string;
   description?: string;
   icon?: string;
+  icon_url?: string;
+  banner_url?: string;
   slug: string;
   parent_id?: string;
 }
 
 export interface UpdateCategoryData extends Partial<CreateCategoryData> {
   updated_at?: string;
+}
+
+export interface CategoryForm {
+  name: string;
+  description: string;
+  image_url: string;
+  banner_image_url: string;
+  is_active: boolean;
 }
 
 // Order Types

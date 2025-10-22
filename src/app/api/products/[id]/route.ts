@@ -3,13 +3,13 @@ import { supabase } from '@/lib/supabase';
 import { UpdateProductData } from '@/types';
 
 interface RouteParams {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 // GET /api/products/[id] - Get a single product by ID
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     const { data: product, error } = await supabase
       .from('products')
@@ -50,7 +50,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 // PUT /api/products/[id] - Update a product
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body: UpdateProductData = await request.json();
 
     // Check if product exists
@@ -132,7 +132,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 // DELETE /api/products/[id] - Delete a product
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     // Check if product exists
     const { data: existingProduct, error: fetchError } = await supabase

@@ -3,13 +3,13 @@ import { supabase } from '@/lib/supabase';
 import { UpdateDistrictData } from '@/types';
 
 interface RouteParams {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 // GET /api/districts/[id] - Get a single district by ID
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     const { data: district, error } = await supabase
       .from('districts')
@@ -47,7 +47,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 // PUT /api/districts/[id] - Update a district
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body: UpdateDistrictData = await request.json();
 
     // Check if district exists
@@ -139,7 +139,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 // DELETE /api/districts/[id] - Delete a district
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     // Check if district exists
     const { data: existingDistrict, error: fetchError } = await supabase

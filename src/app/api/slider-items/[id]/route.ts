@@ -9,7 +9,7 @@ interface RouteParams {
 // GET /api/slider-items/[id] - Get a single slider item by ID
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     const { data: sliderItem, error } = await supabase
       .from('slider_items')
@@ -47,7 +47,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 // PUT /api/slider-items/[id] - Update a slider item
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body: UpdateSliderItemData = await request.json();
 
     // Check if slider item exists
@@ -118,7 +118,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 // DELETE /api/slider-items/[id] - Delete a slider item
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     // Check if slider item exists
     const { data: existingItem, error: fetchError } = await supabase

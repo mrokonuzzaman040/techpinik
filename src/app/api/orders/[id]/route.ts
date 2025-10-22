@@ -3,13 +3,13 @@ import { supabase } from '@/lib/supabase';
 import { UpdateOrderData, OrderStatus } from '@/types';
 
 interface RouteParams {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 // GET /api/orders/[id] - Get a single order by ID
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     const { data: order, error } = await supabase
       .from('orders')
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 // PUT /api/orders/[id] - Update an order
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body: UpdateOrderData = await request.json();
 
     // Check if order exists
@@ -174,7 +174,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 // DELETE /api/orders/[id] - Delete an order (only if pending or cancelled)
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     // Check if order exists and get its status
     const { data: existingOrder, error: fetchError } = await supabase
