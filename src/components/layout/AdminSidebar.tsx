@@ -41,7 +41,7 @@ const sidebarItems: SidebarItem[] = [
     icon: Package,
     children: [
       { title: 'All Products', href: '/admin/products', icon: Package },
-      { title: 'Add Product', href: '/admin/products/add', icon: Package },
+      { title: 'Add Product', href: '/admin/products/new', icon: Package },
     ]
   },
   {
@@ -49,7 +49,7 @@ const sidebarItems: SidebarItem[] = [
     icon: FolderOpen,
     children: [
       { title: 'All Categories', href: '/admin/categories', icon: FolderOpen },
-      { title: 'Add Category', href: '/admin/categories/add', icon: FolderOpen },
+      { title: 'Add Category', href: '/admin/categories/new', icon: FolderOpen },
     ]
   },
   {
