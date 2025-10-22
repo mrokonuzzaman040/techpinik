@@ -36,7 +36,7 @@ export default function DistrictsManagementPage() {
 
   const [formData, setFormData] = useState({
     name: '',
-    shipping_cost: ''
+    delivery_charge: ''
   })
 
   useEffect(() => {
@@ -72,7 +72,7 @@ export default function DistrictsManagementPage() {
   const resetForm = () => {
     setFormData({
       name: '',
-      shipping_cost: ''
+      delivery_charge: ''
     })
     setEditingDistrict(null)
   }
@@ -86,7 +86,7 @@ export default function DistrictsManagementPage() {
     setEditingDistrict(district)
     setFormData({
       name: district.name || '',
-      shipping_cost: district.shipping_cost?.toString() || ''
+      delivery_charge: district.delivery_charge?.toString() || ''
     })
     setIsDialogOpen(true)
   }
@@ -107,7 +107,7 @@ export default function DistrictsManagementPage() {
       
       const districtData = {
         name: formData.name,
-        shipping_cost: parseFloat(formData.shipping_cost) || 0
+        delivery_charge: parseFloat(formData.delivery_charge) || 0
       }
 
       if (editingDistrict) {
@@ -196,7 +196,7 @@ export default function DistrictsManagementPage() {
         .filter(name => !existingNames.includes(name))
         .map(name => ({
           name,
-          shipping_cost: name === 'Dhaka' ? 60 : 120 // Dhaka: 60 BDT, Others: 120 BDT
+          delivery_charge: name === 'Dhaka' ? 60 : 120 // Dhaka: 60 BDT, Others: 120 BDT
         }))
 
       if (newDistricts.length === 0) {
@@ -220,12 +220,14 @@ export default function DistrictsManagementPage() {
     }
   }
 
-  const formatCurrency = (amount: number) => {
+  const formatCurrency = (amount: number | string) => {
+    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount
+    if (isNaN(numAmount)) return '৳0'
     return new Intl.NumberFormat('en-BD', {
       style: 'currency',
       currency: 'BDT',
       minimumFractionDigits: 0
-    }).format(amount)
+    }).format(numAmount)
   }
 
   if (loading) {
@@ -295,7 +297,7 @@ export default function DistrictsManagementPage() {
               <CardContent className="p-4">
                 <div className="text-center">
                   <p className="text-2xl font-bold text-gray-900">
-                    {districts.length > 0 ? formatCurrency(districts.reduce((sum, d) => sum + d.shipping_cost, 0) / districts.length) : '৳0'}
+                    {districts.length > 0 ? formatCurrency(districts.reduce((sum, d) => sum + Number(d.delivery_charge), 0) / districts.length) : '৳0'}
                   </p>
                   <p className="text-sm text-gray-600">Avg. Shipping</p>
                 </div>
@@ -344,7 +346,7 @@ export default function DistrictsManagementPage() {
                           <p className="font-medium">{district.name}</p>
                         </TableCell>
                         <TableCell>
-                          <p className="font-medium">{formatCurrency(district.shipping_cost)}</p>
+                          <p className="font-medium">{formatCurrency(district.delivery_charge)}</p>
                         </TableCell>
                         <TableCell>
                           <p className="text-sm text-gray-600">
@@ -400,13 +402,13 @@ export default function DistrictsManagementPage() {
                 </div>
 
                 <div>
-                  <Label htmlFor="shipping_cost">Shipping Cost (৳) *</Label>
+                  <Label htmlFor="delivery_charge">Delivery Charge (৳) *</Label>
                   <Input
-                    id="shipping_cost"
+                    id="delivery_charge"
                     type="number"
                     step="0.01"
-                    value={formData.shipping_cost}
-                    onChange={(e) => handleInputChange('shipping_cost', e.target.value)}
+                    value={formData.delivery_charge}
+                    onChange={(e) => handleInputChange('delivery_charge', e.target.value)}
                     placeholder="e.g., 60"
                     required
                   />
