@@ -10,7 +10,6 @@ import {
   Dumbbell,
   ShoppingBag 
 } from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
 import { Category } from '@/types'
 
 interface CategoryCardProps {
@@ -35,26 +34,26 @@ export default function CategoryCard({ category, className }: CategoryCardProps)
 
   return (
     <Link href={`/products?category=${category.id}`}>
-      <Card className={`group hover:shadow-lg transition-all duration-300 hover:scale-105 ${className}`}>
-        <CardContent className="p-4 text-center">
+      <div className={`group hover:shadow-xl transition-all duration-300 hover:scale-105 rounded-2xl border-0 shadow-sm bg-white cursor-pointer ${className}`}>
+        <div className="p-6 text-center">
           {/* Category Icon */}
-          <div className="relative w-16 h-16 md:w-20 md:h-20 mx-auto mb-3 overflow-hidden rounded-full bg-gray-100 flex items-center justify-center">
-            <IconComponent className="w-8 h-8 md:w-10 md:h-10 text-gray-400 group-hover:text-green-600 transition-colors" />
+          <div className="relative w-20 h-20 md:w-24 md:h-24 mx-auto mb-4 overflow-hidden rounded-full bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center group-hover:from-green-100 group-hover:to-green-200 transition-all duration-300">
+            <IconComponent className="w-10 h-10 md:w-12 md:h-12 text-green-500 group-hover:text-green-600 transition-colors" />
           </div>
 
           {/* Category Name */}
-          <h3 className="font-medium text-sm md:text-base text-gray-900 group-hover:text-green-600 transition-colors">
+          <h3 className="font-semibold text-sm md:text-base text-gray-900 group-hover:text-green-600 transition-colors mb-2">
             {category.name}
           </h3>
 
           {/* Category Description */}
           {category.description && (
-            <p className="text-xs text-gray-500 mt-1 line-clamp-2">
+            <p className="text-xs text-gray-500 mt-1 line-clamp-2 group-hover:text-gray-600 transition-colors">
               {category.description}
             </p>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </Link>
   )
 }

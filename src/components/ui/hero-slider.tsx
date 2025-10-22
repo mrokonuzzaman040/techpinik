@@ -54,7 +54,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
         style={{ transform: `translateX(-${currentSlide * 100}%)` }}
       >
         {slides.map((slide, index) => (
-          <div key={slide.id} className="w-full h-full flex-shrink-0 relative">
+          <div key={slide.id} className="w-full h-full shrink-0 relative">
             <Image
               src={slide.image_url}
               alt={slide.title || ""}
@@ -91,13 +91,13 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
         <>
           <button
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all"
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-yellow-500 p-2 rounded-full transition-all"
           >
             <ChevronLeft className="h-6 w-6" />
           </button>
           <button
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all"
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-yellow-500 p-2 rounded-full transition-all"
           >
             <ChevronRight className="h-6 w-6" />
           </button>
@@ -113,7 +113,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
               onClick={() => setCurrentSlide(index)}
               className={`w-3 h-3 rounded-full transition-all ${
                 index === currentSlide 
-                  ? 'bg-white' 
+                  ? 'bg-yellow-500' 
                   : 'bg-white bg-opacity-50'
               }`}
             />

@@ -238,7 +238,7 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
       </aside>
 
       {/* Desktop Sidebar Spacer */}
-      <div className="hidden lg:block w-64 flex-shrink-0" />
+      <div className="hidden lg:block w-64 shrink-0" />
     </>
   )
 }
