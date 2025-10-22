@@ -34,7 +34,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
 
   if (slides.length === 0) {
     return (
-      <div className="relative h-64 md:h-96 lg:h-[500px] bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center">
+      <div className="relative h-64 md:h-96 lg:h-[500px] bg-linear-to-r from-green-400 to-blue-500 flex items-center justify-center">
         <div className="text-center text-white">
           <h1 className="text-3xl md:text-5xl font-bold mb-4">Welcome to TechPinik</h1>
           <p className="text-lg md:text-xl mb-6">Your trusted electronics store in Bangladesh</p>
@@ -91,12 +91,14 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
         <>
           <button
             onClick={prevSlide}
+            aria-label="Previous slide"
             className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-yellow-500 p-2 rounded-full transition-all"
           >
             <ChevronLeft className="h-6 w-6" />
           </button>
           <button
             onClick={nextSlide}
+            aria-label="Next slide"
             className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-yellow-500 p-2 rounded-full transition-all"
           >
             <ChevronRight className="h-6 w-6" />
@@ -111,6 +113,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
+              aria-label={`Go to slide ${index + 1}`}
               className={`w-3 h-3 rounded-full transition-all ${
                 index === currentSlide 
                   ? 'bg-yellow-500' 
