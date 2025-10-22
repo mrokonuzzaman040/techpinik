@@ -221,16 +221,16 @@ export default function OrderConfirmationPage() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Subtotal</span>
-                    <span>৳{(order.total_amount - order.shipping_cost).toLocaleString()}</span>
+                    <span>৳{((typeof order.total_amount === 'string' ? parseFloat(order.total_amount) : order.total_amount || 0) - (typeof order.delivery_charge === 'string' ? parseFloat(order.delivery_charge) : order.delivery_charge || 0)).toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Shipping</span>
-                    <span>৳{order.shipping_cost.toLocaleString()}</span>
+                    <span>৳{(typeof order.delivery_charge === 'string' ? parseFloat(order.delivery_charge) : order.delivery_charge || 0).toLocaleString()}</span>
                   </div>
                   <Separator />
                   <div className="flex justify-between font-bold text-lg">
                     <span>Total</span>
-                    <span className="text-green-600">৳{order.total_amount.toLocaleString()}</span>
+                    <span className="text-green-600">৳{(typeof order.total_amount === 'string' ? parseFloat(order.total_amount) : order.total_amount || 0).toLocaleString()}</span>
                   </div>
                 </div>
 

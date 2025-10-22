@@ -280,16 +280,16 @@ export default function AdminOrderDetailPage() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span>Subtotal:</span>
-                      <span>{formatCurrency(order.subtotal)}</span>
+                      <span>{formatCurrency((typeof order.total_amount === 'string' ? parseFloat(order.total_amount) : order.total_amount || 0) - (typeof order.delivery_charge === 'string' ? parseFloat(order.delivery_charge) : order.delivery_charge || 0))}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Shipping:</span>
-                      <span>{formatCurrency(order.shipping_cost)}</span>
+                      <span>{formatCurrency(typeof order.delivery_charge === 'string' ? parseFloat(order.delivery_charge) : order.delivery_charge || 0)}</span>
                     </div>
                     <Separator />
                     <div className="flex justify-between text-lg font-bold">
                       <span>Total:</span>
-                      <span>{formatCurrency(order.total_amount)}</span>
+                      <span>{formatCurrency(typeof order.total_amount === 'string' ? parseFloat(order.total_amount) : order.total_amount || 0)}</span>
                     </div>
                   </div>
                 </CardContent>
