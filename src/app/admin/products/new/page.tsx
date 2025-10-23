@@ -28,7 +28,9 @@ export default function AddProductPage() {
     sku: '',
     stock_quantity: 0,
     category_id: '',
+    images: [],
     image_url: '',
+    is_featured: false,
     is_active: true,
     weight: '',
     dimensions: '',
@@ -36,8 +38,8 @@ export default function AddProductPage() {
     warranty: '',
     brand: '',
     origin: '',
-    key_features: '',
-    box_contents: ''
+    key_features: [],
+    box_contents: []
   })
 
   useEffect(() => {

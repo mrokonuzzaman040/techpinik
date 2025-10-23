@@ -279,7 +279,7 @@ export default function AdminCategoriesPage() {
                             </span>
                           </TableCell>
                           <TableCell>
-                            {getStatusBadge(category.is_active)}
+                            {getStatusBadge(category.is_active ?? true)}
                           </TableCell>
                           <TableCell className="text-right">
                             <DropdownMenu>
@@ -302,9 +302,9 @@ export default function AdminCategoriesPage() {
                                   </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                  onClick={() => toggleCategoryStatus(category.id, category.is_active)}
+                                  onClick={() => toggleCategoryStatus(category.id, category.is_active ?? true)}
                                 >
-                                  {category.is_active ? 'Deactivate' : 'Activate'}
+                                  {(category.is_active ?? true) ? 'Deactivate' : 'Activate'}
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   onClick={() => setDeleteCategoryId(category.id)}

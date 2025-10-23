@@ -62,7 +62,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     // Check if order exists
     const { data: existingOrder, error: fetchError } = await supabase
       .from('orders')
-      .select('id, status')
+      .select('id, status, district_id')
       .eq('id', id)
       .single();
 

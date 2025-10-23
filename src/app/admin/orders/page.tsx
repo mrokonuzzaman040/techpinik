@@ -38,7 +38,7 @@ import {
 } from '@/components/ui/select'
 import AdminSidebar from '@/components/layout/AdminSidebar'
 import { createClient } from '@/lib/supabase'
-import { Order } from '@/types'
+import { Order, OrderStatus } from '@/types'
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([])
@@ -107,7 +107,7 @@ export default function AdminOrdersPage() {
       if (error) throw error
 
       setOrders(orders.map(order => 
-        order.id === orderId ? { ...order, status: newStatus } : order
+        order.id === orderId ? { ...order, status: newStatus as OrderStatus } : order
       ))
     } catch (error) {
       console.error('Error updating order status:', error)

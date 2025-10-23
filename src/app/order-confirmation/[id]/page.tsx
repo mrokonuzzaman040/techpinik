@@ -133,8 +133,8 @@ export default function OrderConfirmationPage() {
                   </div>
                   <div>
                     <p className="text-sm text-gray-600">Order Status</p>
-                    <Badge className={getStatusColor(order.order_status)}>
-                      {order.order_status.charAt(0).toUpperCase() + order.order_status.slice(1)}
+                    <Badge className={getStatusColor(order.order_status ?? order.status)}>
+                      {(order.order_status ?? order.status).charAt(0).toUpperCase() + (order.order_status ?? order.status).slice(1)}
                     </Badge>
                   </div>
                   <div>
@@ -202,7 +202,7 @@ export default function OrderConfirmationPage() {
                         </p>
                       </div>
                       <div className="font-medium">
-                        ৳{item.total_price.toLocaleString()}
+                        ৳{(item.total_price ?? (item.unit_price * item.quantity)).toLocaleString()}
                       </div>
                     </div>
                   ))}

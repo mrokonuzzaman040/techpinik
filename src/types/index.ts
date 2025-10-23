@@ -11,6 +11,7 @@ export interface Product {
   stock_quantity: number;
   category_id?: string;
   images: string[];
+  image_url?: string;
   is_active: boolean;
   is_featured: boolean;
   weight?: number;
@@ -36,6 +37,7 @@ export interface CreateProductData {
   price: number;
   category_id: string;
   images: string[];
+  image_url?: string;
   stock_quantity: number;
   is_featured: boolean;
   slug: string;
@@ -53,8 +55,11 @@ export interface Category {
   icon?: string;
   icon_url?: string;
   banner_url?: string;
+  banner_image_url?: string;
+  image_url?: string;
   slug: string;
   parent_id?: string;
+  is_active?: boolean;
   created_at: string;
   updated_at?: string;
 }
@@ -69,8 +74,11 @@ export interface CreateCategoryData {
   icon?: string;
   icon_url?: string;
   banner_url?: string;
+  banner_image_url?: string;
+  image_url?: string;
   slug: string;
   parent_id?: string;
+  is_active?: boolean;
 }
 
 export interface UpdateCategoryData extends Partial<CreateCategoryData> {
@@ -85,8 +93,30 @@ export interface CategoryForm {
   is_active: boolean;
 }
 
+export interface ProductForm {
+  name: string;
+  description: string;
+  price: number;
+  sale_price: number;
+  sku: string;
+  category_id: string;
+  images: string[];
+  image_url: string;
+  stock_quantity: number;
+  is_featured: boolean;
+  is_active: boolean;
+  weight: string;
+  dimensions: string;
+  availability_status: string;
+  warranty: string;
+  brand: string;
+  origin: string;
+  key_features: string[];
+  box_contents: string[];
+}
+
 // Order Types
-export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+export type OrderStatus = 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
 
 export interface Order {
   id: string;
@@ -103,6 +133,7 @@ export interface Order {
   payment_method: string;
   payment_status: string;
   status: OrderStatus;
+  order_status?: OrderStatus;
   created_at: string;
   updated_at: string;
 }
@@ -114,17 +145,20 @@ export interface OrderWithDetails extends Order {
 
 export interface CreateOrderData {
   customer_name: string;
+  customer_email?: string;
   customer_phone: string;
   customer_address: string;
   district_id: string;
   notes?: string;
   total_amount: number;
   delivery_charge: number;
+  items: CreateOrderItemData[];
   order_items: CreateOrderItemData[];
 }
 
 export interface UpdateOrderData {
   status?: OrderStatus;
+  district_id?: string;
   notes?: string;
   updated_at?: string;
 }
@@ -134,8 +168,11 @@ export interface OrderItem {
   id: string;
   order_id: string;
   product_id: string;
+  product_name?: string;
+  product_sku?: string;
   quantity: number;
   unit_price: number;
+  total_price?: number;
 }
 
 export interface OrderItemWithProduct extends OrderItem {
@@ -154,6 +191,8 @@ export interface District {
   name: string;
   delivery_charge: number;
   is_active?: boolean;
+  created_at: string;
+  updated_at?: string;
 }
 
 export interface CreateDistrictData {
@@ -172,8 +211,12 @@ export interface SliderItem {
   image_url: string;
   title?: string;
   subtitle?: string;
+  description?: string;
+  button_text?: string;
+  button_link?: string;
   link_url?: string;
   order_index: number;
+  sort_order?: number;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -183,8 +226,12 @@ export interface CreateSliderItemData {
   image_url: string;
   title?: string;
   subtitle?: string;
+  description?: string;
+  button_text?: string;
+  button_link?: string;
   link_url?: string;
   order_index: number;
+  sort_order?: number;
   is_active?: boolean;
 }
 

@@ -35,7 +35,7 @@ import {
 } from '@/components/ui/select'
 import AdminSidebar from '@/components/layout/AdminSidebar'
 import { createClient } from '@/lib/supabase'
-import { Order, OrderItem } from '@/types'
+import { Order, OrderItem, OrderStatus } from '@/types'
 
 export default function AdminOrderDetailPage() {
   const params = useParams()
@@ -95,7 +95,7 @@ export default function AdminOrderDetailPage() {
 
       if (error) throw error
 
-      setOrder({ ...order, status: newStatus })
+      setOrder({ ...order, status: newStatus as OrderStatus })
     } catch (error) {
       console.error('Error updating order status:', error)
       alert('Error updating order status. Please try again.')
@@ -267,7 +267,7 @@ export default function AdminOrderDetailPage() {
                             {formatCurrency(item.unit_price)}
                           </TableCell>
                           <TableCell className="text-right font-medium">
-                            {formatCurrency(item.total_price)}
+                            {formatCurrency(item.total_price ?? (item.unit_price * item.quantity))}
                           </TableCell>
                         </TableRow>
                       ))}

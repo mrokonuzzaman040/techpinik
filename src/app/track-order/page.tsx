@@ -7,10 +7,25 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import MainLayout from '@/components/layout/MainLayout'
 
+interface TrackingResult {
+  orderNumber: string;
+  status: string;
+  estimatedDelivery: string;
+  trackingNumber: string;
+  currentLocation: string;
+  updates: Array<{
+    date: string;
+    time: string;
+    status: string;
+    description: string;
+    location: string;
+  }>;
+}
+
 export default function TrackOrderPage() {
   const [orderNumber, setOrderNumber] = useState('')
   const [email, setEmail] = useState('')
-  const [trackingResult, setTrackingResult] = useState(null)
+  const [trackingResult, setTrackingResult] = useState<TrackingResult | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
   const handleTrackOrder = async (e: React.FormEvent) => {
