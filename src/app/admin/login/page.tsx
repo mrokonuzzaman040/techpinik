@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { authManager } from '@/lib/auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -23,71 +23,30 @@ export default function AdminLogin() {
     setError('')
 
     try {
-      // Sign in with Supabase Auth
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
-
-      if (authError) {
-        throw authError
-      }
-
-      if (!authData.user) {
-        throw new Error('No user data returned')
-      }
-
-      // Check if user has admin role
-      let isAdmin = false
+      console.log('Attempting login for:', email)
       
-      try {
-        // First try to check the profiles table
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', authData.user.id)
-          .single()
-
-        if (profileError) {
-          // If no profile exists, check user metadata
-          const userRole = authData.user.user_metadata?.role
-          if (userRole === 'admin') {
-            isAdmin = true
-          } else {
-            // Fallback: Check if this is the specific admin email
-            if (email === 'admin@techpinik.com') {
-              isAdmin = true
-              // Create the profile entry for this admin user
-              await supabase
-                .from('profiles')
-                .upsert({
-                  id: authData.user.id,
-                  email: authData.user.email,
-                  role: 'admin',
-                  created_at: new Date().toISOString(),
-                  updated_at: new Date().toISOString()
-                })
-            }
-          }
-        } else if (profile.role === 'admin') {
-          isAdmin = true
-        }
-      } catch (error) {
-        // If profiles table doesn't exist, fallback to email check
-        console.warn('Profiles table not accessible, using fallback authentication')
-        if (email === 'admin@techpinik.com') {
-          isAdmin = true
-        }
+      // Use the auth manager for sign in
+      const authData = await authManager.signIn(email, password)
+      
+      console.log('Login successful, redirecting to admin dashboard')
+      
+      // Wait for auth state to be updated
+      await new Promise(resolve => setTimeout(resolve, 200))
+      
+      // Check if we're now authenticated
+      const currentState = authManager.getState()
+      console.log('Current auth state after login:', currentState)
+      
+      if (currentState.user && currentState.isAdmin) {
+        console.log('User is authenticated and is admin, redirecting to dashboard')
+        router.push('/admin')
+        router.refresh()
+      } else {
+        console.log('User not properly authenticated, staying on login page')
+        setError('Authentication failed. Please try again.')
       }
-
-      if (!isAdmin) {
-        await supabase.auth.signOut()
-        throw new Error('Access denied. Admin privileges required.')
-      }
-
-      // Redirect to admin dashboard
-      router.push('/admin')
     } catch (err: any) {
+      console.error('Login error:', err)
       setError(err.message || 'Login failed')
     } finally {
       setLoading(false)

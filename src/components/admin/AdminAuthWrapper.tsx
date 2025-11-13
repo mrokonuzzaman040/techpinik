@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { authManager, AuthState } from '@/lib/auth'
 import { Loader2 } from 'lucide-react'
 
 interface AdminAuthWrapperProps {
@@ -10,66 +10,37 @@ interface AdminAuthWrapperProps {
 }
 
 export default function AdminAuthWrapper({ children }: AdminAuthWrapperProps) {
-  const [loading, setLoading] = useState(true)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [authState, setAuthState] = useState<AuthState>({
+    user: null,
+    isAdmin: false,
+    loading: true
+  })
   const router = useRouter()
 
   useEffect(() => {
-    checkAuth()
-  }, [])
-
-  const checkAuth = async () => {
-    try {
-      // Get current session
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+    // Subscribe to auth state changes
+    const unsubscribe = authManager.subscribe((state) => {
+      console.log('Auth state updated:', state)
+      setAuthState(state)
       
-      if (sessionError || !session?.user) {
-        router.push('/admin/login')
-        return
-      }
-
-      // Check if user has admin role
-      let isAdmin = false
-      
-      try {
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', session.user.id)
-          .single()
-
-        if (profileError) {
-          // If no profile exists, check user metadata
-          isAdmin = session.user.user_metadata?.role === 'admin'
-          
-          // Fallback: Check if this is the specific admin email
-          if (!isAdmin && session.user.email === 'admin@techpinik.com') {
-            isAdmin = true
-          }
+      if (!state.loading) {
+        if (!state.user || !state.isAdmin) {
+          console.log('User not authenticated or not admin, redirecting to login')
+          console.log('Auth state details:', { user: state.user, isAdmin: state.isAdmin, loading: state.loading })
+          router.push('/admin/login?error=unauthorized')
         } else {
-          isAdmin = profile.role === 'admin'
+          console.log('User authenticated and is admin, allowing access')
         }
-      } catch (error) {
-        // If profiles table doesn't exist, fallback to email check
-        console.warn('Profiles table not accessible, using fallback authentication')
-        isAdmin = session.user.email === 'admin@techpinik.com'
       }
+    })
 
-      if (!isAdmin) {
-        router.push('/admin/login?error=unauthorized')
-        return
-      }
+    // Get initial state
+    setAuthState(authManager.getState())
 
-      setIsAuthenticated(true)
-    } catch (error) {
-      console.error('Auth check error:', error)
-      router.push('/admin/login')
-    } finally {
-      setLoading(false)
-    }
-  }
+    return unsubscribe
+  }, [router])
 
-  if (loading) {
+  if (authState.loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -80,7 +51,7 @@ export default function AdminAuthWrapper({ children }: AdminAuthWrapperProps) {
     )
   }
 
-  if (!isAuthenticated) {
+  if (!authState.user || !authState.isAdmin) {
     return null // Will redirect to login
   }
 

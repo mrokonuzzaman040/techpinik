@@ -52,7 +52,7 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm border-b">
       {/* Top Bar */}
-      <div className="bg-yellow-600 text-white py-2 px-4">
+      {/* <div className="bg-yellow-600 text-white py-2 px-4">
         <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center text-sm">
           <div className="flex items-center space-x-4 mb-2 sm:mb-0">
             <div className="flex items-center space-x-1">
@@ -69,7 +69,7 @@ export default function Navbar() {
             <span>Free delivery in Dhaka</span>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Main Navigation */}
       <div className="container mx-auto px-4 py-3">
