@@ -1,10 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
-import { ArrowRight, Truck, Shield, RotateCcw, Award, Package } from 'lucide-react'
+import { ArrowRight, Package } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import MainLayout from '@/components/layout/MainLayout'
 import HeroSlider from '@/components/ui/hero-slider'
 import ProductCard from '@/components/ui/product-card'
@@ -18,6 +17,12 @@ export default function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([])
   const [categoryProducts, setCategoryProducts] = useState<Record<string, Product[]>>({})
   const [loading, setLoading] = useState(true)
+  const categoryScrollRef = useRef<HTMLDivElement>(null)
+  const autoScrollIntervalRef = useRef<NodeJS.Timeout | null>(null)
+  const isPausedRef = useRef(false)
+  const isDraggingRef = useRef(false)
+  const startXRef = useRef(0)
+  const scrollLeftRef = useRef(0)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -78,28 +83,168 @@ export default function HomePage() {
     fetchData()
   }, [])
 
-  const features = [
-    {
-      icon: Truck,
-      title: 'Free Delivery',
-      description: 'Free delivery on orders over ৳1000'
-    },
-    {
-      icon: Shield,
-      title: 'Secure Payment',
-      description: '100% secure payment methods'
-    },
-    {
-      icon: RotateCcw,
-      title: 'Easy Returns',
-      description: '7-day return policy'
-    },
-    {
-      icon: Award,
-      title: 'Quality Guarantee',
-      description: 'Authentic products only'
+  // Auto-scroll functionality for categories with infinite loop
+  useEffect(() => {
+    const scrollContainer = categoryScrollRef.current
+    if (!scrollContainer || categories.length === 0) return
+
+    // Calculate the width of one set of categories for seamless loop
+    const calculateSingleSetWidth = () => {
+      if (scrollContainer.children.length === 0) return 0
+      
+      // Get the actual width of all items in the first set
+      let totalWidth = 0
+      for (let i = 0; i < categories.length; i++) {
+        const child = scrollContainer.children[i] as HTMLElement
+        if (child) {
+          totalWidth += child.offsetWidth
+          if (i < categories.length - 1) {
+            totalWidth += 24 // gap-6 = 24px
+          }
+        }
+      }
+      return totalWidth
     }
-  ]
+
+    // Handle scroll position reset for infinite loop
+    const handleScrollReset = () => {
+      if (!scrollContainer) return
+      const singleSetWidth = calculateSingleSetWidth()
+      const currentScroll = scrollContainer.scrollLeft
+      
+      // If we've scrolled past the first set, reset to start instantly (seamless loop)
+      if (currentScroll >= singleSetWidth - 1) {
+        scrollContainer.scrollLeft = currentScroll - singleSetWidth
+      }
+    }
+
+    const startAutoScroll = () => {
+      if (autoScrollIntervalRef.current) {
+        clearInterval(autoScrollIntervalRef.current)
+      }
+
+      // Set initial scroll position to the start of the first set
+      scrollContainer.scrollLeft = 0
+
+      autoScrollIntervalRef.current = setInterval(() => {
+        if (!isPausedRef.current && !isDraggingRef.current && scrollContainer) {
+          const singleSetWidth = calculateSingleSetWidth()
+          const currentScroll = scrollContainer.scrollLeft
+          
+          // If we've scrolled past the first set, reset to start instantly (seamless loop)
+          if (currentScroll >= singleSetWidth - 1) {
+            scrollContainer.scrollLeft = currentScroll - singleSetWidth
+          } else {
+            // Scroll forward
+            scrollContainer.scrollLeft += 2
+          }
+        }
+      }, 50) // Smooth scrolling every 50ms
+    }
+
+    // Also handle manual scrolling to ensure infinite loop
+    scrollContainer.addEventListener('scroll', handleScrollReset)
+
+    startAutoScroll()
+
+    return () => {
+      scrollContainer.removeEventListener('scroll', handleScrollReset)
+      if (autoScrollIntervalRef.current) {
+        clearInterval(autoScrollIntervalRef.current)
+      }
+    }
+  }, [categories])
+
+  // Touch and mouse drag handlers - global mouse events
+  useEffect(() => {
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (!isDraggingRef.current || !categoryScrollRef.current) return
+      e.preventDefault()
+      const x = e.pageX - categoryScrollRef.current.offsetLeft
+      const walk = (x - startXRef.current) * 2
+      categoryScrollRef.current.scrollLeft = scrollLeftRef.current - walk
+    }
+
+    const handleGlobalMouseUp = () => {
+      if (!isDraggingRef.current) return
+      isDraggingRef.current = false
+      if (categoryScrollRef.current) {
+        categoryScrollRef.current.style.cursor = 'grab'
+        categoryScrollRef.current.style.userSelect = 'auto'
+      }
+      // Resume auto-scroll after a delay
+      setTimeout(() => {
+        isPausedRef.current = false
+      }, 2000)
+    }
+
+    document.addEventListener('mousemove', handleGlobalMouseMove)
+    document.addEventListener('mouseup', handleGlobalMouseUp)
+
+    return () => {
+      document.removeEventListener('mousemove', handleGlobalMouseMove)
+      document.removeEventListener('mouseup', handleGlobalMouseUp)
+    }
+  }, [])
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!categoryScrollRef.current) return
+    isDraggingRef.current = true
+    isPausedRef.current = true
+    startXRef.current = e.pageX - categoryScrollRef.current.offsetLeft
+    scrollLeftRef.current = categoryScrollRef.current.scrollLeft
+    categoryScrollRef.current.style.cursor = 'grabbing'
+    categoryScrollRef.current.style.userSelect = 'none'
+  }
+
+  const handleMouseUp = () => {
+    isDraggingRef.current = false
+    if (categoryScrollRef.current) {
+      categoryScrollRef.current.style.cursor = 'grab'
+      categoryScrollRef.current.style.userSelect = 'auto'
+    }
+    // Resume auto-scroll after a delay
+    setTimeout(() => {
+      isPausedRef.current = false
+    }, 2000)
+  }
+
+  const handleMouseLeave = () => {
+    if (isDraggingRef.current) return // Don't reset if still dragging
+    if (categoryScrollRef.current) {
+      categoryScrollRef.current.style.cursor = 'grab'
+    }
+  }
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!categoryScrollRef.current) return
+    isPausedRef.current = true
+    startXRef.current = e.touches[0].pageX - categoryScrollRef.current.offsetLeft
+    scrollLeftRef.current = categoryScrollRef.current.scrollLeft
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!categoryScrollRef.current) return
+    const x = e.touches[0].pageX - categoryScrollRef.current.offsetLeft
+    const walk = (x - startXRef.current) * 2
+    categoryScrollRef.current.scrollLeft = scrollLeftRef.current - walk
+  }
+
+  const handleTouchEnd = () => {
+    setTimeout(() => {
+      isPausedRef.current = false
+    }, 2000)
+  }
+
+  const handleMouseEnter = () => {
+    isPausedRef.current = true
+  }
+
+  const handleMouseLeaveCategory = () => {
+    setTimeout(() => {
+      isPausedRef.current = false
+    }, 1000)
+  }
 
   if (loading) {
     return (
@@ -136,12 +281,16 @@ export default function HomePage() {
       </section> */}
 
       {/* Categories */}
-      <section className="py-16 bg-linear-to-br from-gray-50 to-white">
+      <section 
+        className="py-8 md:py-16 bg-linear-to-br from-gray-50 to-white"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeaveCategory}
+      >
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-12">
+          <div className="flex items-center justify-between mb-6 md:mb-12">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Shop by Category</h2>
-              <p className="text-gray-600">Discover products by category</p>
+              <h2 className="text-xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 md:mb-2">Shop by Category</h2>
+              <p className="text-sm md:text-base text-gray-600">Discover products by category</p>
             </div>
             <Link href="/categories">
               <Button variant="outline" className="hidden md:flex border-yellow-200 text-yellow-600 hover:bg-yellow-50">
@@ -150,9 +299,26 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-6">
-            {categories.map((category) => (
-              <CategoryCard key={category.id} category={category} />
+          <div
+            ref={categoryScrollRef}
+            className="flex gap-6 overflow-x-auto scrollbar-hide pb-4 cursor-grab"
+            style={{
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+              WebkitOverflowScrolling: 'touch',
+            }}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            {/* Render categories twice for seamless infinite scroll */}
+            {[...categories, ...categories].map((category, index) => (
+              <div key={`${category.id}-${index}`} className="shrink-0 w-[140px] md:w-[160px]">
+                <CategoryCard category={category} />
+              </div>
             ))}
           </div>
 
@@ -167,10 +333,10 @@ export default function HomePage() {
       </section>
 
       {/* Featured Products */}
-      <section className="bg-gray-50 py-12">
+      <section className="bg-gray-50 py-8 md:py-12">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Featured Products</h2>
+          <div className="flex items-center justify-between mb-6 md:mb-8">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">Featured Products</h2>
             <Link href="/products">
               <Button variant="outline" className="hidden md:flex">
                 View All <ArrowRight className="ml-2 h-4 w-4" />
@@ -200,21 +366,25 @@ export default function HomePage() {
         if (!category || products.length === 0) return null
 
         return (
-          <section key={categoryId} className="py-12">
+          <section key={categoryId} className="py-8 md:py-12">
             <div className="container mx-auto px-4">
               {/* Category Header */}
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-16 h-16 rounded-full bg-linear-to-br from-yellow-50 to-yellow-100 flex items-center justify-center">
-                  <Package className="w-8 h-8 text-yellow-500" />
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-6 md:mb-8">
+                <div className="flex items-center gap-2 md:gap-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full bg-linear-to-br from-yellow-50 to-yellow-100 flex items-center justify-center shrink-0">
+                    <Package className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-yellow-500" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h2 className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold text-gray-900">{category.name}</h2>
+                    {category.description && (
+                      <p className="text-xs md:text-sm text-gray-600 line-clamp-1 sm:line-clamp-2 hidden sm:block">{category.description}</p>
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-2xl md:text-3xl font-bold text-gray-900">{category.name}</h2>
-                  <p className="text-gray-600">{category.description}</p>
-                </div>
-                <div className="flex-1 h-px bg-gray-200"></div>
-                <Link href={`/products?category=${categoryId}`}>
-                  <Button variant="outline" className="hidden md:flex">
-                    View All <ArrowRight className="ml-2 h-4 w-4" />
+                <div className="hidden sm:block flex-1 h-px bg-gray-200"></div>
+                <Link href={`/products?category=${categoryId}`} className="self-start sm:self-auto">
+                  <Button variant="outline" size="sm" className="text-xs sm:text-sm">
+                    View All <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
                 </Link>
               </div>

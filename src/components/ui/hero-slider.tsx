@@ -35,10 +35,10 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
   if (slides.length === 0) {
     return (
       <div className="relative h-64 md:h-96 lg:h-[500px] bg-linear-to-r from-yellow-400 to-blue-500 flex items-center justify-center">
-        <div className="text-center text-white">
-          <h1 className="text-3xl md:text-5xl font-bold mb-4">Welcome to TechPinik</h1>
-          <p className="text-lg md:text-xl mb-6">Your trusted electronics store in Bangladesh</p>
-          <Button size="lg" className="bg-white text-yellow-600 hover:bg-gray-100">
+        <div className="text-center text-white px-4">
+          <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4">Welcome to TechPinik</h1>
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl mb-4 md:mb-6">Your trusted electronics store in Bangladesh</p>
+          <Button size="sm" className="sm:h-11 sm:px-6 sm:text-base bg-white text-yellow-600 hover:bg-gray-100">
             Shop Now
           </Button>
         </div>
@@ -65,17 +65,17 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
             />
             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
               <div className="text-center text-white max-w-4xl px-4">
-                <h2 className="text-2xl md:text-4xl lg:text-6xl font-bold mb-4">
+                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl xl:text-6xl font-bold mb-2 md:mb-4">
                   {slide.title}
                 </h2>
                 {slide.subtitle && (
-                  <p className="text-lg md:text-xl lg:text-2xl mb-6 opacity-90">
+                  <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl mb-4 md:mb-6 opacity-90">
                     {slide.subtitle}
                   </p>
                 )}
                 {slide.link_url && (
                   <Link href={slide.link_url}>
-                    <Button size="lg" className="bg-yellow-600 hover:bg-yellow-700">
+                    <Button size="sm" className="sm:h-11 sm:px-6 sm:text-base bg-yellow-600 hover:bg-yellow-700">
                       Shop Now
                     </Button>
                   </Link>
