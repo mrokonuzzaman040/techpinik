@@ -18,10 +18,12 @@ import { Product, Category } from '@/types'
 function ProductsPageContent() {
   const [products, setProducts] = useState<Product[]>([])
   const [categories, setCategories] = useState<Category[]>([])
+  const [brands, setBrands] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [sortBy, setSortBy] = useState('newest')
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([])
   const [priceRange, setPriceRange] = useState({ min: '', max: '' })
   const [searchQuery, setSearchQuery] = useState('')
   
@@ -42,12 +44,30 @@ function ProductsPageContent() {
 
         setCategories(categoriesData || [])
 
+        // Fetch unique brands from products
+        const { data: productsData } = await supabase
+          .from('products')
+          .select('brand')
+          .eq('is_active', true)
+          .not('brand', 'is', null)
+
+        // Extract unique brands and sort them
+        const uniqueBrands = Array.from(
+          new Set(
+            (productsData || [])
+              .map(p => p.brand)
+              .filter((brand): brand is string => Boolean(brand))
+          )
+        ).sort()
+
+        setBrands(uniqueBrands)
+
         // Set initial category filter if provided in URL
         if (categoryParam) {
           setSelectedCategories([categoryParam])
         }
       } catch (error) {
-        console.error('Error fetching categories:', error)
+        console.error('Error fetching data:', error)
       }
     }
 
@@ -68,6 +88,11 @@ function ProductsPageContent() {
         // Apply category filter
         if (selectedCategories.length > 0) {
           query = query.in('category_id', selectedCategories)
+        }
+
+        // Apply brand filter
+        if (selectedBrands.length > 0) {
+          query = query.in('brand', selectedBrands)
         }
 
         // Apply price range filter
@@ -109,7 +134,7 @@ function ProductsPageContent() {
     }
 
     fetchProducts()
-  }, [selectedCategories, priceRange, searchQuery, sortBy])
+  }, [selectedCategories, selectedBrands, priceRange, searchQuery, sortBy])
 
   const handleCategoryChange = (categoryId: string, checked: boolean) => {
     if (checked) {
@@ -119,8 +144,17 @@ function ProductsPageContent() {
     }
   }
 
+  const handleBrandChange = (brand: string, checked: boolean) => {
+    if (checked) {
+      setSelectedBrands(prev => [...prev, brand])
+    } else {
+      setSelectedBrands(prev => prev.filter(b => b !== brand))
+    }
+  }
+
   const clearFilters = () => {
     setSelectedCategories([])
+    setSelectedBrands([])
     setPriceRange({ min: '', max: '' })
     setSearchQuery('')
   }
@@ -159,6 +193,29 @@ function ProductsPageContent() {
           ))}
         </div>
       </div>
+
+      {/* Brands */}
+      {brands.length > 0 && (
+        <div>
+          <Label className="text-sm font-medium">Brands</Label>
+          <div className="mt-2 space-y-2 max-h-48 overflow-y-auto">
+            {brands.map((brand) => (
+              <div key={brand} className="flex items-center space-x-2">
+                <Checkbox
+                  id={`brand-${brand}`}
+                  checked={selectedBrands.includes(brand)}
+                  onCheckedChange={(checked) => 
+                    handleBrandChange(brand, checked as boolean)
+                  }
+                />
+                <Label htmlFor={`brand-${brand}`} className="text-sm">
+                  {brand}
+                </Label>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Price Range */}
       <div>

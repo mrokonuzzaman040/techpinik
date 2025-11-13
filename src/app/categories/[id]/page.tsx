@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Checkbox } from '@/components/ui/checkbox'
 import MainLayout from '@/components/layout/MainLayout'
 import ProductCard from '@/components/ui/product-card'
 import { createClient } from '@/lib/supabase'
@@ -22,9 +23,11 @@ export default function CategoryDetailPage() {
   
   const [category, setCategory] = useState<Category | null>(null)
   const [products, setProducts] = useState<Product[]>([])
+  const [brands, setBrands] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [sortBy, setSortBy] = useState('newest')
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([])
   const [priceRange, setPriceRange] = useState({ min: '', max: '' })
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -43,8 +46,27 @@ export default function CategoryDetailPage() {
           .single()
 
         setCategory(categoryData)
+
+        // Fetch unique brands from products in this category
+        const { data: productsData } = await supabase
+          .from('products')
+          .select('brand')
+          .eq('category_id', categoryId)
+          .eq('is_active', true)
+          .not('brand', 'is', null)
+
+        // Extract unique brands and sort them
+        const uniqueBrands = Array.from(
+          new Set(
+            (productsData || [])
+              .map(p => p.brand)
+              .filter((brand): brand is string => Boolean(brand))
+          )
+        ).sort()
+
+        setBrands(uniqueBrands)
       } catch (error) {
-        console.error('Error fetching category:', error)
+        console.error('Error fetching data:', error)
       }
     }
 
@@ -64,6 +86,11 @@ export default function CategoryDetailPage() {
           .select('*')
           .eq('category_id', categoryId)
           .eq('is_active', true)
+
+        // Apply brand filter
+        if (selectedBrands.length > 0) {
+          query = query.in('brand', selectedBrands)
+        }
 
         // Apply price range filter
         if (priceRange.min) {
@@ -104,9 +131,18 @@ export default function CategoryDetailPage() {
     }
 
     fetchProducts()
-  }, [categoryId, priceRange, searchQuery, sortBy])
+  }, [categoryId, selectedBrands, priceRange, searchQuery, sortBy])
+
+  const handleBrandChange = (brand: string, checked: boolean) => {
+    if (checked) {
+      setSelectedBrands(prev => [...prev, brand])
+    } else {
+      setSelectedBrands(prev => prev.filter(b => b !== brand))
+    }
+  }
 
   const clearFilters = () => {
+    setSelectedBrands([])
     setPriceRange({ min: '', max: '' })
     setSearchQuery('')
   }
@@ -124,6 +160,29 @@ export default function CategoryDetailPage() {
           className="mt-2"
         />
       </div>
+
+      {/* Brands */}
+      {brands.length > 0 && (
+        <div>
+          <Label className="text-sm font-medium">Brands</Label>
+          <div className="mt-2 space-y-2 max-h-48 overflow-y-auto">
+            {brands.map((brand) => (
+              <div key={brand} className="flex items-center space-x-2">
+                <Checkbox
+                  id={`brand-${brand}`}
+                  checked={selectedBrands.includes(brand)}
+                  onCheckedChange={(checked) => 
+                    handleBrandChange(brand, checked as boolean)
+                  }
+                />
+                <Label htmlFor={`brand-${brand}`} className="text-sm">
+                  {brand}
+                </Label>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Price Range */}
       <div>
