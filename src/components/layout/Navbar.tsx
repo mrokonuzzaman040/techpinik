@@ -7,10 +7,7 @@ import {
   Search, 
   ShoppingCart, 
   User, 
-  Menu, 
-  Phone, 
-  Mail, 
-  MapPin 
+  Menu
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -24,7 +21,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [categories, setCategories] = useState<Category[]>([])
   const [mounted, setMounted] = useState(false)
-  const { items, getTotalItems } = useCartStore()
+  const { getTotalItems } = useCartStore()
 
   useEffect(() => {
     setMounted(true)
@@ -180,58 +177,145 @@ export default function Navbar() {
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-80">
-                <div className="flex flex-col space-y-4 mt-6">
+              <SheetContent side="left" className="w-80 sm:w-96 p-0 overflow-y-auto">
+                {/* Header */}
+                <div className="sticky top-0 z-10 bg-white border-b px-6 py-4">
+                  <div className="flex items-center justify-between">
+                    <Link href="/" onClick={() => setIsMenuOpen(false)}>
+                      <div className="bg-yellow-600 text-white px-3 py-2 rounded-lg font-bold text-lg">
+                        TechPinik
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Navigation Content */}
+                <div className="flex flex-col px-4 py-6 space-y-1">
+                  {/* Home Link */}
                   <Link 
                     href="/" 
-                    className="text-lg font-medium py-2 border-b"
+                    className="flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Home
+                    <span>🏠</span>
+                    <span>Home</span>
                   </Link>
                   
-                  <div className="space-y-2">
-                    <h3 className="font-medium text-gray-900">Categories</h3>
-                    {categories.map((category) => (
-                      <Link
-                        key={category.id}
-                        href={`/category/${category.slug}`}
-                        className="flex items-center space-x-2 py-2 pl-4 text-gray-600 hover:text-yellow-600"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        {category.image_url && (
-                          <img 
-                            src={category.image_url} 
-                            alt={category.name}
-                            className="w-5 h-5 object-cover rounded"
-                          />
-                        )}
-                        <span>{category.name}</span>
-                      </Link>
-                    ))}
+                  {/* Categories Section */}
+                  <div className="pt-2">
+                    <div className="px-4 py-2 mb-2">
+                      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Categories</h3>
+                    </div>
+                    <div className="space-y-1">
+                      {categories.length > 0 ? (
+                        categories.map((category) => (
+                          <Link
+                            key={category.id}
+                            href={`/products?category=${category.id}`}
+                            className="flex items-center space-x-3 px-4 py-3 rounded-lg text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition-colors group"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            {category.image_url ? (
+                              <img 
+                                src={category.image_url} 
+                                alt={category.name}
+                                className="w-8 h-8 object-cover rounded-md"
+                              />
+                            ) : (
+                              <div className="w-8 h-8 rounded-md bg-linear-to-br from-yellow-100 to-yellow-200 flex items-center justify-center">
+                                <span className="text-yellow-600 text-xs">📦</span>
+                              </div>
+                            )}
+                            <span className="flex-1">{category.name}</span>
+                            <span className="text-gray-400 group-hover:text-yellow-600">→</span>
+                          </Link>
+                        ))
+                      ) : (
+                        <div className="px-4 py-3 text-sm text-gray-500">No categories available</div>
+                      )}
+                    </div>
                   </div>
-                  
+
+                  {/* Divider */}
+                  <div className="my-2 border-t border-gray-200"></div>
+
+                  {/* Other Links */}
                   <Link 
                     href="/products" 
-                    className="text-lg font-medium py-2 border-b"
+                    className="flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    All Products
+                    <span>🛍️</span>
+                    <span>All Products</span>
                   </Link>
+                  
                   <Link 
                     href="/about" 
-                    className="text-lg font-medium py-2 border-b"
+                    className="flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    About
+                    <span>ℹ️</span>
+                    <span>About Us</span>
                   </Link>
+                  
                   <Link 
                     href="/contact" 
-                    className="text-lg font-medium py-2 border-b"
+                    className="flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Contact
+                    <span>📧</span>
+                    <span>Contact</span>
                   </Link>
+
+                  <Link 
+                    href="/faq" 
+                    className="flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <span>❓</span>
+                    <span>FAQ</span>
+                  </Link>
+
+                  {/* Divider */}
+                  <div className="my-2 border-t border-gray-200"></div>
+
+                  {/* Quick Links */}
+                  <div className="pt-2">
+                    <div className="px-4 py-2 mb-2">
+                      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Quick Links</h3>
+                    </div>
+                    <Link 
+                      href="/shipping" 
+                      className="flex items-center space-x-3 px-4 py-3 rounded-lg text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <span>🚚</span>
+                      <span>Shipping Info</span>
+                    </Link>
+                    <Link 
+                      href="/returns" 
+                      className="flex items-center space-x-3 px-4 py-3 rounded-lg text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <span>↩️</span>
+                      <span>Returns</span>
+                    </Link>
+                    <Link 
+                      href="/warranty" 
+                      className="flex items-center space-x-3 px-4 py-3 rounded-lg text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <span>🛡️</span>
+                      <span>Warranty</span>
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Footer */}
+                <div className="sticky bottom-0 bg-gray-50 border-t px-4 py-4 mt-auto">
+                  <div className="flex items-center justify-center space-x-4 text-sm text-gray-600">
+                    <span>© 2024 TechPinik</span>
+                  </div>
                 </div>
               </SheetContent>
             </Sheet>

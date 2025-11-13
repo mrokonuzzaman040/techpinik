@@ -113,19 +113,19 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
   }
 
   const sidebarContent = (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-white">
       {/* Logo */}
-      <div className="p-6 border-b border-gray-200">
-        <Link href="/admin" className="flex items-center space-x-2">
-          <div className="bg-yellow-600 text-white px-3 py-2 rounded-lg font-bold text-lg">
+      <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-yellow-50 to-white">
+        <Link href="/admin" className="flex items-center space-x-2 group">
+          <div className="bg-yellow-600 text-white px-3 py-2 rounded-lg font-bold text-lg shadow-md group-hover:shadow-lg transition-shadow">
             TechPinik
           </div>
-          <span className="text-sm text-gray-500">Admin</span>
+          <span className="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded">Admin</span>
         </Link>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+      <nav className="flex-1 p-4 space-y-1 overflow-y-auto scrollbar-hide">
         {sidebarItems.map((item) => (
           <div key={item.title}>
             {item.children ? (
@@ -133,8 +133,9 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
                 <button
                   onClick={() => toggleExpanded(item.title)}
                   className={cn(
-                    "w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-colors",
-                    "text-gray-700 hover:bg-gray-100"
+                    "w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200",
+                    "text-gray-700 hover:bg-yellow-50 hover:text-yellow-700",
+                    expandedItems.includes(item.title) && "bg-yellow-50 text-yellow-700"
                   )}
                 >
                   <div className="flex items-center space-x-3">
@@ -142,23 +143,23 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
                     <span>{item.title}</span>
                   </div>
                   {expandedItems.includes(item.title) ? (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="h-4 w-4 transition-transform" />
                   ) : (
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="h-4 w-4 transition-transform" />
                   )}
                 </button>
                 
                 {expandedItems.includes(item.title) && (
-                  <div className="ml-6 mt-2 space-y-1">
+                  <div className="ml-4 mt-1 space-y-1 border-l-2 border-yellow-100 pl-4">
                     {item.children.map((child) => (
                       <Link
                         key={child.href}
                         href={child.href!}
                         className={cn(
-                          "flex items-center space-x-3 px-3 py-2 text-sm rounded-lg transition-colors",
+                          "flex items-center space-x-3 px-4 py-2.5 text-sm rounded-lg transition-all duration-200",
                           isActive(child.href!)
-                            ? "bg-yellow-100 text-yellow-700 font-medium"
-                            : "text-gray-600 hover:bg-gray-100"
+                            ? "bg-yellow-100 text-yellow-700 font-semibold shadow-sm"
+                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                         )}
                         onClick={() => setIsMobileOpen(false)}
                       >
@@ -173,10 +174,10 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
               <Link
                 href={item.href!}
                 className={cn(
-                  "flex items-center space-x-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors",
+                  "flex items-center space-x-3 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200",
                   isActive(item.href!)
-                    ? "bg-yellow-100 text-yellow-700"
-                    : "text-gray-700 hover:bg-gray-100"
+                    ? "bg-yellow-100 text-yellow-700 shadow-sm"
+                    : "text-gray-700 hover:bg-yellow-50 hover:text-yellow-700"
                 )}
                 onClick={() => setIsMobileOpen(false)}
               >
@@ -189,17 +190,18 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-gray-200 space-y-2">
+      <div className="p-4 border-t border-gray-200 bg-gray-50 space-y-2">
         <Link
           href="/"
-          className="flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-900"
+          className="flex items-center space-x-2 text-sm text-gray-600 hover:text-yellow-600 hover:bg-white px-3 py-2 rounded-lg transition-colors"
         >
-          <span>← Back to Store</span>
+          <span>←</span>
+          <span>Back to Store</span>
         </Link>
         <Button
           onClick={handleLogout}
           variant="ghost"
-          className="w-full justify-start text-sm text-red-600 hover:text-red-700 hover:bg-red-50"
+          className="w-full justify-start text-sm text-red-600 hover:text-red-700 hover:bg-red-50 px-3 py-2"
         >
           <LogOut className="h-4 w-4 mr-2" />
           Logout
@@ -230,7 +232,7 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
 
       {/* Sidebar */}
       <aside className={cn(
-        "fixed top-0 left-0 z-40 h-full w-64 bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out lg:translate-x-0",
+        "fixed top-0 left-0 z-40 h-full w-64 bg-white border-r border-gray-200 shadow-lg lg:shadow-none transition-transform duration-300 ease-in-out lg:translate-x-0",
         isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         className
       )}>
