@@ -10,14 +10,19 @@ interface AdminAuthWrapperProps {
 }
 
 export default function AdminAuthWrapper({ children }: AdminAuthWrapperProps) {
-  const [authState, setAuthState] = useState<AuthState>({
-    user: null,
-    isAdmin: false,
-    loading: true
-  })
+  // Initialize state with current auth state to avoid synchronous setState in effect
+  const [authState, setAuthState] = useState<AuthState>(() => authManager.getState())
   const router = useRouter()
 
   useEffect(() => {
+    // Check initial state and redirect if needed
+    const initialState = authManager.getState()
+    if (!initialState.loading && (!initialState.user || !initialState.isAdmin)) {
+      console.log('No user in session, redirecting to login')
+      router.replace('/admin/login?error=unauthorized')
+      return
+    }
+
     // Subscribe to auth state changes
     const unsubscribe = authManager.subscribe((state) => {
       console.log('Auth state updated:', state)
@@ -27,15 +32,12 @@ export default function AdminAuthWrapper({ children }: AdminAuthWrapperProps) {
         if (!state.user || !state.isAdmin) {
           console.log('User not authenticated or not admin, redirecting to login')
           console.log('Auth state details:', { user: state.user, isAdmin: state.isAdmin, loading: state.loading })
-          router.push('/admin/login?error=unauthorized')
+          router.replace('/admin/login?error=unauthorized')
         } else {
           console.log('User authenticated and is admin, allowing access')
         }
       }
     })
-
-    // Get initial state
-    setAuthState(authManager.getState())
 
     return unsubscribe
   }, [router])
