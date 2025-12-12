@@ -10,6 +10,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
 import MainLayout from '@/components/layout/MainLayout'
 import ProductCard from '@/components/ui/product-card'
 import { createClient } from '@/lib/supabase'
@@ -23,7 +24,7 @@ function ProductsPageContent() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [sortBy, setSortBy] = useState('newest')
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([])
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(null)
   const [priceRange, setPriceRange] = useState({ min: '', max: '' })
   const [searchQuery, setSearchQuery] = useState('')
   
@@ -91,8 +92,8 @@ function ProductsPageContent() {
         }
 
         // Apply brand filter
-        if (selectedBrands.length > 0) {
-          query = query.in('brand', selectedBrands)
+        if (selectedBrand) {
+          query = query.eq('brand', selectedBrand)
         }
 
         // Apply price range filter
@@ -134,7 +135,7 @@ function ProductsPageContent() {
     }
 
     fetchProducts()
-  }, [selectedCategories, selectedBrands, priceRange, searchQuery, sortBy])
+  }, [selectedCategories, selectedBrand, priceRange, searchQuery, sortBy])
 
   const handleCategoryChange = (categoryId: string, checked: boolean) => {
     if (checked) {
@@ -144,17 +145,14 @@ function ProductsPageContent() {
     }
   }
 
-  const handleBrandChange = (brand: string, checked: boolean) => {
-    if (checked) {
-      setSelectedBrands(prev => [...prev, brand])
-    } else {
-      setSelectedBrands(prev => prev.filter(b => b !== brand))
-    }
+  const handleBrandChange = (brand: string) => {
+    // Toggle: if already selected, deselect; otherwise, select this brand only
+    setSelectedBrand(prev => prev === brand ? null : brand)
   }
 
   const clearFilters = () => {
     setSelectedCategories([])
-    setSelectedBrands([])
+    setSelectedBrand(null)
     setPriceRange({ min: '', max: '' })
     setSearchQuery('')
   }
@@ -203,12 +201,10 @@ function ProductsPageContent() {
               <div key={brand} className="flex items-center space-x-2">
                 <Checkbox
                   id={`brand-${brand}`}
-                  checked={selectedBrands.includes(brand)}
-                  onCheckedChange={(checked) => 
-                    handleBrandChange(brand, checked as boolean)
-                  }
+                  checked={selectedBrand === brand}
+                  onCheckedChange={() => handleBrandChange(brand)}
                 />
-                <Label htmlFor={`brand-${brand}`} className="text-sm">
+                <Label htmlFor={`brand-${brand}`} className="text-sm cursor-pointer">
                   {brand}
                 </Label>
               </div>
@@ -251,6 +247,44 @@ function ProductsPageContent() {
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">All Products</h1>
           <p className="text-gray-600">Discover our complete range of electronics and gadgets</p>
         </div>
+
+        {/* Brand Filters - Top Section */}
+        {brands.length > 0 && (
+          <div className="mb-6">
+            <div className="flex items-center gap-2 mb-3">
+              <Label className="text-sm font-medium text-gray-700">Filter by Brand:</Label>
+              {selectedBrand && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedBrand(null)}
+                  className="h-6 px-2 text-xs text-gray-500 hover:text-gray-700"
+                >
+                  Clear brand
+                </Button>
+              )}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {brands.map((brand) => {
+                const isSelected = selectedBrand === brand
+                return (
+                  <Badge
+                    key={brand}
+                    variant={isSelected ? "default" : "outline"}
+                    className={`cursor-pointer px-3 py-1.5 text-sm font-medium transition-colors ${
+                      isSelected
+                        ? "bg-yellow-600 hover:bg-yellow-700 text-white border-yellow-600"
+                        : "bg-white hover:bg-yellow-50 text-gray-700 border-gray-300 hover:border-yellow-400"
+                    }`}
+                    onClick={() => handleBrandChange(brand)}
+                  >
+                    {brand}
+                  </Badge>
+                )
+              })}
+            </div>
+          </div>
+        )}
 
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Desktop Filters */}
