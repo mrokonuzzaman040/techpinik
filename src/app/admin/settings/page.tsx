@@ -13,28 +13,28 @@ export default function AdminSettingsPage() {
       description: 'Manage homepage hero slider images and content',
       icon: Sliders,
       href: '/admin/settings/slider',
-      color: 'bg-blue-500'
+      color: 'bg-blue-500',
     },
     {
       title: 'Districts Management',
       description: 'Manage delivery districts and shipping charges',
       icon: MapPin,
       href: '/admin/settings/districts',
-      color: 'bg-yellow-500'
+      color: 'bg-yellow-500',
     },
     {
       title: 'General Settings',
       description: 'Configure site settings, contact info, and preferences',
       icon: Globe,
       href: '/admin/settings/general',
-      color: 'bg-purple-500'
-    }
+      color: 'bg-purple-500',
+    },
   ]
 
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
-      
+
       <div className="flex-1 overflow-auto">
         <div className="p-6">
           {/* Header */}
@@ -63,9 +63,7 @@ export default function AdminSettingsPage() {
                   <CardContent>
                     <p className="text-gray-600 mb-4">{item.description}</p>
                     <Link href={item.href}>
-                      <Button className="w-full">
-                        Manage
-                      </Button>
+                      <Button className="w-full">Manage</Button>
                     </Link>
                   </CardContent>
                 </Card>

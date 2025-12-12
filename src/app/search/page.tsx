@@ -26,12 +26,12 @@ function SearchPageContent() {
     try {
       setLoading(true)
       setError(null)
-      
+
       const response = await fetch(`/api/products?search=${encodeURIComponent(searchQuery)}`)
       if (!response.ok) {
         throw new Error('Failed to search products')
       }
-      
+
       const data = await response.json()
       setProducts(data.data || [])
     } catch (error) {
@@ -48,17 +48,15 @@ function SearchPageContent() {
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
           <Search className="h-6 w-6 text-gray-500" />
-          <h1 className="text-2xl font-bold text-gray-900">
-            Search Results
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-900">Search Results</h1>
         </div>
-        
+
         {query && (
           <p className="text-gray-600">
             Showing results for: <span className="font-semibold">"{query}"</span>
           </p>
         )}
-        
+
         {!loading && products.length > 0 && (
           <p className="text-sm text-gray-500 mt-2">
             Found {products.length} product{products.length !== 1 ? 's' : ''}
@@ -87,9 +85,7 @@ function SearchPageContent() {
       {!query && !loading && (
         <div className="text-center py-12">
           <Search className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-600 mb-2">
-            Start your search
-          </h2>
+          <h2 className="text-xl font-semibold text-gray-600 mb-2">Start your search</h2>
           <p className="text-gray-500">
             Enter a product name or keyword to find what you're looking for
           </p>
@@ -100,12 +96,8 @@ function SearchPageContent() {
       {query && !loading && products.length === 0 && !error && (
         <div className="text-center py-12">
           <Search className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-600 mb-2">
-            No products found
-          </h2>
-          <p className="text-gray-500 mb-4">
-            We couldn't find any products matching "{query}"
-          </p>
+          <h2 className="text-xl font-semibold text-gray-600 mb-2">No products found</h2>
+          <p className="text-gray-500 mb-4">We couldn't find any products matching "{query}"</p>
           <div className="text-sm text-gray-500">
             <p>Try:</p>
             <ul className="list-disc list-inside mt-2 space-y-1">

@@ -7,7 +7,7 @@ export const ORDER_STATUS = {
   SHIPPED: 'shipped',
   DELIVERED: 'delivered',
   CANCELLED: 'cancelled',
-} as const;
+} as const
 
 export const ORDER_STATUS_LABELS = {
   [ORDER_STATUS.PENDING]: 'Pending',
@@ -15,7 +15,7 @@ export const ORDER_STATUS_LABELS = {
   [ORDER_STATUS.SHIPPED]: 'Shipped',
   [ORDER_STATUS.DELIVERED]: 'Delivered',
   [ORDER_STATUS.CANCELLED]: 'Cancelled',
-} as const;
+} as const
 
 export const ORDER_STATUS_COLORS = {
   [ORDER_STATUS.PENDING]: 'bg-yellow-100 text-yellow-800',
@@ -23,7 +23,7 @@ export const ORDER_STATUS_COLORS = {
   [ORDER_STATUS.SHIPPED]: 'bg-purple-100 text-purple-800',
   [ORDER_STATUS.DELIVERED]: 'bg-green-100 text-green-800',
   [ORDER_STATUS.CANCELLED]: 'bg-red-100 text-red-800',
-} as const;
+} as const
 
 // Pagination Constants
 export const PAGINATION = {
@@ -33,7 +33,7 @@ export const PAGINATION = {
   PRODUCTS_PER_PAGE: 12,
   ORDERS_PER_PAGE: 20,
   ADMIN_ITEMS_PER_PAGE: 10,
-} as const;
+} as const
 
 // Price Constants
 export const PRICE = {
@@ -41,7 +41,7 @@ export const PRICE = {
   MAX: 1000000,
   CURRENCY: 'BDT',
   CURRENCY_SYMBOL: '৳',
-} as const;
+} as const
 
 // Image Constants
 export const IMAGE = {
@@ -54,7 +54,7 @@ export const IMAGE = {
     MEDIUM: { width: 600, height: 600 },
     LARGE: { width: 1200, height: 1200 },
   },
-} as const;
+} as const
 
 // Form Validation Constants
 export const VALIDATION = {
@@ -86,7 +86,7 @@ export const VALIDATION = {
   SLUG: {
     PATTERN: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
   },
-} as const;
+} as const
 
 // API Constants
 export const API = {
@@ -102,7 +102,7 @@ export const API = {
     UPLOAD: '/api/upload',
     SEARCH: '/api/search',
   },
-} as const;
+} as const
 
 // Local Storage Keys
 export const STORAGE_KEYS = {
@@ -111,7 +111,7 @@ export const STORAGE_KEYS = {
   ADMIN_TOKEN: 'techpinik_admin_token',
   RECENT_SEARCHES: 'techpinik_recent_searches',
   USER_PREFERENCES: 'techpinik_user_preferences',
-} as const;
+} as const
 
 // Route Constants
 export const ROUTES = {
@@ -138,7 +138,7 @@ export const ROUTES = {
       DISTRICTS: '/admin/settings/districts',
     },
   },
-} as const;
+} as const
 
 // Bangladesh Districts with Delivery Charges
 export const BANGLADESH_DISTRICTS = [
@@ -162,7 +162,7 @@ export const BANGLADESH_DISTRICTS = [
   { name: 'Pabna', delivery_charge: 100 },
   { name: 'Sirajganj', delivery_charge: 100 },
   { name: 'Brahmanbaria', delivery_charge: 90 },
-] as const;
+] as const
 
 // Error Messages
 export const ERROR_MESSAGES = {
@@ -176,7 +176,7 @@ export const ERROR_MESSAGES = {
   PRODUCT_OUT_OF_STOCK: 'This product is out of stock.',
   INVALID_PHONE: 'Please enter a valid Bangladesh phone number.',
   REQUIRED_FIELD: 'This field is required.',
-} as const;
+} as const
 
 // Success Messages
 export const SUCCESS_MESSAGES = {
@@ -191,7 +191,7 @@ export const SUCCESS_MESSAGES = {
   CART_UPDATED: 'Cart updated successfully.',
   ITEM_ADDED_TO_CART: 'Item added to cart.',
   ITEM_REMOVED_FROM_CART: 'Item removed from cart.',
-} as const;
+} as const
 
 // Feature Flags
 export const FEATURES = {
@@ -202,14 +202,14 @@ export const FEATURES = {
   ENABLE_MULTI_CURRENCY: false,
   ENABLE_GUEST_CHECKOUT: true,
   ENABLE_ADMIN_NOTIFICATIONS: true,
-} as const;
+} as const
 
 // Theme Configuration
 export const THEME_CONFIG = {
   DEFAULT_THEME: 'light' as const,
   STORAGE_KEY: STORAGE_KEYS.THEME,
   THEMES: ['light', 'dark', 'system'] as const,
-} as const;
+} as const
 
 // Animation Durations (in milliseconds)
 export const ANIMATION = {
@@ -217,7 +217,7 @@ export const ANIMATION = {
   NORMAL: 300,
   SLOW: 500,
   VERY_SLOW: 1000,
-} as const;
+} as const
 
 // Breakpoints (matching Tailwind CSS)
 export const BREAKPOINTS = {
@@ -226,4 +226,4 @@ export const BREAKPOINTS = {
   LG: 1024,
   XL: 1280,
   '2XL': 1536,
-} as const;
+} as const

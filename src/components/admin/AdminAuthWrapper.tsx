@@ -27,11 +27,15 @@ export default function AdminAuthWrapper({ children }: AdminAuthWrapperProps) {
     const unsubscribe = authManager.subscribe((state) => {
       console.log('Auth state updated:', state)
       setAuthState(state)
-      
+
       if (!state.loading) {
         if (!state.user || !state.isAdmin) {
           console.log('User not authenticated or not admin, redirecting to login')
-          console.log('Auth state details:', { user: state.user, isAdmin: state.isAdmin, loading: state.loading })
+          console.log('Auth state details:', {
+            user: state.user,
+            isAdmin: state.isAdmin,
+            loading: state.loading,
+          })
           router.replace('/admin/login?error=unauthorized')
         } else {
           console.log('User authenticated and is admin, allowing access')

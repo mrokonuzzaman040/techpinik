@@ -57,9 +57,7 @@ export default function CategoriesPage() {
 
         {/* Controls */}
         <div className="flex items-center justify-between mb-6">
-          <span className="text-sm text-gray-600">
-            {categories.length} categories found
-          </span>
+          <span className="text-sm text-gray-600">{categories.length} categories found</span>
 
           {/* View Mode Toggle */}
           <div className="hidden md:flex border rounded-lg">
@@ -88,14 +86,16 @@ export default function CategoriesPage() {
             <p className="text-gray-500 text-lg">No categories found</p>
           </div>
         ) : (
-          <div className={`grid gap-4 md:gap-6 ${
-            viewMode === 'grid' 
-              ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6' 
-              : 'grid-cols-1 md:grid-cols-2'
-          }`}>
+          <div
+            className={`grid gap-4 md:gap-6 ${
+              viewMode === 'grid'
+                ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6'
+                : 'grid-cols-1 md:grid-cols-2'
+            }`}
+          >
             {categories.map((category) => (
-              <CategoryCard 
-                key={category.id} 
+              <CategoryCard
+                key={category.id}
                 category={category}
                 className={viewMode === 'list' ? 'md:flex md:items-center md:text-left' : ''}
               />

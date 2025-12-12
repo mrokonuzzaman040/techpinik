@@ -3,12 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { 
-  Search, 
-  ShoppingCart, 
-  User, 
-  Menu
-} from 'lucide-react'
+import { Search, ShoppingCart, User, Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
@@ -96,8 +91,8 @@ export default function Navbar() {
                       className="flex items-center space-x-2 p-2 rounded hover:bg-gray-50"
                     >
                       {category.image_url && (
-                        <img 
-                          src={category.image_url} 
+                        <img
+                          src={category.image_url}
                           alt={category.name}
                           className="w-6 h-6 object-cover rounded"
                         />
@@ -148,15 +143,11 @@ export default function Navbar() {
 
             {/* Cart */}
             <Link href="/cart">
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="relative"
-              >
+              <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="h-5 w-5" />
                 {mounted && totalItems > 0 && (
-                  <Badge 
-                    variant="destructive" 
+                  <Badge
+                    variant="destructive"
                     className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs"
                   >
                     {totalItems}
@@ -192,19 +183,21 @@ export default function Navbar() {
                 {/* Navigation Content */}
                 <div className="flex flex-col px-4 py-6 space-y-1">
                   {/* Home Link */}
-                  <Link 
-                    href="/" 
+                  <Link
+                    href="/"
                     className="flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <span>🏠</span>
                     <span>Home</span>
                   </Link>
-                  
+
                   {/* Categories Section */}
                   <div className="pt-2">
                     <div className="px-4 py-2 mb-2">
-                      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Categories</h3>
+                      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        Categories
+                      </h3>
                     </div>
                     <div className="space-y-1">
                       {categories.length > 0 ? (
@@ -216,8 +209,8 @@ export default function Navbar() {
                             onClick={() => setIsMenuOpen(false)}
                           >
                             {category.image_url ? (
-                              <img 
-                                src={category.image_url} 
+                              <img
+                                src={category.image_url}
                                 alt={category.name}
                                 className="w-8 h-8 object-cover rounded-md"
                               />
@@ -231,7 +224,9 @@ export default function Navbar() {
                           </Link>
                         ))
                       ) : (
-                        <div className="px-4 py-3 text-sm text-gray-500">No categories available</div>
+                        <div className="px-4 py-3 text-sm text-gray-500">
+                          No categories available
+                        </div>
                       )}
                     </div>
                   </div>
@@ -240,26 +235,26 @@ export default function Navbar() {
                   <div className="my-2 border-t border-gray-200"></div>
 
                   {/* Other Links */}
-                  <Link 
-                    href="/products" 
+                  <Link
+                    href="/products"
                     className="flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <span>🛍️</span>
                     <span>All Products</span>
                   </Link>
-                  
-                  <Link 
-                    href="/about" 
+
+                  <Link
+                    href="/about"
                     className="flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <span>ℹ️</span>
                     <span>About Us</span>
                   </Link>
-                  
-                  <Link 
-                    href="/contact" 
+
+                  <Link
+                    href="/contact"
                     className="flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -267,8 +262,8 @@ export default function Navbar() {
                     <span>Contact</span>
                   </Link>
 
-                  <Link 
-                    href="/faq" 
+                  <Link
+                    href="/faq"
                     className="flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -282,26 +277,28 @@ export default function Navbar() {
                   {/* Quick Links */}
                   <div className="pt-2">
                     <div className="px-4 py-2 mb-2">
-                      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Quick Links</h3>
+                      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        Quick Links
+                      </h3>
                     </div>
-                    <Link 
-                      href="/shipping" 
+                    <Link
+                      href="/shipping"
                       className="flex items-center space-x-3 px-4 py-3 rounded-lg text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition-colors"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <span>🚚</span>
                       <span>Shipping Info</span>
                     </Link>
-                    <Link 
-                      href="/returns" 
+                    <Link
+                      href="/returns"
                       className="flex items-center space-x-3 px-4 py-3 rounded-lg text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition-colors"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <span>↩️</span>
                       <span>Returns</span>
                     </Link>
-                    <Link 
-                      href="/warranty" 
+                    <Link
+                      href="/warranty"
                       className="flex items-center space-x-3 px-4 py-3 rounded-lg text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition-colors"
                       onClick={() => setIsMenuOpen(false)}
                     >

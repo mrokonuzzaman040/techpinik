@@ -12,7 +12,8 @@ export default function ShippingPage() {
             Shipping Information
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Fast, reliable, and secure delivery across Bangladesh. Learn about our shipping options and policies.
+            Fast, reliable, and secure delivery across Bangladesh. Learn about our shipping options
+            and policies.
           </p>
         </div>
 
@@ -26,7 +27,8 @@ export default function ShippingPage() {
                 <h2 className="text-2xl font-bold text-gray-900">Free Shipping</h2>
               </div>
               <p className="text-gray-700 leading-relaxed">
-                Enjoy free delivery on all orders over ৳1,000. No hidden fees, no minimum order requirements beyond the threshold.
+                Enjoy free delivery on all orders over ৳1,000. No hidden fees, no minimum order
+                requirements beyond the threshold.
               </p>
             </section>
 
@@ -116,29 +118,43 @@ export default function ShippingPage() {
                 <table className="w-full">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Standard</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Express</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Location
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Standard
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Express
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
                     <tr>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Dhaka City</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        Dhaka City
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">৳60</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">৳120</td>
                     </tr>
                     <tr>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Chittagong City</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        Chittagong City
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">৳80</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">৳150</td>
                     </tr>
                     <tr>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Sylhet</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        Sylhet
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">৳100</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">৳180</td>
                     </tr>
                     <tr>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Other Cities</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        Other Cities
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">৳120</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">৳200</td>
                     </tr>
@@ -160,7 +176,9 @@ export default function ShippingPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Order Processing</h3>
-                    <p className="text-gray-700">We process your order within 24 hours of payment confirmation.</p>
+                    <p className="text-gray-700">
+                      We process your order within 24 hours of payment confirmation.
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -169,7 +187,9 @@ export default function ShippingPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Packaging</h3>
-                    <p className="text-gray-700">Your items are carefully packaged to ensure safe delivery.</p>
+                    <p className="text-gray-700">
+                      Your items are carefully packaged to ensure safe delivery.
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -178,7 +198,9 @@ export default function ShippingPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Shipping</h3>
-                    <p className="text-gray-700">Your package is handed over to our trusted delivery partners.</p>
+                    <p className="text-gray-700">
+                      Your package is handed over to our trusted delivery partners.
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -187,7 +209,9 @@ export default function ShippingPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Tracking</h3>
-                    <p className="text-gray-700">You receive tracking information to monitor your delivery.</p>
+                    <p className="text-gray-700">
+                      You receive tracking information to monitor your delivery.
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -196,7 +220,9 @@ export default function ShippingPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Delivery</h3>
-                    <p className="text-gray-700">Your package is delivered to your specified address.</p>
+                    <p className="text-gray-700">
+                      Your package is delivered to your specified address.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -204,30 +230,36 @@ export default function ShippingPage() {
 
             {/* Important Notes */}
             <section className="bg-yellow-50 p-6 rounded-lg">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Important Notes
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Important Notes</h2>
               <ul className="space-y-2 text-gray-700">
                 <li>• Delivery times may vary during holidays and peak seasons</li>
                 <li>• Someone must be available to receive the package</li>
                 <li>• Valid ID may be required for delivery confirmation</li>
                 <li>• We are not responsible for delays caused by weather or natural disasters</li>
-                <li>• Contact us immediately if you don't receive your package within the estimated time</li>
+                <li>
+                  • Contact us immediately if you don't receive your package within the estimated
+                  time
+                </li>
               </ul>
             </section>
 
             {/* Contact Information */}
             <section className="bg-gray-50 p-6 rounded-lg">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Need Help?
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Need Help?</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                If you have any questions about shipping or delivery, please contact our customer service team:
+                If you have any questions about shipping or delivery, please contact our customer
+                service team:
               </p>
               <div className="space-y-2">
-                <p className="text-gray-700"><strong>Email:</strong> shipping@techpinik.com</p>
-                <p className="text-gray-700"><strong>Phone:</strong> +880 1234 567890</p>
-                <p className="text-gray-700"><strong>Live Chat:</strong> Available 24/7 on our website</p>
+                <p className="text-gray-700">
+                  <strong>Email:</strong> shipping@techpinik.com
+                </p>
+                <p className="text-gray-700">
+                  <strong>Phone:</strong> +880 1234 567890
+                </p>
+                <p className="text-gray-700">
+                  <strong>Live Chat:</strong> Available 24/7 on our website
+                </p>
               </div>
             </section>
           </div>

@@ -3,27 +3,18 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  Edit, 
-  Trash2, 
-  Eye,
-  MoreHorizontal,
-  Package
-} from 'lucide-react'
+import { Plus, Search, Filter, Edit, Trash2, Eye, MoreHorizontal, Package } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '@/components/ui/table'
 import {
   DropdownMenu,
@@ -71,9 +62,7 @@ export default function AdminProductsPage() {
     const supabase = createClient()
 
     try {
-      let query = supabase
-        .from('products')
-        .select(`
+      let query = supabase.from('products').select(`
           *,
           categories (
             id,
@@ -128,14 +117,11 @@ export default function AdminProductsPage() {
     const supabase = createClient()
 
     try {
-      const { error } = await supabase
-        .from('products')
-        .delete()
-        .eq('id', productId)
+      const { error } = await supabase.from('products').delete().eq('id', productId)
 
       if (error) throw error
 
-      setProducts(products.filter(p => p.id !== productId))
+      setProducts(products.filter((p) => p.id !== productId))
       setDeleteProductId(null)
     } catch (error) {
       console.error('Error deleting product:', error)
@@ -153,9 +139,9 @@ export default function AdminProductsPage() {
 
       if (error) throw error
 
-      setProducts(products.map(p => 
-        p.id === productId ? { ...p, is_active: !currentStatus } : p
-      ))
+      setProducts(
+        products.map((p) => (p.id === productId ? { ...p, is_active: !currentStatus } : p))
+      )
     } catch (error) {
       console.error('Error updating product status:', error)
     }
@@ -165,7 +151,7 @@ export default function AdminProductsPage() {
     return new Intl.NumberFormat('en-BD', {
       style: 'currency',
       currency: 'BDT',
-      minimumFractionDigits: 0
+      minimumFractionDigits: 0,
     }).format(amount)
   }
 
@@ -190,7 +176,7 @@ export default function AdminProductsPage() {
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
-      
+
       <div className="flex-1 overflow-auto">
         <div className="p-6">
           {/* Header */}
@@ -333,9 +319,7 @@ export default function AdminProductsPage() {
                               {getStockBadge(product.stock_quantity)}
                             </div>
                           </TableCell>
-                          <TableCell>
-                            {getStatusBadge(product.is_active)}
-                          </TableCell>
+                          <TableCell>{getStatusBadge(product.is_active)}</TableCell>
                           <TableCell className="text-right">
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
@@ -388,8 +372,8 @@ export default function AdminProductsPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the product
-              and remove it from our servers.
+              This action cannot be undone. This will permanently delete the product and remove it
+              from our servers.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

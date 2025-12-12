@@ -8,9 +8,7 @@ export default function TermsPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <FileText className="h-16 w-16 text-yellow-600 mx-auto mb-4" />
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Terms of Service
-          </h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Terms of Service</h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Please read these terms and conditions carefully before using our services.
           </p>
@@ -26,7 +24,9 @@ export default function TermsPage() {
                 1. Acceptance of Terms
               </h2>
               <p className="text-gray-700 leading-relaxed">
-                By accessing and using TechPinik's website and services, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
+                By accessing and using TechPinik's website and services, you accept and agree to be
+                bound by the terms and provision of this agreement. If you do not agree to abide by
+                the above, please do not use this service.
               </p>
             </section>
 
@@ -37,7 +37,9 @@ export default function TermsPage() {
                 2. User Accounts
               </h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                When you create an account with us, you must provide information that is accurate, complete, and current at all times. You are responsible for safeguarding the password and for all activities that occur under your account.
+                When you create an account with us, you must provide information that is accurate,
+                complete, and current at all times. You are responsible for safeguarding the
+                password and for all activities that occur under your account.
               </p>
               <ul className="list-disc list-inside text-gray-700 space-y-2">
                 <li>You must be at least 18 years old to create an account</li>
@@ -53,7 +55,8 @@ export default function TermsPage() {
                 3. Payment Terms
               </h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                All payments are processed securely. We accept various payment methods including credit cards, mobile banking, and cash on delivery.
+                All payments are processed securely. We accept various payment methods including
+                credit cards, mobile banking, and cash on delivery.
               </p>
               <ul className="list-disc list-inside text-gray-700 space-y-2">
                 <li>Payment must be made in Bangladeshi Taka (BDT)</li>
@@ -70,7 +73,8 @@ export default function TermsPage() {
                 4. Shipping and Delivery
               </h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                We strive to deliver your orders as quickly as possible. Delivery times may vary depending on your location and product availability.
+                We strive to deliver your orders as quickly as possible. Delivery times may vary
+                depending on your location and product availability.
               </p>
               <ul className="list-disc list-inside text-gray-700 space-y-2">
                 <li>Free delivery on orders over ৳1,000</li>
@@ -87,7 +91,8 @@ export default function TermsPage() {
                 5. Returns and Refunds
               </h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                We offer a 7-day return policy for most products. Some items may have different return policies.
+                We offer a 7-day return policy for most products. Some items may have different
+                return policies.
               </p>
               <ul className="list-disc list-inside text-gray-700 space-y-2">
                 <li>Items must be in original condition with packaging</li>
@@ -99,36 +104,40 @@ export default function TermsPage() {
 
             {/* Section 6 */}
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                6. Limitation of Liability
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Limitation of Liability</h2>
               <p className="text-gray-700 leading-relaxed">
-                TechPinik shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your use of the service.
+                TechPinik shall not be liable for any indirect, incidental, special, consequential,
+                or punitive damages, including without limitation, loss of profits, data, use,
+                goodwill, or other intangible losses, resulting from your use of the service.
               </p>
             </section>
 
             {/* Section 7 */}
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                7. Changes to Terms
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Changes to Terms</h2>
               <p className="text-gray-700 leading-relaxed">
-                We reserve the right, at our sole discretion, to modify or replace these Terms of Service at any time. If a revision is material, we will try to provide at least 30 days notice prior to any new terms taking effect.
+                We reserve the right, at our sole discretion, to modify or replace these Terms of
+                Service at any time. If a revision is material, we will try to provide at least 30
+                days notice prior to any new terms taking effect.
               </p>
             </section>
 
             {/* Contact Information */}
             <section className="bg-gray-50 p-6 rounded-lg">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Contact Information
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Contact Information</h2>
               <p className="text-gray-700 leading-relaxed">
                 If you have any questions about these Terms of Service, please contact us at:
               </p>
               <div className="mt-4 space-y-2">
-                <p className="text-gray-700"><strong>Email:</strong> legal@techpinik.com</p>
-                <p className="text-gray-700"><strong>Phone:</strong> +880 1234 567890</p>
-                <p className="text-gray-700"><strong>Address:</strong> Dhaka, Bangladesh</p>
+                <p className="text-gray-700">
+                  <strong>Email:</strong> legal@techpinik.com
+                </p>
+                <p className="text-gray-700">
+                  <strong>Phone:</strong> +880 1234 567890
+                </p>
+                <p className="text-gray-700">
+                  <strong>Address:</strong> Dhaka, Bangladesh
+                </p>
               </div>
             </section>
           </div>

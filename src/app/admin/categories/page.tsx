@@ -3,26 +3,18 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { 
-  Plus, 
-  Search, 
-  Edit, 
-  Trash2, 
-  Eye,
-  MoreHorizontal,
-  Tag
-} from 'lucide-react'
+import { Plus, Search, Edit, Trash2, Eye, MoreHorizontal, Tag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '@/components/ui/table'
 import {
   DropdownMenu,
@@ -67,9 +59,7 @@ export default function AdminCategoriesPage() {
     const supabase = createClient()
 
     try {
-      let query = supabase
-        .from('categories')
-        .select(`
+      let query = supabase.from('categories').select(`
           *,
           products (count)
         `)
@@ -108,19 +98,18 @@ export default function AdminCategoriesPage() {
         .eq('category_id', categoryId)
 
       if (count && count > 0) {
-        alert('Cannot delete category with existing products. Please move or delete the products first.')
+        alert(
+          'Cannot delete category with existing products. Please move or delete the products first.'
+        )
         setDeleteCategoryId(null)
         return
       }
 
-      const { error } = await supabase
-        .from('categories')
-        .delete()
-        .eq('id', categoryId)
+      const { error } = await supabase.from('categories').delete().eq('id', categoryId)
 
       if (error) throw error
 
-      setCategories(categories.filter(c => c.id !== categoryId))
+      setCategories(categories.filter((c) => c.id !== categoryId))
       setDeleteCategoryId(null)
     } catch (error) {
       console.error('Error deleting category:', error)
@@ -139,9 +128,9 @@ export default function AdminCategoriesPage() {
 
       if (error) throw error
 
-      setCategories(categories.map(c => 
-        c.id === categoryId ? { ...c, is_active: !currentStatus } : c
-      ))
+      setCategories(
+        categories.map((c) => (c.id === categoryId ? { ...c, is_active: !currentStatus } : c))
+      )
     } catch (error) {
       console.error('Error updating category status:', error)
     }
@@ -158,7 +147,7 @@ export default function AdminCategoriesPage() {
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
-      
+
       <div className="flex-1 overflow-auto">
         <div className="p-6">
           {/* Header */}
@@ -278,9 +267,7 @@ export default function AdminCategoriesPage() {
                               {(category as any).products?.[0]?.count || 0} products
                             </span>
                           </TableCell>
-                          <TableCell>
-                            {getStatusBadge(category.is_active ?? true)}
-                          </TableCell>
+                          <TableCell>{getStatusBadge(category.is_active ?? true)}</TableCell>
                           <TableCell className="text-right">
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
@@ -302,7 +289,9 @@ export default function AdminCategoriesPage() {
                                   </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                  onClick={() => toggleCategoryStatus(category.id, category.is_active ?? true)}
+                                  onClick={() =>
+                                    toggleCategoryStatus(category.id, category.is_active ?? true)
+                                  }
                                 >
                                   {(category.is_active ?? true) ? 'Deactivate' : 'Activate'}
                                 </DropdownMenuItem>
@@ -333,8 +322,8 @@ export default function AdminCategoriesPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the category
-              and remove it from our servers. Make sure there are no products in this category.
+              This action cannot be undone. This will permanently delete the category and remove it
+              from our servers. Make sure there are no products in this category.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

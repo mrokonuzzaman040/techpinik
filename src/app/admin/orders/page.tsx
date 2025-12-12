@@ -2,26 +2,26 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { 
-  Search, 
+import {
+  Search,
   Eye,
   MoreHorizontal,
   ShoppingCart,
   Calendar,
   Download,
-  FileText
+  FileText,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '@/components/ui/table'
 import {
   DropdownMenu,
@@ -56,9 +56,7 @@ export default function AdminOrdersPage() {
     const supabase = createClient()
 
     try {
-      let query = supabase
-        .from('orders')
-        .select(`
+      let query = supabase.from('orders').select(`
           *,
           order_items (
             id,
@@ -70,7 +68,9 @@ export default function AdminOrdersPage() {
 
       // Apply filters
       if (searchQuery) {
-        query = query.or(`order_number.ilike.%${searchQuery}%,customer_name.ilike.%${searchQuery}%,customer_email.ilike.%${searchQuery}%`)
+        query = query.or(
+          `order_number.ilike.%${searchQuery}%,customer_name.ilike.%${searchQuery}%,customer_email.ilike.%${searchQuery}%`
+        )
       }
 
       if (selectedStatus !== 'all') {
@@ -106,9 +106,11 @@ export default function AdminOrdersPage() {
 
       if (error) throw error
 
-      setOrders(orders.map(order => 
-        order.id === orderId ? { ...order, status: newStatus as OrderStatus } : order
-      ))
+      setOrders(
+        orders.map((order) =>
+          order.id === orderId ? { ...order, status: newStatus as OrderStatus } : order
+        )
+      )
     } catch (error) {
       console.error('Error updating order status:', error)
       alert('Error updating order status. Please try again.')
@@ -126,9 +128,11 @@ export default function AdminOrdersPage() {
 
       if (error) throw error
 
-      setOrders(orders.map(order => 
-        order.id === orderId ? { ...order, payment_status: newStatus } : order
-      ))
+      setOrders(
+        orders.map((order) =>
+          order.id === orderId ? { ...order, payment_status: newStatus } : order
+        )
+      )
     } catch (error) {
       console.error('Error updating payment status:', error)
       alert('Error updating payment status. Please try again.')
@@ -142,7 +146,7 @@ export default function AdminOrdersPage() {
     return new Intl.NumberFormat('en-BD', {
       style: 'currency',
       currency: 'BDT',
-      minimumFractionDigits: 0
+      minimumFractionDigits: 0,
     }).format(numAmount)
   }
 
@@ -152,7 +156,7 @@ export default function AdminOrdersPage() {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     })
   }
 
@@ -165,13 +169,19 @@ export default function AdminOrdersPage() {
       return new Intl.NumberFormat('en-BD', {
         style: 'currency',
         currency: 'BDT',
-        minimumFractionDigits: 0
+        minimumFractionDigits: 0,
       }).format(numAmount)
     }
 
     // Calculate safe totals
-    const totalAmount = typeof order.total_amount === 'string' ? parseFloat(order.total_amount) : order.total_amount || 0
-    const shippingCost = typeof order.delivery_charge === 'string' ? parseFloat(order.delivery_charge) : order.delivery_charge || 0
+    const totalAmount =
+      typeof order.total_amount === 'string'
+        ? parseFloat(order.total_amount)
+        : order.total_amount || 0
+    const shippingCost =
+      typeof order.delivery_charge === 'string'
+        ? parseFloat(order.delivery_charge)
+        : order.delivery_charge || 0
     const subtotal = totalAmount - shippingCost
 
     // Create invoice content
@@ -410,14 +420,26 @@ export default function AdminOrdersPage() {
                 </tr>
               </thead>
               <tbody>
-                ${(order as any).order_items?.map((item: { product_name?: string; quantity: number; unit_price: number; total_price?: number }) => `
+                ${
+                  (order as any).order_items
+                    ?.map(
+                      (item: {
+                        product_name?: string
+                        quantity: number
+                        unit_price: number
+                        total_price?: number
+                      }) => `
                   <tr>
                     <td>${item.product_name || 'Product'}</td>
                     <td>${item.quantity || 0}</td>
                     <td>${safeFormatCurrency(item.unit_price)}</td>
-                    <td>${safeFormatCurrency(item.total_price || (item.unit_price * item.quantity))}</td>
+                    <td>${safeFormatCurrency(item.total_price || item.unit_price * item.quantity)}</td>
                   </tr>
-                `).join('') || '<tr><td colspan="4" style="text-align: center; color: #6b7280;">No items found</td></tr>'}
+                `
+                    )
+                    .join('') ||
+                  '<tr><td colspan="4" style="text-align: center; color: #6b7280;">No items found</td></tr>'
+                }
               </tbody>
             </table>
           </div>
@@ -470,11 +492,13 @@ export default function AdminOrdersPage() {
       processing: 'bg-blue-100 text-blue-800',
       shipped: 'bg-purple-100 text-purple-800',
       delivered: 'bg-yellow-100 text-yellow-800',
-      cancelled: 'bg-red-100 text-red-800'
+      cancelled: 'bg-red-100 text-red-800',
     }
 
     return (
-      <Badge className={statusColors[status as keyof typeof statusColors] || 'bg-gray-100 text-gray-800'}>
+      <Badge
+        className={statusColors[status as keyof typeof statusColors] || 'bg-gray-100 text-gray-800'}
+      >
         {status}
       </Badge>
     )
@@ -485,11 +509,13 @@ export default function AdminOrdersPage() {
       pending: 'bg-yellow-100 text-yellow-800',
       paid: 'bg-yellow-100 text-yellow-800',
       failed: 'bg-red-100 text-red-800',
-      refunded: 'bg-gray-100 text-gray-800'
+      refunded: 'bg-gray-100 text-gray-800',
     }
 
     return (
-      <Badge className={statusColors[status as keyof typeof statusColors] || 'bg-gray-100 text-gray-800'}>
+      <Badge
+        className={statusColors[status as keyof typeof statusColors] || 'bg-gray-100 text-gray-800'}
+      >
         {status}
       </Badge>
     )
@@ -502,7 +528,7 @@ export default function AdminOrdersPage() {
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
-      
+
       <div className="flex-1 overflow-auto">
         <div className="p-6">
           {/* Header */}
@@ -578,7 +604,9 @@ export default function AdminOrdersPage() {
                 <div className="text-center py-12">
                   <ShoppingCart className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No orders found</h3>
-                  <p className="text-gray-600">Orders will appear here when customers place them.</p>
+                  <p className="text-gray-600">
+                    Orders will appear here when customers place them.
+                  </p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
@@ -624,12 +652,8 @@ export default function AdminOrdersPage() {
                               </p>
                             </div>
                           </TableCell>
-                          <TableCell>
-                            {getStatusBadge(order.status)}
-                          </TableCell>
-                          <TableCell>
-                            {getPaymentStatusBadge(order.payment_status)}
-                          </TableCell>
+                          <TableCell>{getStatusBadge(order.status)}</TableCell>
+                          <TableCell>{getPaymentStatusBadge(order.payment_status)}</TableCell>
                           <TableCell>
                             <div className="flex items-center gap-1">
                               <Calendar className="h-4 w-4 text-gray-400" />
@@ -662,7 +686,9 @@ export default function AdminOrdersPage() {
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   onClick={() => updateOrderStatus(order.id, 'shipped')}
-                                  disabled={order.status === 'shipped' || order.status === 'delivered'}
+                                  disabled={
+                                    order.status === 'shipped' || order.status === 'delivered'
+                                  }
                                 >
                                   Mark as Shipped
                                 </DropdownMenuItem>
@@ -680,7 +706,9 @@ export default function AdminOrdersPage() {
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   onClick={() => updateOrderStatus(order.id, 'cancelled')}
-                                  disabled={order.status === 'cancelled' || order.status === 'delivered'}
+                                  disabled={
+                                    order.status === 'cancelled' || order.status === 'delivered'
+                                  }
                                   className="text-red-600"
                                 >
                                   Cancel Order

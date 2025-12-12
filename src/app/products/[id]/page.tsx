@@ -4,7 +4,19 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Star, ShoppingCart, Heart, Share2, Truck, Shield, RotateCcw, Minus, Plus, ArrowLeft, Zap } from 'lucide-react'
+import {
+  Star,
+  ShoppingCart,
+  Heart,
+  Share2,
+  Truck,
+  Shield,
+  RotateCcw,
+  Minus,
+  Plus,
+  ArrowLeft,
+  Zap,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -19,7 +31,7 @@ export default function ProductDetailPage() {
   const params = useParams()
   const router = useRouter()
   const productId = params.id as string
-  
+
   const [product, setProduct] = useState<Product | null>(null)
   const [category, setCategory] = useState<Category | null>(null)
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
@@ -89,14 +101,17 @@ export default function ProductDetailPage() {
     router.push('/checkout')
   }
 
-  const discountPercentage = product?.sale_price 
+  const discountPercentage = product?.sale_price
     ? Math.round(((product.price - product.sale_price) / product.price) * 100)
     : 0
 
   // Use product images array
-  const productImages = product?.images && product.images.length > 0 
-    ? product.images 
-    : ['https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=product%20placeholder%20image&image_size=square']
+  const productImages =
+    product?.images && product.images.length > 0
+      ? product.images
+      : [
+          'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=product%20placeholder%20image&image_size=square',
+        ]
 
   if (loading) {
     return (
@@ -127,9 +142,13 @@ export default function ProductDetailPage() {
       <div className="container mx-auto px-4 py-6">
         {/* Breadcrumb */}
         <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
-          <Link href="/" className="hover:text-yellow-600">Home</Link>
+          <Link href="/" className="hover:text-yellow-600">
+            Home
+          </Link>
           <span>/</span>
-          <Link href="/products" className="hover:text-yellow-600">Products</Link>
+          <Link href="/products" className="hover:text-yellow-600">
+            Products
+          </Link>
           {category && (
             <>
               <span>/</span>
@@ -192,14 +211,10 @@ export default function ProductDetailPage() {
           {/* Product Info */}
           <div className="space-y-6">
             {/* Brand */}
-            {product.brand && (
-              <p className="text-sm text-gray-600">{product.brand}</p>
-            )}
+            {product.brand && <p className="text-sm text-gray-600">{product.brand}</p>}
 
             {/* Title */}
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-              {product.name}
-            </h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{product.name}</h1>
 
             {/* Rating */}
             <div className="flex items-center gap-2">
@@ -208,9 +223,7 @@ export default function ProductDetailPage() {
                   <Star
                     key={star}
                     className={`h-5 w-5 ${
-                      star <= 4 
-                        ? 'fill-yellow-400 text-yellow-400' 
-                        : 'text-gray-300'
+                      star <= 4 ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
                     }`}
                   />
                 ))}
@@ -232,7 +245,9 @@ export default function ProductDetailPage() {
               </div>
               {discountPercentage > 0 && (
                 <p className="text-sm text-yellow-600">
-                  You save ৳{(product.price - (product.sale_price || product.price)).toLocaleString()} ({discountPercentage}%)
+                  You save ৳
+                  {(product.price - (product.sale_price || product.price)).toLocaleString()} (
+                  {discountPercentage}%)
                 </p>
               )}
             </div>
@@ -240,7 +255,7 @@ export default function ProductDetailPage() {
             {/* Availability */}
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium">Availability:</span>
-              <Badge 
+              <Badge
                 variant={product.stock_quantity > 0 ? 'default' : 'secondary'}
                 className={product.stock_quantity > 0 ? 'bg-yellow-100 text-yellow-800' : ''}
               >
@@ -250,9 +265,7 @@ export default function ProductDetailPage() {
             </div>
 
             {/* SKU */}
-            {product.sku && (
-              <p className="text-sm text-gray-600">SKU: {product.sku}</p>
-            )}
+            {product.sku && <p className="text-sm text-gray-600">SKU: {product.sku}</p>}
 
             {/* Quantity & Add to Cart */}
             {product.stock_quantity > 0 && (
@@ -278,9 +291,7 @@ export default function ProductDetailPage() {
                       <Plus className="h-4 w-4" />
                     </Button>
                   </div>
-                  <span className="text-sm text-gray-500">
-                    {product.stock_quantity} available
-                  </span>
+                  <span className="text-sm text-gray-500">{product.stock_quantity} available</span>
                 </div>
 
                 <div className="space-y-3">
@@ -289,7 +300,10 @@ export default function ProductDetailPage() {
                       <ShoppingCart className="h-4 w-4 mr-2" />
                       Add to Cart
                     </Button>
-                    <Button onClick={handleOrderNow} className="flex-1 bg-yellow-600 hover:bg-yellow-700">
+                    <Button
+                      onClick={handleOrderNow}
+                      className="flex-1 bg-yellow-600 hover:bg-yellow-700"
+                    >
                       <Zap className="h-4 w-4 mr-2" />
                       Order Now
                     </Button>
@@ -333,13 +347,13 @@ export default function ProductDetailPage() {
                 <TabsTrigger value="specifications">Specifications</TabsTrigger>
                 <TabsTrigger value="reviews">Reviews</TabsTrigger>
               </TabsList>
-              
+
               <TabsContent value="description" className="mt-6">
                 <div className="prose max-w-none">
                   <p className="text-gray-700 leading-relaxed">
                     {product.description || 'No description available for this product.'}
                   </p>
-                  
+
                   {product.key_features && (
                     <div className="mt-6">
                       <h3 className="font-semibold text-gray-900 mb-3">Key Features:</h3>
@@ -350,7 +364,7 @@ export default function ProductDetailPage() {
                   )}
                 </div>
               </TabsContent>
-              
+
               <TabsContent value="specifications" className="mt-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {product.brand && (
@@ -385,10 +399,12 @@ export default function ProductDetailPage() {
                   )}
                 </div>
               </TabsContent>
-              
+
               <TabsContent value="reviews" className="mt-6">
                 <div className="text-center py-8">
-                  <p className="text-gray-600">No reviews yet. Be the first to review this product!</p>
+                  <p className="text-gray-600">
+                    No reviews yet. Be the first to review this product!
+                  </p>
                   <Button className="mt-4">Write a Review</Button>
                 </div>
               </TabsContent>

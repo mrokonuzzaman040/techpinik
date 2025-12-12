@@ -1,4 +1,16 @@
-import { HelpCircle, Search, MessageCircle, Phone, Mail, Clock, BookOpen, Users, CreditCard, Truck, RotateCcw } from 'lucide-react'
+import {
+  HelpCircle,
+  Search,
+  MessageCircle,
+  Phone,
+  Mail,
+  Clock,
+  BookOpen,
+  Users,
+  CreditCard,
+  Truck,
+  RotateCcw,
+} from 'lucide-react'
 import MainLayout from '@/components/layout/MainLayout'
 
 export default function HelpPage() {
@@ -8,9 +20,7 @@ export default function HelpPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <HelpCircle className="h-16 w-16 text-yellow-600 mx-auto mb-4" />
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Help Center
-          </h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Help Center</h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Find answers to common questions and get the support you need.
           </p>
@@ -103,44 +113,65 @@ export default function HelpPage() {
 
             {/* FAQ Section */}
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                Frequently Asked Questions
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
               <div className="space-y-6">
                 <div className="bg-white border border-gray-200 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">How do I track my order?</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                    How do I track my order?
+                  </h3>
                   <p className="text-gray-700">
-                    Once your order is shipped, you'll receive a tracking number via email and SMS. You can track your order status in your account dashboard or by visiting our tracking page.
+                    Once your order is shipped, you'll receive a tracking number via email and SMS.
+                    You can track your order status in your account dashboard or by visiting our
+                    tracking page.
                   </p>
                 </div>
                 <div className="bg-white border border-gray-200 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">What payment methods do you accept?</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                    What payment methods do you accept?
+                  </h3>
                   <p className="text-gray-700">
-                    We accept all major credit cards (Visa, Mastercard, American Express), mobile banking (bKash, Rocket, Nagad), bank transfers, and cash on delivery (COD) for eligible orders.
+                    We accept all major credit cards (Visa, Mastercard, American Express), mobile
+                    banking (bKash, Rocket, Nagad), bank transfers, and cash on delivery (COD) for
+                    eligible orders.
                   </p>
                 </div>
                 <div className="bg-white border border-gray-200 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">How long does delivery take?</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                    How long does delivery take?
+                  </h3>
                   <p className="text-gray-700">
-                    Standard delivery takes 2-5 business days, while express delivery takes 1-2 business days. Delivery times may vary based on your location and product availability.
+                    Standard delivery takes 2-5 business days, while express delivery takes 1-2
+                    business days. Delivery times may vary based on your location and product
+                    availability.
                   </p>
                 </div>
                 <div className="bg-white border border-gray-200 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Can I return or exchange items?</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                    Can I return or exchange items?
+                  </h3>
                   <p className="text-gray-700">
-                    Yes, we offer a 7-day return policy for most products. Items must be in original condition with packaging. Some items like software and digital products are non-returnable.
+                    Yes, we offer a 7-day return policy for most products. Items must be in original
+                    condition with packaging. Some items like software and digital products are
+                    non-returnable.
                   </p>
                 </div>
                 <div className="bg-white border border-gray-200 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Is my personal information secure?</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                    Is my personal information secure?
+                  </h3>
                   <p className="text-gray-700">
-                    Absolutely. We use SSL encryption and secure payment processing to protect your personal and financial information. We never share your data with third parties without your consent.
+                    Absolutely. We use SSL encryption and secure payment processing to protect your
+                    personal and financial information. We never share your data with third parties
+                    without your consent.
                   </p>
                 </div>
                 <div className="bg-white border border-gray-200 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Do you offer warranty on products?</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                    Do you offer warranty on products?
+                  </h3>
                   <p className="text-gray-700">
-                    Yes, most products come with manufacturer warranty. Warranty terms vary by product and brand. Check the product page for specific warranty information.
+                    Yes, most products come with manufacturer warranty. Warranty terms vary by
+                    product and brand. Check the product page for specific warranty information.
                   </p>
                 </div>
               </div>
@@ -161,7 +192,9 @@ export default function HelpPage() {
                     <MessageCircle className="h-8 w-8 text-yellow-600" />
                   </div>
                   <h3 className="font-semibold text-gray-900 mb-2">Live Chat</h3>
-                  <p className="text-gray-700 text-sm mb-3">Get instant help from our support team</p>
+                  <p className="text-gray-700 text-sm mb-3">
+                    Get instant help from our support team
+                  </p>
                   <button className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors">
                     Start Chat
                   </button>
@@ -171,8 +204,13 @@ export default function HelpPage() {
                     <Mail className="h-8 w-8 text-blue-600" />
                   </div>
                   <h3 className="font-semibold text-gray-900 mb-2">Email Support</h3>
-                  <p className="text-gray-700 text-sm mb-3">Send us an email and we'll respond within 24 hours</p>
-                  <a href="mailto:support@techpinik.com" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors inline-block">
+                  <p className="text-gray-700 text-sm mb-3">
+                    Send us an email and we'll respond within 24 hours
+                  </p>
+                  <a
+                    href="mailto:support@techpinik.com"
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors inline-block"
+                  >
                     Send Email
                   </a>
                 </div>
@@ -182,7 +220,10 @@ export default function HelpPage() {
                   </div>
                   <h3 className="font-semibold text-gray-900 mb-2">Phone Support</h3>
                   <p className="text-gray-700 text-sm mb-3">Call us for immediate assistance</p>
-                  <a href="tel:+8801234567890" className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors inline-block">
+                  <a
+                    href="tel:+8801234567890"
+                    className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors inline-block"
+                  >
                     Call Now
                   </a>
                 </div>
@@ -213,9 +254,7 @@ export default function HelpPage() {
 
             {/* Contact Information */}
             <section className="bg-yellow-50 p-6 rounded-lg">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Get in Touch
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Get in Touch</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-2">General Inquiries</h3>

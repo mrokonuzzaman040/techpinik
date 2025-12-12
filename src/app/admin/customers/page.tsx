@@ -6,7 +6,13 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import AdminSidebar from '@/components/layout/AdminSidebar'
 import AdminAuthWrapper from '@/components/admin/AdminAuthWrapper'
 import { createClient } from '@/lib/supabase'
@@ -27,14 +33,13 @@ export default function AdminCustomersPage() {
     const supabase = createClient()
 
     try {
-      let query = supabase
-        .from('customers')
-        .select('*')
-        .order('created_at', { ascending: false })
+      let query = supabase.from('customers').select('*').order('created_at', { ascending: false })
 
       // Apply filters
       if (searchQuery) {
-        query = query.or(`first_name.ilike.%${searchQuery}%,last_name.ilike.%${searchQuery}%,email.ilike.%${searchQuery}%`)
+        query = query.or(
+          `first_name.ilike.%${searchQuery}%,last_name.ilike.%${searchQuery}%,email.ilike.%${searchQuery}%`
+        )
       }
 
       if (selectedStatus !== 'all') {
@@ -65,7 +70,7 @@ export default function AdminCustomersPage() {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     })
   }
 
@@ -80,9 +85,9 @@ export default function AdminCustomersPage() {
       customer.city,
       customer.state,
       customer.postal_code,
-      customer.country
+      customer.country,
     ].filter(Boolean)
-    
+
     return parts.join(', ')
   }
 
@@ -90,7 +95,7 @@ export default function AdminCustomersPage() {
     <AdminAuthWrapper>
       <div className="flex h-screen bg-gray-50">
         <AdminSidebar />
-        
+
         <div className="flex-1 overflow-auto">
           <div className="p-6">
             {/* Header */}
@@ -155,9 +160,13 @@ export default function AdminCustomersPage() {
                     <table className="w-full">
                       <thead>
                         <tr className="border-b">
-                          <th className="text-left py-3 px-4 font-medium text-gray-700">Customer</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-700">
+                            Customer
+                          </th>
                           <th className="text-left py-3 px-4 font-medium text-gray-700">Contact</th>
-                          <th className="text-left py-3 px-4 font-medium text-gray-700">Location</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-700">
+                            Location
+                          </th>
                           <th className="text-left py-3 px-4 font-medium text-gray-700">Status</th>
                           <th className="text-left py-3 px-4 font-medium text-gray-700">Joined</th>
                           <th className="text-left py-3 px-4 font-medium text-gray-700">Actions</th>
@@ -207,9 +216,7 @@ export default function AdminCustomersPage() {
                                 <span className="text-gray-400 text-sm">No address</span>
                               )}
                             </td>
-                            <td className="py-4 px-4">
-                              {getStatusBadge(customer.is_active)}
-                            </td>
+                            <td className="py-4 px-4">{getStatusBadge(customer.is_active)}</td>
                             <td className="py-4 px-4 text-sm text-gray-600">
                               {formatDate(customer.created_at)}
                             </td>
@@ -221,7 +228,11 @@ export default function AdminCustomersPage() {
                                 <Button variant="ghost" size="sm">
                                   <Edit className="h-4 w-4" />
                                 </Button>
-                                <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="text-red-600 hover:text-red-700"
+                                >
                                   <Trash2 className="h-4 w-4" />
                                 </Button>
                               </div>

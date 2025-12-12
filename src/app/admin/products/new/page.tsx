@@ -8,7 +8,13 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import AdminSidebar from '@/components/layout/AdminSidebar'
 import { createClient } from '@/lib/supabase'
@@ -19,7 +25,7 @@ export default function AddProductPage() {
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(false)
   const [imagePreview, setImagePreview] = useState<string>('')
-  
+
   const [formData, setFormData] = useState<ProductForm>({
     name: '',
     description: '',
@@ -39,7 +45,7 @@ export default function AddProductPage() {
     brand: '',
     origin: '',
     key_features: [],
-    box_contents: []
+    box_contents: [],
   })
 
   useEffect(() => {
@@ -63,9 +69,9 @@ export default function AddProductPage() {
   }
 
   const handleInputChange = (field: keyof ProductForm, value: any) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }))
   }
 
@@ -76,7 +82,7 @@ export default function AddProductPage() {
       reader.onload = (e) => {
         const result = e.target?.result as string
         setImagePreview(result)
-        setFormData(prev => ({ ...prev, image_url: result }))
+        setFormData((prev) => ({ ...prev, image_url: result }))
       }
       reader.readAsDataURL(file)
     }
@@ -84,7 +90,7 @@ export default function AddProductPage() {
 
   const removeImage = () => {
     setImagePreview('')
-    setFormData(prev => ({ ...prev, image_url: '' }))
+    setFormData((prev) => ({ ...prev, image_url: '' }))
   }
 
   const generateSKU = () => {
@@ -108,12 +114,10 @@ export default function AddProductPage() {
         sku,
         price: Number(formData.price),
         sale_price: formData.sale_price ? Number(formData.sale_price) : null,
-        stock_quantity: Number(formData.stock_quantity)
+        stock_quantity: Number(formData.stock_quantity),
       }
 
-      const { error } = await supabase
-        .from('products')
-        .insert([productData])
+      const { error } = await supabase.from('products').insert([productData])
 
       if (error) throw error
 
@@ -129,7 +133,7 @@ export default function AddProductPage() {
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
-      
+
       <div className="flex-1 overflow-auto">
         <div className="p-6">
           {/* Header */}

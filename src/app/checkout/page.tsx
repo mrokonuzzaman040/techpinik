@@ -9,7 +9,13 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { Separator } from '@/components/ui/separator'
 
@@ -21,7 +27,7 @@ import { District, CheckoutForm } from '@/types'
 export default function CheckoutPage() {
   const router = useRouter()
   const { items, getTotalItems, getTotalPrice, clearCart } = useCartStore()
-  
+
   const [districts, setDistricts] = useState<District[]>([])
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState<CheckoutForm>({
@@ -29,7 +35,7 @@ export default function CheckoutPage() {
     customer_phone: '',
     customer_address: '',
     district_id: '',
-    notes: ''
+    notes: '',
   })
 
   useEffect(() => {
@@ -54,13 +60,13 @@ export default function CheckoutPage() {
     fetchDistricts()
   }, [items.length, router])
 
-  const selectedDistrict = districts.find(d => d.id === formData.district_id)
+  const selectedDistrict = districts.find((d) => d.id === formData.district_id)
   const subtotal = getTotalPrice()
   const deliveryCharge = selectedDistrict?.delivery_charge || 60
   const total = subtotal + deliveryCharge
 
   const handleInputChange = (field: keyof CheckoutForm, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
+    setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -79,7 +85,7 @@ export default function CheckoutPage() {
         notes: formData.notes || '',
         total_amount: total,
         delivery_charge: deliveryCharge,
-        status: 'pending' as const
+        status: 'pending' as const,
       }
 
       console.log('Submitting order data:', orderData)
@@ -98,18 +104,16 @@ export default function CheckoutPage() {
       console.log('Order created successfully:', order)
 
       // Create order items - map to actual database schema
-      const orderItems = items.map(item => ({
+      const orderItems = items.map((item) => ({
         order_id: order.id,
         product_id: item.product.id,
         quantity: item.quantity,
-        unit_price: item.product.sale_price || item.product.price
+        unit_price: item.product.sale_price || item.product.price,
       }))
 
       console.log('Submitting order items:', orderItems)
 
-      const { error: itemsError } = await supabase
-        .from('order_items')
-        .insert(orderItems)
+      const { error: itemsError } = await supabase.from('order_items').insert(orderItems)
 
       if (itemsError) {
         console.error('Order items creation error:', itemsError)
@@ -123,7 +127,7 @@ export default function CheckoutPage() {
       router.push(`/order-confirmation/${order.id}`)
     } catch (error) {
       console.error('Error placing order:', error)
-      
+
       // Better error handling
       let errorMessage = 'Failed to place order. Please try again.'
       if (error && typeof error === 'object' && 'message' in error) {
@@ -131,7 +135,7 @@ export default function CheckoutPage() {
       } else if (error && typeof error === 'object' && 'details' in error) {
         errorMessage = `Error: ${error.details}`
       }
-      
+
       alert(errorMessage)
     } finally {
       setLoading(false)
@@ -252,8 +256,6 @@ export default function CheckoutPage() {
                   </div>
                 </CardContent>
               </Card>
-
-
             </div>
 
             {/* Order Summary */}
@@ -280,7 +282,10 @@ export default function CheckoutPage() {
                           <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
                         </div>
                         <div className="text-sm font-medium">
-                          ৳{((item.product.sale_price || item.product.price) * item.quantity).toLocaleString()}
+                          ৳
+                          {(
+                            (item.product.sale_price || item.product.price) * item.quantity
+                          ).toLocaleString()}
                         </div>
                       </div>
                     ))}

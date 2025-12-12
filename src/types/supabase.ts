@@ -1,13 +1,7 @@
 // Supabase Database Types
 // This file contains types that match the Supabase database schema
 
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 export interface Database {
   public: {
@@ -45,12 +39,12 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "categories_parent_id_fkey"
-            columns: ["parent_id"]
+            foreignKeyName: 'categories_parent_id_fkey'
+            columns: ['parent_id']
             isOneToOne: false
-            referencedRelation: "categories"
-            referencedColumns: ["id"]
-          }
+            referencedRelation: 'categories'
+            referencedColumns: ['id']
+          },
         ]
       }
       districts: {
@@ -98,19 +92,19 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "order_items_order_id_fkey"
-            columns: ["order_id"]
+            foreignKeyName: 'order_items_order_id_fkey'
+            columns: ['order_id']
             isOneToOne: false
-            referencedRelation: "orders"
-            referencedColumns: ["id"]
+            referencedRelation: 'orders'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "order_items_product_id_fkey"
-            columns: ["product_id"]
+            foreignKeyName: 'order_items_product_id_fkey'
+            columns: ['product_id']
             isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["id"]
-          }
+            referencedRelation: 'products'
+            referencedColumns: ['id']
+          },
         ]
       }
       orders: {
@@ -155,12 +149,12 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "orders_district_id_fkey"
-            columns: ["district_id"]
+            foreignKeyName: 'orders_district_id_fkey'
+            columns: ['district_id']
             isOneToOne: false
-            referencedRelation: "districts"
-            referencedColumns: ["id"]
-          }
+            referencedRelation: 'districts'
+            referencedColumns: ['id']
+          },
         ]
       }
       products: {
@@ -205,12 +199,12 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "products_category_id_fkey"
-            columns: ["category_id"]
+            foreignKeyName: 'products_category_id_fkey'
+            columns: ['category_id']
             isOneToOne: false
-            referencedRelation: "categories"
-            referencedColumns: ["id"]
-          }
+            referencedRelation: 'categories'
+            referencedColumns: ['id']
+          },
         ]
       }
       slider_items: {
@@ -266,9 +260,12 @@ export interface Database {
 }
 
 // Helper types for easier usage
-export type Tables<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row']
-export type TablesInsert<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Insert']
-export type TablesUpdate<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Update']
+export type Tables<T extends keyof Database['public']['Tables']> =
+  Database['public']['Tables'][T]['Row']
+export type TablesInsert<T extends keyof Database['public']['Tables']> =
+  Database['public']['Tables'][T]['Insert']
+export type TablesUpdate<T extends keyof Database['public']['Tables']> =
+  Database['public']['Tables'][T]['Update']
 
 // Specific table types
 export type CategoryRow = Tables<'categories'>

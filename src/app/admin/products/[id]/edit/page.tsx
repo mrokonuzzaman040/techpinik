@@ -48,7 +48,7 @@ export default function EditProductPage() {
     warranty: '',
     category_id: '',
     availability_status: 'in_stock',
-    is_active: true
+    is_active: true,
   })
 
   useEffect(() => {
@@ -80,7 +80,7 @@ export default function EditProductPage() {
       setProduct(productData)
       setCategories(categoriesData || [])
       setImagePreview(productData.image_url || '')
-      
+
       // Populate form data
       setFormData({
         name: productData.name || '',
@@ -98,7 +98,7 @@ export default function EditProductPage() {
         warranty: productData.warranty || '',
         category_id: productData.category_id || '',
         availability_status: productData.availability_status || 'in_stock',
-        is_active: productData.is_active ?? true
+        is_active: productData.is_active ?? true,
       })
     } catch (error) {
       console.error('Error fetching data:', error)
@@ -109,9 +109,9 @@ export default function EditProductPage() {
   }
 
   const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }))
   }
 
@@ -138,17 +138,13 @@ export default function EditProductPage() {
     const fileName = `${Date.now()}.${fileExt}`
     const filePath = `products/${fileName}`
 
-    const { error: uploadError } = await supabase.storage
-      .from('images')
-      .upload(filePath, file)
+    const { error: uploadError } = await supabase.storage.from('images').upload(filePath, file)
 
     if (uploadError) {
       throw uploadError
     }
 
-    const { data } = supabase.storage
-      .from('images')
-      .getPublicUrl(filePath)
+    const { data } = supabase.storage.from('images').getPublicUrl(filePath)
 
     return data.publicUrl
   }
@@ -159,9 +155,9 @@ export default function EditProductPage() {
 
     try {
       const supabase = createClient()
-      
+
       let imageUrl = product?.image_url || ''
-      
+
       // Upload new image if selected
       if (imageFile) {
         imageUrl = await uploadImage(imageFile)
@@ -187,13 +183,10 @@ export default function EditProductPage() {
         availability_status: formData.availability_status,
         is_active: formData.is_active,
         image_url: imageUrl,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       }
 
-      const { error } = await supabase
-        .from('products')
-        .update(updateData)
-        .eq('id', productId)
+      const { error } = await supabase.from('products').update(updateData).eq('id', productId)
 
       if (error) throw error
 
@@ -226,9 +219,7 @@ export default function EditProductPage() {
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Product Not Found</h2>
             <p className="text-gray-600 mb-4">The product you're looking for doesn't exist.</p>
-            <Button onClick={() => router.push('/admin/products')}>
-              Back to Products
-            </Button>
+            <Button onClick={() => router.push('/admin/products')}>Back to Products</Button>
           </div>
         </div>
       </div>
@@ -238,7 +229,7 @@ export default function EditProductPage() {
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
-      
+
       <div className="flex-1 overflow-auto">
         <div className="p-6">
           {/* Header */}
@@ -431,7 +422,7 @@ export default function EditProductPage() {
                       </button>
                     </div>
                   )}
-                  
+
                   <div>
                     <Label htmlFor="image">Upload New Image</Label>
                     <div className="mt-1 flex items-center gap-4">
@@ -450,9 +441,7 @@ export default function EditProductPage() {
                         <Upload className="h-4 w-4 mr-2" />
                         Choose Image
                       </Button>
-                      <span className="text-sm text-gray-500">
-                        JPG, PNG up to 5MB
-                      </span>
+                      <span className="text-sm text-gray-500">JPG, PNG up to 5MB</span>
                     </div>
                   </div>
                 </div>
@@ -468,7 +457,10 @@ export default function EditProductPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="category_id">Category *</Label>
-                    <Select value={formData.category_id} onValueChange={(value) => handleInputChange('category_id', value)}>
+                    <Select
+                      value={formData.category_id}
+                      onValueChange={(value) => handleInputChange('category_id', value)}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select a category" />
                       </SelectTrigger>
@@ -484,7 +476,10 @@ export default function EditProductPage() {
 
                   <div>
                     <Label htmlFor="availability_status">Availability Status</Label>
-                    <Select value={formData.availability_status} onValueChange={(value) => handleInputChange('availability_status', value)}>
+                    <Select
+                      value={formData.availability_status}
+                      onValueChange={(value) => handleInputChange('availability_status', value)}
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>

@@ -18,19 +18,19 @@ export default function AddCategoryPage() {
   const [loading, setLoading] = useState(false)
   const [imagePreview, setImagePreview] = useState<string>('')
   const [bannerPreview, setBannerPreview] = useState<string>('')
-  
+
   const [formData, setFormData] = useState<CategoryForm>({
     name: '',
     description: '',
     image_url: '',
     banner_image_url: '',
-    is_active: true
+    is_active: true,
   })
 
   const handleInputChange = (field: keyof CategoryForm, value: any) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }))
   }
 
@@ -42,10 +42,10 @@ export default function AddCategoryPage() {
         const result = e.target?.result as string
         if (type === 'image') {
           setImagePreview(result)
-          setFormData(prev => ({ ...prev, image_url: result }))
+          setFormData((prev) => ({ ...prev, image_url: result }))
         } else {
           setBannerPreview(result)
-          setFormData(prev => ({ ...prev, banner_image_url: result }))
+          setFormData((prev) => ({ ...prev, banner_image_url: result }))
         }
       }
       reader.readAsDataURL(file)
@@ -55,10 +55,10 @@ export default function AddCategoryPage() {
   const removeImage = (type: 'image' | 'banner') => {
     if (type === 'image') {
       setImagePreview('')
-      setFormData(prev => ({ ...prev, image_url: '' }))
+      setFormData((prev) => ({ ...prev, image_url: '' }))
     } else {
       setBannerPreview('')
-      setFormData(prev => ({ ...prev, banner_image_url: '' }))
+      setFormData((prev) => ({ ...prev, banner_image_url: '' }))
     }
   }
 
@@ -69,9 +69,7 @@ export default function AddCategoryPage() {
     const supabase = createClient()
 
     try {
-      const { error } = await supabase
-        .from('categories')
-        .insert([formData])
+      const { error } = await supabase.from('categories').insert([formData])
 
       if (error) throw error
 
@@ -87,7 +85,7 @@ export default function AddCategoryPage() {
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
-      
+
       <div className="flex-1 overflow-auto">
         <div className="p-6">
           {/* Header */}

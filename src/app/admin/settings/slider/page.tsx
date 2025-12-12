@@ -45,7 +45,7 @@ export default function SliderManagementPage() {
     button_text: '',
     button_link: '',
     is_active: true,
-    sort_order: 1
+    sort_order: 1,
   })
 
   useEffect(() => {
@@ -56,10 +56,7 @@ export default function SliderManagementPage() {
     const supabase = createClient()
 
     try {
-      const { data, error } = await supabase
-        .from('slider_items')
-        .select('*')
-        .order('sort_order')
+      const { data, error } = await supabase.from('slider_items').select('*').order('sort_order')
 
       if (error) throw error
 
@@ -79,7 +76,7 @@ export default function SliderManagementPage() {
       button_text: '',
       button_link: '',
       is_active: true,
-      sort_order: 1
+      sort_order: 1,
     })
     setImagePreview('')
     setImageFile(null)
@@ -88,7 +85,7 @@ export default function SliderManagementPage() {
 
   const openAddDialog = () => {
     resetForm()
-    setFormData(prev => ({ ...prev, sort_order: sliders.length + 1 }))
+    setFormData((prev) => ({ ...prev, sort_order: sliders.length + 1 }))
     setIsDialogOpen(true)
   }
 
@@ -101,7 +98,7 @@ export default function SliderManagementPage() {
       button_text: slider.button_text || '',
       button_link: slider.button_link || '',
       is_active: slider.is_active ?? true,
-      sort_order: slider.sort_order || 1
+      sort_order: slider.sort_order || 1,
     })
     setImagePreview(slider.image_url || '')
     setImageFile(null)
@@ -109,9 +106,9 @@ export default function SliderManagementPage() {
   }
 
   const handleInputChange = (field: string, value: string | boolean | number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }))
   }
 
@@ -138,17 +135,13 @@ export default function SliderManagementPage() {
     const fileName = `${Date.now()}.${fileExt}`
     const filePath = `sliders/${fileName}`
 
-    const { error: uploadError } = await supabase.storage
-      .from('images')
-      .upload(filePath, file)
+    const { error: uploadError } = await supabase.storage.from('images').upload(filePath, file)
 
     if (uploadError) {
       throw uploadError
     }
 
-    const { data } = supabase.storage
-      .from('images')
-      .getPublicUrl(filePath)
+    const { data } = supabase.storage.from('images').getPublicUrl(filePath)
 
     return data.publicUrl
   }
@@ -159,9 +152,9 @@ export default function SliderManagementPage() {
 
     try {
       const supabase = createClient()
-      
+
       let imageUrl = editingSlider?.image_url || ''
-      
+
       // Upload new image if selected
       if (imageFile) {
         imageUrl = await uploadImage(imageFile)
@@ -179,7 +172,7 @@ export default function SliderManagementPage() {
         button_link: formData.button_link,
         image_url: imageUrl,
         is_active: formData.is_active,
-        sort_order: formData.sort_order
+        sort_order: formData.sort_order,
       }
 
       if (editingSlider) {
@@ -192,9 +185,7 @@ export default function SliderManagementPage() {
         if (error) throw error
       } else {
         // Create new slider
-        const { error } = await supabase
-          .from('slider_items')
-          .insert([sliderData])
+        const { error } = await supabase.from('slider_items').insert([sliderData])
 
         if (error) throw error
       }
@@ -217,9 +208,9 @@ export default function SliderManagementPage() {
     try {
       const { error } = await supabase
         .from('slider_items')
-        .update({ 
+        .update({
           is_active: !slider.is_active,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .eq('id', slider.id)
 
@@ -240,10 +231,7 @@ export default function SliderManagementPage() {
     const supabase = createClient()
 
     try {
-      const { error } = await supabase
-        .from('slider_items')
-        .delete()
-        .eq('id', slider.id)
+      const { error } = await supabase.from('slider_items').delete().eq('id', slider.id)
 
       if (error) throw error
 
@@ -269,7 +257,7 @@ export default function SliderManagementPage() {
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
-      
+
       <div className="flex-1 overflow-auto">
         <div className="p-6">
           {/* Header */}
@@ -397,9 +385,7 @@ export default function SliderManagementPage() {
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>
-                  {editingSlider ? 'Edit Slider' : 'Add New Slider'}
-                </DialogTitle>
+                <DialogTitle>{editingSlider ? 'Edit Slider' : 'Add New Slider'}</DialogTitle>
               </DialogHeader>
 
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -422,7 +408,7 @@ export default function SliderManagementPage() {
                       </button>
                     </div>
                   )}
-                  
+
                   <div className="mt-2">
                     <Input
                       id="image"
@@ -439,9 +425,7 @@ export default function SliderManagementPage() {
                       <Upload className="h-4 w-4 mr-2" />
                       {imagePreview ? 'Change Image' : 'Upload Image'}
                     </Button>
-                    <p className="text-sm text-gray-500 mt-1">
-                      Recommended size: 1920x800px
-                    </p>
+                    <p className="text-sm text-gray-500 mt-1">Recommended size: 1920x800px</p>
                   </div>
                 </div>
 
@@ -506,7 +490,9 @@ export default function SliderManagementPage() {
                       id="sort_order"
                       type="number"
                       value={formData.sort_order}
-                      onChange={(e) => handleInputChange('sort_order', parseInt(e.target.value) || 1)}
+                      onChange={(e) =>
+                        handleInputChange('sort_order', parseInt(e.target.value) || 1)
+                      }
                       min="1"
                     />
                   </div>

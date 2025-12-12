@@ -3,6 +3,7 @@
 ## Feature Added
 
 ### **Invoice Generation for Orders** ✅
+
 - **Generate Invoice Button**: Added to each order's dropdown menu
 - **Professional Invoice**: HTML-based invoice with company branding
 - **Automatic Download**: Downloads as HTML file with order number
@@ -11,6 +12,7 @@
 ## Implementation Details
 
 ### **Invoice Features:**
+
 - ✅ **Company Header**: TechPinik branding with company name
 - ✅ **Customer Information**: Bill-to details with name, email, phone, address
 - ✅ **Invoice Details**: Order number, date, payment method, status
@@ -22,6 +24,7 @@
 ### **Technical Implementation:**
 
 #### **Invoice Generation Function:**
+
 ```typescript
 const generateInvoice = (order: Order) => {
   // Creates HTML invoice with:
@@ -35,6 +38,7 @@ const generateInvoice = (order: Order) => {
 ```
 
 #### **Download Mechanism:**
+
 ```typescript
 // Creates HTML blob and downloads as file
 const blob = new Blob([invoiceContent], { type: 'text/html' })
@@ -45,6 +49,7 @@ link.download = `invoice-${order.order_number}.html`
 ```
 
 ### **UI Integration:**
+
 - ✅ **Dropdown Menu**: Added "Generate Invoice" option with FileText icon
 - ✅ **One-Click Action**: Click to generate and download invoice
 - ✅ **File Naming**: Automatic naming with order number
@@ -53,38 +58,46 @@ link.download = `invoice-${order.order_number}.html`
 ## Invoice Content Structure
 
 ### **Header Section:**
+
 - Company name (TechPinik)
 - Tagline (Your Trusted Electronics Store)
 
 ### **Invoice Details:**
+
 - **Left Side**: Customer information (Bill To)
 - **Right Side**: Invoice details (number, date, payment, status)
 
 ### **Product Table:**
+
 - Item name
 - Quantity
 - Unit price
 - Total price
 
 ### **Financial Summary:**
+
 - Subtotal (before shipping)
 - Shipping cost
 - Grand total (highlighted)
 
 ### **Footer:**
+
 - Thank you message
 - Support contact information
 
 ## Files Modified:
+
 - ✅ `src/app/admin/orders/page.tsx` - Added invoice generation functionality
 
 ## Usage:
+
 1. **Navigate** to `/admin/orders`
 2. **Click** the three-dot menu (⋮) for any order
 3. **Select** "Generate Invoice"
 4. **Download** starts automatically as HTML file
 
 ## Benefits:
+
 - ✅ **Professional Invoices**: Branded, printable invoices
 - ✅ **Complete Information**: All order details included
 - ✅ **Easy Access**: One-click generation from orders list

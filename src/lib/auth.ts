@@ -12,7 +12,7 @@ export class AuthManager {
   private authState: AuthState = {
     user: null,
     isAdmin: false,
-    loading: true
+    loading: true,
   }
   private listeners: ((state: AuthState) => void)[] = []
 
@@ -30,10 +30,13 @@ export class AuthManager {
   private async initializeAuth() {
     try {
       console.log('Initializing authentication...')
-      
+
       // Get initial session
-      const { data: { session }, error } = await supabase.auth.getSession()
-      
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession()
+
       if (error) {
         console.error('Session error:', error)
         this.updateState({ user: null, isAdmin: false, loading: false })
@@ -51,7 +54,7 @@ export class AuthManager {
       // Listen for auth changes
       supabase.auth.onAuthStateChange(async (event, session) => {
         console.log('Auth state changed:', event, session?.user?.email)
-        
+
         if (session?.user) {
           await this.checkAdminStatus(session.user)
         } else {
@@ -67,9 +70,9 @@ export class AuthManager {
   private async checkAdminStatus(user: User) {
     try {
       console.log('Checking admin status for user:', user.id)
-      
+
       let isAdmin = false
-      
+
       try {
         // Check profiles table
         const { data: profile, error: profileError } = await supabase
@@ -82,23 +85,21 @@ export class AuthManager {
           console.log('Profile not found, checking metadata and email')
           // Check user metadata
           isAdmin = user.user_metadata?.role === 'admin'
-          
+
           // Fallback: Check if this is the specific admin email
           if (!isAdmin && user.email === 'admin@techpinik.com') {
             isAdmin = true
             console.log('Admin access granted via email fallback')
-            
+
             // Try to create the profile entry
             try {
-              await supabase
-                .from('profiles')
-                .upsert({
-                  id: user.id,
-                  email: user.email,
-                  role: 'admin',
-                  created_at: new Date().toISOString(),
-                  updated_at: new Date().toISOString()
-                })
+              await supabase.from('profiles').upsert({
+                id: user.id,
+                email: user.email,
+                role: 'admin',
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+              })
               console.log('Admin profile created')
             } catch (upsertError) {
               console.warn('Failed to create admin profile:', upsertError)
@@ -124,7 +125,7 @@ export class AuthManager {
 
   private updateState(newState: Partial<AuthState>) {
     this.authState = { ...this.authState, ...newState }
-    this.listeners.forEach(listener => listener(this.authState))
+    this.listeners.forEach((listener) => listener(this.authState))
   }
 
   public getState(): AuthState {
@@ -135,14 +136,14 @@ export class AuthManager {
     this.listeners.push(listener)
     // Return unsubscribe function
     return () => {
-      this.listeners = this.listeners.filter(l => l !== listener)
+      this.listeners = this.listeners.filter((l) => l !== listener)
     }
   }
 
   public async signIn(email: string, password: string) {
     try {
       console.log('Attempting sign in for:', email)
-      
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -158,10 +159,10 @@ export class AuthManager {
       }
 
       console.log('Sign in successful for:', data.user.email)
-      
+
       // Immediately check admin status after successful sign in
       await this.checkAdminStatus(data.user)
-      
+
       return data
     } catch (error) {
       console.error('Sign in failed:', error)

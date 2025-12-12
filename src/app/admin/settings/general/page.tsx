@@ -22,52 +22,54 @@ export default function GeneralSettingsPage() {
     site_keywords: 'electronics, gadgets, mobile, laptop, accessories, bangladesh',
     site_logo: '',
     favicon: '',
-    
+
     // Contact Information
     contact_email: 'info@techpinik.com',
     contact_phone: '+880 1234-567890',
     contact_address: 'Dhaka, Bangladesh',
     support_email: 'support@techpinik.com',
-    
+
     // Business Settings
     currency: 'BDT',
     currency_symbol: '৳',
     timezone: 'Asia/Dhaka',
     date_format: 'DD/MM/YYYY',
-    
+
     // Order Settings
     min_order_amount: 500,
     free_shipping_threshold: 1000,
     default_shipping_cost: 60,
     order_prefix: 'TP',
-    
+
     // Social Media
     facebook_url: '',
     instagram_url: '',
     twitter_url: '',
     youtube_url: '',
-    
+
     // Features
     enable_reviews: true,
     enable_wishlist: true,
     enable_compare: true,
     enable_newsletter: true,
-    
+
     // SEO Settings
     meta_title: 'TechPinik - Electronics & Gadgets Store in Bangladesh',
-    meta_description: 'Shop the latest electronics, mobile phones, laptops, and accessories at TechPinik. Fast delivery across Bangladesh with competitive prices.',
+    meta_description:
+      'Shop the latest electronics, mobile phones, laptops, and accessories at TechPinik. Fast delivery across Bangladesh with competitive prices.',
     google_analytics_id: '',
     facebook_pixel_id: '',
-    
+
     // Maintenance
     maintenance_mode: false,
-    maintenance_message: 'We are currently performing scheduled maintenance. Please check back soon.'
+    maintenance_message:
+      'We are currently performing scheduled maintenance. Please check back soon.',
   })
 
   const handleInputChange = (field: string, value: string | number | boolean) => {
-    setSettings(prev => ({
+    setSettings((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }))
   }
 
@@ -78,8 +80,8 @@ export default function GeneralSettingsPage() {
     try {
       // Here you would typically save to your backend/database
       // For now, we'll just simulate a save operation
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+
       alert('Settings saved successfully!')
     } catch (error) {
       console.error('Error saving settings:', error)
@@ -92,7 +94,7 @@ export default function GeneralSettingsPage() {
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
-      
+
       <div className="flex-1 overflow-auto">
         <div className="p-6">
           {/* Header */}
@@ -106,7 +108,9 @@ export default function GeneralSettingsPage() {
               </Link>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">General Settings</h1>
-                <p className="text-gray-600">Configure site settings, contact info, and preferences</p>
+                <p className="text-gray-600">
+                  Configure site settings, contact info, and preferences
+                </p>
               </div>
             </div>
             <Button onClick={handleSubmit} disabled={saving}>
@@ -230,7 +234,9 @@ export default function GeneralSettingsPage() {
                       id="min_order_amount"
                       type="number"
                       value={settings.min_order_amount}
-                      onChange={(e) => handleInputChange('min_order_amount', parseInt(e.target.value) || 0)}
+                      onChange={(e) =>
+                        handleInputChange('min_order_amount', parseInt(e.target.value) || 0)
+                      }
                     />
                   </div>
                   <div>
@@ -239,7 +245,9 @@ export default function GeneralSettingsPage() {
                       id="free_shipping_threshold"
                       type="number"
                       value={settings.free_shipping_threshold}
-                      onChange={(e) => handleInputChange('free_shipping_threshold', parseInt(e.target.value) || 0)}
+                      onChange={(e) =>
+                        handleInputChange('free_shipping_threshold', parseInt(e.target.value) || 0)
+                      }
                     />
                   </div>
                   <div>
@@ -248,7 +256,9 @@ export default function GeneralSettingsPage() {
                       id="default_shipping_cost"
                       type="number"
                       value={settings.default_shipping_cost}
-                      onChange={(e) => handleInputChange('default_shipping_cost', parseInt(e.target.value) || 0)}
+                      onChange={(e) =>
+                        handleInputChange('default_shipping_cost', parseInt(e.target.value) || 0)
+                      }
                     />
                   </div>
                 </div>

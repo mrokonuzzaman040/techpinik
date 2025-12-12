@@ -36,9 +36,16 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
     return (
       <div className="relative h-64 md:h-96 lg:h-[500px] bg-linear-to-r from-yellow-400 to-blue-500 flex items-center justify-center">
         <div className="text-center text-white px-4">
-          <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4">Welcome to TechPinik</h1>
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl mb-4 md:mb-6">Your trusted electronics store in Bangladesh</p>
-          <Button size="sm" className="sm:h-11 sm:px-6 sm:text-base bg-white text-yellow-600 hover:bg-gray-100">
+          <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4">
+            Welcome to TechPinik
+          </h1>
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl mb-4 md:mb-6">
+            Your trusted electronics store in Bangladesh
+          </p>
+          <Button
+            size="sm"
+            className="sm:h-11 sm:px-6 sm:text-base bg-white text-yellow-600 hover:bg-gray-100"
+          >
             Shop Now
           </Button>
         </div>
@@ -49,7 +56,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
   return (
     <div className="relative h-64 md:h-96 lg:h-[500px] overflow-hidden rounded-lg">
       {/* Slides */}
-      <div 
+      <div
         className="flex transition-transform duration-500 ease-in-out h-full"
         style={{ transform: `translateX(-${currentSlide * 100}%)` }}
       >
@@ -57,7 +64,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
           <div key={slide.id} className="w-full h-full shrink-0 relative">
             <Image
               src={slide.image_url}
-              alt={slide.title || ""}
+              alt={slide.title || ''}
               fill
               sizes="100vw"
               className="object-cover"
@@ -75,7 +82,10 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
                 )}
                 {slide.link_url && (
                   <Link href={slide.link_url}>
-                    <Button size="sm" className="sm:h-11 sm:px-6 sm:text-base bg-yellow-600 hover:bg-yellow-700">
+                    <Button
+                      size="sm"
+                      className="sm:h-11 sm:px-6 sm:text-base bg-yellow-600 hover:bg-yellow-700"
+                    >
                       Shop Now
                     </Button>
                   </Link>
@@ -115,9 +125,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
               onClick={() => setCurrentSlide(index)}
               aria-label={`Go to slide ${index + 1}`}
               className={`w-3 h-3 rounded-full transition-all ${
-                index === currentSlide 
-                  ? 'bg-yellow-500' 
-                  : 'bg-white bg-opacity-50'
+                index === currentSlide ? 'bg-yellow-500' : 'bg-white bg-opacity-50'
               }`}
             />
           ))}

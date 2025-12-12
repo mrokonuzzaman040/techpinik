@@ -55,7 +55,8 @@ export default function HomePage() {
         // Fetch products for each category
         const categoryProductsData: Record<string, Product[]> = {}
         if (categoriesData && categoriesData.length > 0) {
-          for (const category of categoriesData.slice(0, 4)) { // Limit to 4 categories for homepage
+          for (const category of categoriesData.slice(0, 4)) {
+            // Limit to 4 categories for homepage
             const { data: categoryProducts } = await supabase
               .from('products')
               .select('*')
@@ -63,7 +64,7 @@ export default function HomePage() {
               .eq('is_active', true)
               .order('created_at', { ascending: false })
               .limit(10)
-            
+
             if (categoryProducts && categoryProducts.length > 0) {
               categoryProductsData[category.id] = categoryProducts
             }
@@ -92,7 +93,7 @@ export default function HomePage() {
     // Calculate the width of one set of categories for seamless loop
     const calculateSingleSetWidth = () => {
       if (scrollContainer.children.length === 0) return 0
-      
+
       // Get the actual width of all items in the first set
       let totalWidth = 0
       for (let i = 0; i < categories.length; i++) {
@@ -112,7 +113,7 @@ export default function HomePage() {
       if (!scrollContainer) return
       const singleSetWidth = calculateSingleSetWidth()
       const currentScroll = scrollContainer.scrollLeft
-      
+
       // If we've scrolled past the first set, reset to start instantly (seamless loop)
       if (currentScroll >= singleSetWidth - 1) {
         scrollContainer.scrollLeft = currentScroll - singleSetWidth
@@ -131,7 +132,7 @@ export default function HomePage() {
         if (!isPausedRef.current && !isDraggingRef.current && scrollContainer) {
           const singleSetWidth = calculateSingleSetWidth()
           const currentScroll = scrollContainer.scrollLeft
-          
+
           // If we've scrolled past the first set, reset to start instantly (seamless loop)
           if (currentScroll >= singleSetWidth - 1) {
             scrollContainer.scrollLeft = currentScroll - singleSetWidth
@@ -282,7 +283,7 @@ export default function HomePage() {
       </section> */}
 
       {/* Categories */}
-      <section 
+      <section
         className="py-8 md:py-16 bg-linear-to-br from-gray-50 to-white"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeaveCategory}
@@ -290,11 +291,16 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-6 md:mb-12">
             <div>
-              <h2 className="text-xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 md:mb-2">Shop by Category</h2>
+              <h2 className="text-xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 md:mb-2">
+                Shop by Category
+              </h2>
               <p className="text-sm md:text-base text-gray-600">Discover products by category</p>
             </div>
             <Link href="/categories">
-              <Button variant="outline" className="hidden md:flex border-yellow-200 text-yellow-600 hover:bg-yellow-50">
+              <Button
+                variant="outline"
+                className="hidden md:flex border-yellow-200 text-yellow-600 hover:bg-yellow-50"
+              >
                 View All <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
@@ -325,7 +331,10 @@ export default function HomePage() {
 
           <div className="text-center mt-8 md:hidden">
             <Link href="/categories">
-              <Button variant="outline" className="border-yellow-200 text-yellow-600 hover:bg-yellow-50">
+              <Button
+                variant="outline"
+                className="border-yellow-200 text-yellow-600 hover:bg-yellow-50"
+              >
                 View All Categories <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
@@ -337,7 +346,9 @@ export default function HomePage() {
       <section className="bg-gray-50 py-8 md:py-12">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-6 md:mb-8">
-            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">Featured Products</h2>
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">
+              Featured Products
+            </h2>
             <Link href="/products">
               <Button variant="outline" className="hidden md:flex">
                 View All <ArrowRight className="ml-2 h-4 w-4" />
@@ -363,7 +374,7 @@ export default function HomePage() {
 
       {/* Category-based Product Sections */}
       {Object.entries(categoryProducts).map(([categoryId, products]) => {
-        const category = categories.find(cat => cat.id === categoryId)
+        const category = categories.find((cat) => cat.id === categoryId)
         if (!category || products.length === 0) return null
 
         return (
@@ -390,9 +401,13 @@ export default function HomePage() {
                     <Package className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-yellow-500" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h2 className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold text-gray-900">{category.name}</h2>
+                    <h2 className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold text-gray-900">
+                      {category.name}
+                    </h2>
                     {category.description && (
-                      <p className="text-xs md:text-sm text-gray-600 line-clamp-1 sm:line-clamp-2 hidden sm:block">{category.description}</p>
+                      <p className="text-xs md:text-sm text-gray-600 line-clamp-1 sm:line-clamp-2 hidden sm:block">
+                        {category.description}
+                      </p>
                     )}
                   </div>
                 </div>

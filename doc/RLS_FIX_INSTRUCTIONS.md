@@ -1,7 +1,9 @@
 # Fix RLS Infinite Recursion Error
 
 ## Problem
+
 You're getting this error when accessing admin pages:
+
 ```
 {
     "code": "42P17",
@@ -12,17 +14,20 @@ You're getting this error when accessing admin pages:
 ```
 
 ## Root Cause
+
 The RLS (Row Level Security) policies on the `profiles` table are referencing the `profiles` table itself, creating infinite recursion.
 
 ## Quick Fix
 
 ### Option 1: Run the SQL Script (Recommended)
+
 1. Go to your Supabase project dashboard
 2. Navigate to SQL Editor
 3. Copy and paste the contents of `scripts/fix-all-rls-policies.sql`
 4. Execute the script
 
 ### Option 2: Manual Fix
+
 If you prefer to fix manually, run these commands in your Supabase SQL editor:
 
 ```sql
@@ -52,6 +57,7 @@ CREATE POLICY "Admin email access" ON public.profiles
 ## After the Fix
 
 Once you run the fix:
+
 1. The admin login should work properly
 2. The admin products page should load without errors
 3. All admin functionality should be accessible
@@ -66,6 +72,7 @@ Once you run the fix:
 ## Verification
 
 After running the fix, you should be able to:
+
 1. Access `http://localhost:3000/admin/login`
 2. Log in with `admin@techpinik.com` / `1234567890`
 3. Navigate to `http://localhost:3000/admin/products` without errors

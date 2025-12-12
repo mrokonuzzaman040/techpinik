@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabase'
-import { 
+import {
   LayoutDashboard,
   Package,
   FolderOpen,
@@ -20,7 +20,7 @@ import {
   ChevronRight,
   Menu,
   X,
-  LogOut
+  LogOut,
 } from 'lucide-react'
 
 interface SidebarItem {
@@ -34,7 +34,7 @@ const sidebarItems: SidebarItem[] = [
   {
     title: 'Dashboard',
     href: '/admin',
-    icon: LayoutDashboard
+    icon: LayoutDashboard,
   },
   {
     title: 'Products',
@@ -42,7 +42,7 @@ const sidebarItems: SidebarItem[] = [
     children: [
       { title: 'All Products', href: '/admin/products', icon: Package },
       { title: 'Add Product', href: '/admin/products/new', icon: Package },
-    ]
+    ],
   },
   {
     title: 'Categories',
@@ -50,22 +50,22 @@ const sidebarItems: SidebarItem[] = [
     children: [
       { title: 'All Categories', href: '/admin/categories', icon: FolderOpen },
       { title: 'Add Category', href: '/admin/categories/new', icon: FolderOpen },
-    ]
+    ],
   },
   {
     title: 'Orders',
     href: '/admin/orders',
-    icon: ShoppingCart
+    icon: ShoppingCart,
   },
   {
     title: 'Customers',
     href: '/admin/customers',
-    icon: Users
+    icon: Users,
   },
   {
     title: 'Analytics',
     href: '/admin/analytics',
-    icon: BarChart3
+    icon: BarChart3,
   },
   {
     title: 'Settings',
@@ -74,8 +74,8 @@ const sidebarItems: SidebarItem[] = [
       { title: 'Slider Management', href: '/admin/settings/slider', icon: Image },
       { title: 'Districts', href: '/admin/settings/districts', icon: MapPin },
       { title: 'General Settings', href: '/admin/settings/general', icon: Settings },
-    ]
-  }
+    ],
+  },
 ]
 
 interface AdminSidebarProps {
@@ -83,16 +83,18 @@ interface AdminSidebarProps {
 }
 
 export default function AdminSidebar({ className }: AdminSidebarProps) {
-  const [expandedItems, setExpandedItems] = useState<string[]>(['Products', 'Categories', 'Settings'])
+  const [expandedItems, setExpandedItems] = useState<string[]>([
+    'Products',
+    'Categories',
+    'Settings',
+  ])
   const [isMobileOpen, setIsMobileOpen] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
 
   const toggleExpanded = (title: string) => {
-    setExpandedItems(prev => 
-      prev.includes(title) 
-        ? prev.filter(item => item !== title)
-        : [...prev, title]
+    setExpandedItems((prev) =>
+      prev.includes(title) ? prev.filter((item) => item !== title) : [...prev, title]
     )
   }
 
@@ -120,7 +122,9 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
           <div className="bg-yellow-600 text-white px-3 py-2 rounded-lg font-bold text-lg shadow-md group-hover:shadow-lg transition-shadow">
             TechPinik
           </div>
-          <span className="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded">Admin</span>
+          <span className="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded">
+            Admin
+          </span>
         </Link>
       </div>
 
@@ -133,9 +137,9 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
                 <button
                   onClick={() => toggleExpanded(item.title)}
                   className={cn(
-                    "w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200",
-                    "text-gray-700 hover:bg-yellow-50 hover:text-yellow-700",
-                    expandedItems.includes(item.title) && "bg-yellow-50 text-yellow-700"
+                    'w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200',
+                    'text-gray-700 hover:bg-yellow-50 hover:text-yellow-700',
+                    expandedItems.includes(item.title) && 'bg-yellow-50 text-yellow-700'
                   )}
                 >
                   <div className="flex items-center space-x-3">
@@ -148,7 +152,7 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
                     <ChevronRight className="h-4 w-4 transition-transform" />
                   )}
                 </button>
-                
+
                 {expandedItems.includes(item.title) && (
                   <div className="ml-4 mt-1 space-y-1 border-l-2 border-yellow-100 pl-4">
                     {item.children.map((child) => (
@@ -156,10 +160,10 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
                         key={child.href}
                         href={child.href!}
                         className={cn(
-                          "flex items-center space-x-3 px-4 py-2.5 text-sm rounded-lg transition-all duration-200",
+                          'flex items-center space-x-3 px-4 py-2.5 text-sm rounded-lg transition-all duration-200',
                           isActive(child.href!)
-                            ? "bg-yellow-100 text-yellow-700 font-semibold shadow-sm"
-                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                            ? 'bg-yellow-100 text-yellow-700 font-semibold shadow-sm'
+                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                         )}
                         onClick={() => setIsMobileOpen(false)}
                       >
@@ -174,10 +178,10 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
               <Link
                 href={item.href!}
                 className={cn(
-                  "flex items-center space-x-3 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200",
+                  'flex items-center space-x-3 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200',
                   isActive(item.href!)
-                    ? "bg-yellow-100 text-yellow-700 shadow-sm"
-                    : "text-gray-700 hover:bg-yellow-50 hover:text-yellow-700"
+                    ? 'bg-yellow-100 text-yellow-700 shadow-sm'
+                    : 'text-gray-700 hover:bg-yellow-50 hover:text-yellow-700'
                 )}
                 onClick={() => setIsMobileOpen(false)}
               >
@@ -224,18 +228,20 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
 
       {/* Mobile Overlay */}
       {isMobileOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <aside className={cn(
-        "fixed top-0 left-0 z-40 h-full w-64 bg-white border-r border-gray-200 shadow-lg lg:shadow-none transition-transform duration-300 ease-in-out lg:translate-x-0",
-        isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
-        className
-      )}>
+      <aside
+        className={cn(
+          'fixed top-0 left-0 z-40 h-full w-64 bg-white border-r border-gray-200 shadow-lg lg:shadow-none transition-transform duration-300 ease-in-out lg:translate-x-0',
+          isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+          className
+        )}
+      >
         {sidebarContent}
       </aside>
 

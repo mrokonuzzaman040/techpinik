@@ -29,7 +29,7 @@ export default function EditCategoryPage() {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    is_active: true
+    is_active: true,
   })
 
   useEffect(() => {
@@ -51,11 +51,11 @@ export default function EditCategoryPage() {
       setCategory(data)
       setIconPreview(data.icon_url || '')
       setBannerPreview(data.banner_url || '')
-      
+
       setFormData({
         name: data.name || '',
         description: data.description || '',
-        is_active: data.is_active ?? true
+        is_active: data.is_active ?? true,
       })
     } catch (error) {
       console.error('Error fetching category:', error)
@@ -66,9 +66,9 @@ export default function EditCategoryPage() {
   }
 
   const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }))
   }
 
@@ -112,17 +112,13 @@ export default function EditCategoryPage() {
     const fileName = `${Date.now()}.${fileExt}`
     const filePath = `${folder}/${fileName}`
 
-    const { error: uploadError } = await supabase.storage
-      .from('images')
-      .upload(filePath, file)
+    const { error: uploadError } = await supabase.storage.from('images').upload(filePath, file)
 
     if (uploadError) {
       throw uploadError
     }
 
-    const { data } = supabase.storage
-      .from('images')
-      .getPublicUrl(filePath)
+    const { data } = supabase.storage.from('images').getPublicUrl(filePath)
 
     return data.publicUrl
   }
@@ -133,10 +129,10 @@ export default function EditCategoryPage() {
 
     try {
       const supabase = createClient()
-      
+
       let iconUrl = category?.icon_url || ''
       let bannerUrl = category?.banner_url || ''
-      
+
       // Upload new icon if selected
       if (iconFile) {
         iconUrl = await uploadImage(iconFile, 'categories/icons')
@@ -157,13 +153,10 @@ export default function EditCategoryPage() {
         icon_url: iconUrl,
         banner_url: bannerUrl,
         is_active: formData.is_active,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       }
 
-      const { error } = await supabase
-        .from('categories')
-        .update(updateData)
-        .eq('id', categoryId)
+      const { error } = await supabase.from('categories').update(updateData).eq('id', categoryId)
 
       if (error) throw error
 
@@ -196,9 +189,7 @@ export default function EditCategoryPage() {
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Category Not Found</h2>
             <p className="text-gray-600 mb-4">The category you're looking for doesn't exist.</p>
-            <Button onClick={() => router.push('/admin/categories')}>
-              Back to Categories
-            </Button>
+            <Button onClick={() => router.push('/admin/categories')}>Back to Categories</Button>
           </div>
         </div>
       </div>
@@ -208,7 +199,7 @@ export default function EditCategoryPage() {
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
-      
+
       <div className="flex-1 overflow-auto">
         <div className="p-6">
           {/* Header */}
@@ -285,7 +276,7 @@ export default function EditCategoryPage() {
                       </button>
                     </div>
                   )}
-                  
+
                   <div>
                     <Label htmlFor="icon">Upload New Icon</Label>
                     <div className="mt-1 flex items-center gap-4">
@@ -336,7 +327,7 @@ export default function EditCategoryPage() {
                       </button>
                     </div>
                   )}
-                  
+
                   <div>
                     <Label htmlFor="banner">Upload New Banner</Label>
                     <div className="mt-1 flex items-center gap-4">

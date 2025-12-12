@@ -12,7 +12,8 @@ export default function WarrantyPage() {
             Warranty Information
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Comprehensive warranty coverage for your peace of mind. Learn about our warranty terms and how to claim warranty service.
+            Comprehensive warranty coverage for your peace of mind. Learn about our warranty terms
+            and how to claim warranty service.
           </p>
         </div>
 
@@ -26,7 +27,8 @@ export default function WarrantyPage() {
                 <h2 className="text-2xl font-bold text-gray-900">Manufacturer Warranty</h2>
               </div>
               <p className="text-gray-700 leading-relaxed">
-                All products sold by TechPinik come with the original manufacturer's warranty. Warranty terms vary by brand and product type, typically ranging from 1 to 3 years.
+                All products sold by TechPinik come with the original manufacturer's warranty.
+                Warranty terms vary by brand and product type, typically ranging from 1 to 3 years.
               </p>
             </section>
 
@@ -148,7 +150,10 @@ export default function WarrantyPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Contact Support</h3>
-                    <p className="text-gray-700">Email us at warranty@techpinik.com or call +880 1234 567890 with your order details and issue description.</p>
+                    <p className="text-gray-700">
+                      Email us at warranty@techpinik.com or call +880 1234 567890 with your order
+                      details and issue description.
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -157,7 +162,10 @@ export default function WarrantyPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Provide Documentation</h3>
-                    <p className="text-gray-700">Submit your purchase receipt, warranty card, and detailed description of the issue with photos if applicable.</p>
+                    <p className="text-gray-700">
+                      Submit your purchase receipt, warranty card, and detailed description of the
+                      issue with photos if applicable.
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -166,7 +174,10 @@ export default function WarrantyPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Assessment</h3>
-                    <p className="text-gray-700">Our technical team will assess the issue and determine if it's covered under warranty.</p>
+                    <p className="text-gray-700">
+                      Our technical team will assess the issue and determine if it's covered under
+                      warranty.
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -175,7 +186,10 @@ export default function WarrantyPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Service Options</h3>
-                    <p className="text-gray-700">We'll provide options for repair, replacement, or refund based on the warranty terms and issue severity.</p>
+                    <p className="text-gray-700">
+                      We'll provide options for repair, replacement, or refund based on the warranty
+                      terms and issue severity.
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -184,7 +198,10 @@ export default function WarrantyPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Resolution</h3>
-                    <p className="text-gray-700">We'll process your warranty claim and provide updates throughout the service process.</p>
+                    <p className="text-gray-700">
+                      We'll process your warranty claim and provide updates throughout the service
+                      process.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -199,36 +216,72 @@ export default function WarrantyPage() {
                 <table className="w-full">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product Category</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Warranty Period</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service Type</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Product Category
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Warranty Period
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Service Type
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
                     <tr>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Laptops & Computers</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1-3 years</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Repair/Replacement</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        Laptops & Computers
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        1-3 years
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        Repair/Replacement
+                      </td>
                     </tr>
                     <tr>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Smartphones & Tablets</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1-2 years</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Repair/Replacement</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        Smartphones & Tablets
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        1-2 years
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        Repair/Replacement
+                      </td>
                     </tr>
                     <tr>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Audio & Headphones</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1-2 years</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Repair/Replacement</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        Audio & Headphones
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        1-2 years
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        Repair/Replacement
+                      </td>
                     </tr>
                     <tr>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Gaming Accessories</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1-2 years</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Repair/Replacement</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        Gaming Accessories
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        1-2 years
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        Repair/Replacement
+                      </td>
                     </tr>
                     <tr>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Cables & Accessories</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">6 months - 1 year</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Replacement</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        Cables & Accessories
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        6 months - 1 year
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        Replacement
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -237,12 +290,12 @@ export default function WarrantyPage() {
 
             {/* Extended Warranty Options */}
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                Extended Warranty Options
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Extended Warranty Options</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="bg-white border border-gray-200 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Accidental Damage Protection</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                    Accidental Damage Protection
+                  </h3>
                   <ul className="space-y-2 text-gray-700">
                     <li>• Covers accidental drops and spills</li>
                     <li>• Screen damage protection</li>
@@ -266,9 +319,7 @@ export default function WarrantyPage() {
 
             {/* Important Notes */}
             <section className="bg-yellow-50 p-6 rounded-lg">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Important Notes
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Important Notes</h2>
               <ul className="space-y-2 text-gray-700">
                 <li>• Keep your purchase receipt and warranty card safe</li>
                 <li>• Warranty is non-transferable to other users</li>
@@ -281,17 +332,23 @@ export default function WarrantyPage() {
 
             {/* Contact Information */}
             <section className="bg-gray-50 p-6 rounded-lg">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Warranty Support
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Warranty Support</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
                 For warranty claims, technical support, or questions about warranty coverage:
               </p>
               <div className="space-y-2">
-                <p className="text-gray-700"><strong>Email:</strong> warranty@techpinik.com</p>
-                <p className="text-gray-700"><strong>Phone:</strong> +880 1234 567890</p>
-                <p className="text-gray-700"><strong>Live Chat:</strong> Available 24/7 on our website</p>
-                <p className="text-gray-700"><strong>Service Hours:</strong> Monday - Friday, 9:00 AM - 6:00 PM</p>
+                <p className="text-gray-700">
+                  <strong>Email:</strong> warranty@techpinik.com
+                </p>
+                <p className="text-gray-700">
+                  <strong>Phone:</strong> +880 1234 567890
+                </p>
+                <p className="text-gray-700">
+                  <strong>Live Chat:</strong> Available 24/7 on our website
+                </p>
+                <p className="text-gray-700">
+                  <strong>Service Hours:</strong> Monday - Friday, 9:00 AM - 6:00 PM
+                </p>
               </div>
             </section>
           </div>

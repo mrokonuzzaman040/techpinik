@@ -24,19 +24,19 @@ export default function AdminLogin() {
 
     try {
       console.log('Attempting login for:', email)
-      
+
       // Use the auth manager for sign in
       const authData = await authManager.signIn(email, password)
-      
+
       console.log('Login successful, redirecting to admin dashboard')
-      
+
       // Wait for auth state to be updated
-      await new Promise(resolve => setTimeout(resolve, 200))
-      
+      await new Promise((resolve) => setTimeout(resolve, 200))
+
       // Check if we're now authenticated
       const currentState = authManager.getState()
       console.log('Current auth state after login:', currentState)
-      
+
       if (currentState.user && currentState.isAdmin) {
         console.log('User is authenticated and is admin, redirecting to dashboard')
         router.push('/admin')
@@ -69,7 +69,7 @@ export default function AdminLogin() {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            
+
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -82,7 +82,7 @@ export default function AdminLogin() {
                 disabled={loading}
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input
@@ -95,12 +95,8 @@ export default function AdminLogin() {
                 disabled={loading}
               />
             </div>
-            
-            <Button 
-              type="submit" 
-              className="w-full" 
-              disabled={loading}
-            >
+
+            <Button type="submit" className="w-full" disabled={loading}>
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

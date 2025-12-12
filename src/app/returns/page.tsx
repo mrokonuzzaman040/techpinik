@@ -1,4 +1,12 @@
-import { RotateCcw, Clock, CheckCircle, AlertTriangle, Package, Truck, CreditCard } from 'lucide-react'
+import {
+  RotateCcw,
+  Clock,
+  CheckCircle,
+  AlertTriangle,
+  Package,
+  Truck,
+  CreditCard,
+} from 'lucide-react'
 import MainLayout from '@/components/layout/MainLayout'
 
 export default function ReturnsPage() {
@@ -8,11 +16,10 @@ export default function ReturnsPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <RotateCcw className="h-16 w-16 text-yellow-600 mx-auto mb-4" />
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Returns & Refunds
-          </h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Returns & Refunds</h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Easy returns and fast refunds. Learn about our return policy and how to process your return.
+            Easy returns and fast refunds. Learn about our return policy and how to process your
+            return.
           </p>
         </div>
 
@@ -26,7 +33,9 @@ export default function ReturnsPage() {
                 <h2 className="text-2xl font-bold text-gray-900">7-Day Return Policy</h2>
               </div>
               <p className="text-gray-700 leading-relaxed">
-                We offer a hassle-free 7-day return policy for most products. If you're not satisfied with your purchase, you can return it within 7 days of delivery for a full refund.
+                We offer a hassle-free 7-day return policy for most products. If you're not
+                satisfied with your purchase, you can return it within 7 days of delivery for a full
+                refund.
               </p>
             </section>
 
@@ -81,7 +90,10 @@ export default function ReturnsPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Contact Support</h3>
-                    <p className="text-gray-700">Email us at returns@techpinik.com or call +880 1234 567890 to initiate your return.</p>
+                    <p className="text-gray-700">
+                      Email us at returns@techpinik.com or call +880 1234 567890 to initiate your
+                      return.
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -90,7 +102,10 @@ export default function ReturnsPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Get Return Authorization</h3>
-                    <p className="text-gray-700">We'll provide you with a Return Merchandise Authorization (RMA) number and return instructions.</p>
+                    <p className="text-gray-700">
+                      We'll provide you with a Return Merchandise Authorization (RMA) number and
+                      return instructions.
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -99,7 +114,10 @@ export default function ReturnsPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Package Your Item</h3>
-                    <p className="text-gray-700">Pack the item securely in its original packaging with all accessories and documentation.</p>
+                    <p className="text-gray-700">
+                      Pack the item securely in its original packaging with all accessories and
+                      documentation.
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -108,7 +126,10 @@ export default function ReturnsPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Ship the Item</h3>
-                    <p className="text-gray-700">Send the package to our return address. We recommend using a trackable shipping method.</p>
+                    <p className="text-gray-700">
+                      Send the package to our return address. We recommend using a trackable
+                      shipping method.
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -117,7 +138,10 @@ export default function ReturnsPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Receive Refund</h3>
-                    <p className="text-gray-700">Once we receive and inspect your return, we'll process your refund within 5-7 business days.</p>
+                    <p className="text-gray-700">
+                      Once we receive and inspect your return, we'll process your refund within 5-7
+                      business days.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -161,7 +185,8 @@ export default function ReturnsPage() {
               </h2>
               <div className="bg-white border border-gray-200 rounded-lg p-6">
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  We offer exchanges for items of equal or greater value. If you want to exchange an item:
+                  We offer exchanges for items of equal or greater value. If you want to exchange an
+                  item:
                 </p>
                 <ul className="list-disc list-inside text-gray-700 space-y-2">
                   <li>Contact our support team to initiate an exchange</li>
@@ -175,13 +200,15 @@ export default function ReturnsPage() {
 
             {/* Return Shipping */}
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                Return Shipping
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Return Shipping</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="bg-white border border-gray-200 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Customer Pays Return Shipping</h3>
-                  <p className="text-gray-700 mb-3">In most cases, customers are responsible for return shipping costs.</p>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                    Customer Pays Return Shipping
+                  </h3>
+                  <p className="text-gray-700 mb-3">
+                    In most cases, customers are responsible for return shipping costs.
+                  </p>
                   <ul className="list-disc list-inside text-gray-700 space-y-1">
                     <li>Use a trackable shipping method</li>
                     <li>Keep your shipping receipt</li>
@@ -190,7 +217,9 @@ export default function ReturnsPage() {
                 </div>
                 <div className="bg-white border border-gray-200 rounded-lg p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-3">Free Return Shipping</h3>
-                  <p className="text-gray-700 mb-3">We cover return shipping costs in these cases:</p>
+                  <p className="text-gray-700 mb-3">
+                    We cover return shipping costs in these cases:
+                  </p>
                   <ul className="list-disc list-inside text-gray-700 space-y-1">
                     <li>Defective or damaged items</li>
                     <li>Wrong item sent by us</li>
@@ -203,32 +232,39 @@ export default function ReturnsPage() {
 
             {/* Important Notes */}
             <section className="bg-yellow-50 p-6 rounded-lg">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Important Notes
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Important Notes</h2>
               <ul className="space-y-2 text-gray-700">
                 <li>• All returns must be authorized before shipping</li>
                 <li>• Include the RMA number on your return package</li>
                 <li>• We recommend insuring valuable items during return shipping</li>
                 <li>• Refunds will be processed to the original payment method</li>
                 <li>• Store credit never expires and can be used for future purchases</li>
-                <li>• Contact us immediately if you don't receive your refund within the expected timeframe</li>
+                <li>
+                  • Contact us immediately if you don't receive your refund within the expected
+                  timeframe
+                </li>
               </ul>
             </section>
 
             {/* Contact Information */}
             <section className="bg-gray-50 p-6 rounded-lg">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Need Help with Returns?
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Need Help with Returns?</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
                 If you have any questions about returns or need assistance, please contact us:
               </p>
               <div className="space-y-2">
-                <p className="text-gray-700"><strong>Email:</strong> returns@techpinik.com</p>
-                <p className="text-gray-700"><strong>Phone:</strong> +880 1234 567890</p>
-                <p className="text-gray-700"><strong>Live Chat:</strong> Available 24/7 on our website</p>
-                <p className="text-gray-700"><strong>Return Address:</strong> TechPinik Returns, Dhaka, Bangladesh</p>
+                <p className="text-gray-700">
+                  <strong>Email:</strong> returns@techpinik.com
+                </p>
+                <p className="text-gray-700">
+                  <strong>Phone:</strong> +880 1234 567890
+                </p>
+                <p className="text-gray-700">
+                  <strong>Live Chat:</strong> Available 24/7 on our website
+                </p>
+                <p className="text-gray-700">
+                  <strong>Return Address:</strong> TechPinik Returns, Dhaka, Bangladesh
+                </p>
               </div>
             </section>
           </div>

@@ -2,29 +2,29 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { 
-  ArrowLeft, 
-  Package, 
-  User, 
-  MapPin, 
-  CreditCard, 
+import {
+  ArrowLeft,
+  Package,
+  User,
+  MapPin,
+  CreditCard,
   Calendar,
   Phone,
   Mail,
   Edit,
-  Printer
+  Printer,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '@/components/ui/table'
 import {
   Select,
@@ -41,7 +41,7 @@ export default function AdminOrderDetailPage() {
   const params = useParams()
   const router = useRouter()
   const orderId = params.id as string
-  
+
   const [order, setOrder] = useState<Order | null>(null)
   const [orderItems, setOrderItems] = useState<OrderItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -126,7 +126,7 @@ export default function AdminOrderDetailPage() {
     return new Intl.NumberFormat('en-BD', {
       style: 'currency',
       currency: 'BDT',
-      minimumFractionDigits: 0
+      minimumFractionDigits: 0,
     }).format(amount)
   }
 
@@ -136,7 +136,7 @@ export default function AdminOrderDetailPage() {
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     })
   }
 
@@ -146,11 +146,13 @@ export default function AdminOrderDetailPage() {
       processing: 'bg-blue-100 text-blue-800',
       shipped: 'bg-purple-100 text-purple-800',
       delivered: 'bg-yellow-100 text-yellow-800',
-      cancelled: 'bg-red-100 text-red-800'
+      cancelled: 'bg-red-100 text-red-800',
     }
 
     return (
-      <Badge className={statusColors[status as keyof typeof statusColors] || 'bg-gray-100 text-gray-800'}>
+      <Badge
+        className={statusColors[status as keyof typeof statusColors] || 'bg-gray-100 text-gray-800'}
+      >
         {status}
       </Badge>
     )
@@ -161,11 +163,13 @@ export default function AdminOrderDetailPage() {
       pending: 'bg-yellow-100 text-yellow-800',
       paid: 'bg-yellow-100 text-yellow-800',
       failed: 'bg-red-100 text-red-800',
-      refunded: 'bg-gray-100 text-gray-800'
+      refunded: 'bg-gray-100 text-gray-800',
     }
 
     return (
-      <Badge className={statusColors[status as keyof typeof statusColors] || 'bg-gray-100 text-gray-800'}>
+      <Badge
+        className={statusColors[status as keyof typeof statusColors] || 'bg-gray-100 text-gray-800'}
+      >
         {status}
       </Badge>
     )
@@ -194,9 +198,7 @@ export default function AdminOrderDetailPage() {
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Order Not Found</h2>
             <p className="text-gray-600 mb-4">The order you're looking for doesn't exist.</p>
-            <Button onClick={() => router.push('/admin/orders')}>
-              Back to Orders
-            </Button>
+            <Button onClick={() => router.push('/admin/orders')}>Back to Orders</Button>
           </div>
         </div>
       </div>
@@ -206,7 +208,7 @@ export default function AdminOrderDetailPage() {
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
-      
+
       <div className="flex-1 overflow-auto">
         <div className="p-6">
           {/* Header */}
@@ -263,11 +265,9 @@ export default function AdminOrderDetailPage() {
                           <TableCell>
                             <span className="font-medium">{item.quantity}</span>
                           </TableCell>
-                          <TableCell>
-                            {formatCurrency(item.unit_price)}
-                          </TableCell>
+                          <TableCell>{formatCurrency(item.unit_price)}</TableCell>
                           <TableCell className="text-right font-medium">
-                            {formatCurrency(item.total_price ?? (item.unit_price * item.quantity))}
+                            {formatCurrency(item.total_price ?? item.unit_price * item.quantity)}
                           </TableCell>
                         </TableRow>
                       ))}
@@ -280,16 +280,37 @@ export default function AdminOrderDetailPage() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span>Subtotal:</span>
-                      <span>{formatCurrency((typeof order.total_amount === 'string' ? parseFloat(order.total_amount) : order.total_amount || 0) - (typeof order.delivery_charge === 'string' ? parseFloat(order.delivery_charge) : order.delivery_charge || 0))}</span>
+                      <span>
+                        {formatCurrency(
+                          (typeof order.total_amount === 'string'
+                            ? parseFloat(order.total_amount)
+                            : order.total_amount || 0) -
+                            (typeof order.delivery_charge === 'string'
+                              ? parseFloat(order.delivery_charge)
+                              : order.delivery_charge || 0)
+                        )}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span>Shipping:</span>
-                      <span>{formatCurrency(typeof order.delivery_charge === 'string' ? parseFloat(order.delivery_charge) : order.delivery_charge || 0)}</span>
+                      <span>
+                        {formatCurrency(
+                          typeof order.delivery_charge === 'string'
+                            ? parseFloat(order.delivery_charge)
+                            : order.delivery_charge || 0
+                        )}
+                      </span>
                     </div>
                     <Separator />
                     <div className="flex justify-between text-lg font-bold">
                       <span>Total:</span>
-                      <span>{formatCurrency(typeof order.total_amount === 'string' ? parseFloat(order.total_amount) : order.total_amount || 0)}</span>
+                      <span>
+                        {formatCurrency(
+                          typeof order.total_amount === 'string'
+                            ? parseFloat(order.total_amount)
+                            : order.total_amount || 0
+                        )}
+                      </span>
                     </div>
                   </div>
                 </CardContent>

@@ -1,21 +1,27 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { 
-  TrendingUp, 
-  ShoppingCart, 
-  Package, 
-  Users, 
+import {
+  TrendingUp,
+  ShoppingCart,
+  Package,
+  Users,
   DollarSign,
   Eye,
   Calendar,
   BarChart3,
   PieChart,
-  Activity
+  Activity,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import AdminSidebar from '@/components/layout/AdminSidebar'
 import AdminAuthWrapper from '@/components/admin/AdminAuthWrapper'
 import { createClient } from '@/lib/supabase'
@@ -62,33 +68,35 @@ export default function AdminAnalyticsPage() {
         .select('id, is_active, created_at')
 
       // Calculate analytics
-      const totalRevenue = ordersData?.reduce((sum, order) => sum + Number(order.total_amount), 0) || 0
+      const totalRevenue =
+        ordersData?.reduce((sum, order) => sum + Number(order.total_amount), 0) || 0
       const totalOrders = ordersData?.length || 0
-      const pendingOrders = ordersData?.filter(order => order.status === 'pending').length || 0
-      const deliveredOrders = ordersData?.filter(order => order.status === 'delivered').length || 0
+      const pendingOrders = ordersData?.filter((order) => order.status === 'pending').length || 0
+      const deliveredOrders =
+        ordersData?.filter((order) => order.status === 'delivered').length || 0
       const totalProducts = productsData?.length || 0
-      const activeProducts = productsData?.filter(product => product.is_active).length || 0
-    const totalCustomers = customersData?.length || 0
-      const activeCustomers = customersData?.filter(customer => customer.is_active).length || 0
+      const activeProducts = productsData?.filter((product) => product.is_active).length || 0
+      const totalCustomers = customersData?.length || 0
+      const activeCustomers = customersData?.filter((customer) => customer.is_active).length || 0
 
       // Get recent orders
       const { data: recentOrders } = await supabase
         .from('orders')
-        .select(`
+        .select(
+          `
           id,
           order_number,
           customer_name,
           total_amount,
           status,
           created_at
-        `)
+        `
+        )
         .order('created_at', { ascending: false })
         .limit(5)
 
       // Get top products by order count
-      const { data: topProductsData } = await supabase
-        .from('order_items')
-        .select(`
+      const { data: topProductsData } = await supabase.from('order_items').select(`
           product_id,
           products!inner(name, price),
           quantity
@@ -103,7 +111,7 @@ export default function AdminAnalyticsPage() {
             name: item.products.name,
             price: item.products.price,
             total_quantity: 0,
-            total_revenue: 0
+            total_revenue: 0,
           }
         }
         acc[productId].total_quantity += item.quantity
@@ -117,9 +125,9 @@ export default function AdminAnalyticsPage() {
 
       // Get monthly revenue data
       const monthlyRevenue = ordersData?.reduce((acc: any, order: any) => {
-        const month = new Date(order.created_at).toLocaleDateString('en-US', { 
-          year: 'numeric', 
-          month: 'short' 
+        const month = new Date(order.created_at).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
         })
         if (!acc[month]) {
           acc[month] = 0
@@ -143,7 +151,7 @@ export default function AdminAnalyticsPage() {
         activeCustomers,
         recentOrders: recentOrders || [],
         topProducts,
-        monthlyRevenue: monthlyRevenueArray
+        monthlyRevenue: monthlyRevenueArray,
       })
     } catch (error) {
       console.error('Error fetching analytics data:', error)
@@ -156,7 +164,7 @@ export default function AdminAnalyticsPage() {
     return new Intl.NumberFormat('en-BD', {
       style: 'currency',
       currency: 'BDT',
-      minimumFractionDigits: 0
+      minimumFractionDigits: 0,
     }).format(amount)
   }
 
@@ -167,9 +175,9 @@ export default function AdminAnalyticsPage() {
       processing: { variant: 'default' as const, label: 'Processing' },
       shipped: { variant: 'default' as const, label: 'Shipped' },
       delivered: { variant: 'default' as const, label: 'Delivered' },
-      cancelled: { variant: 'destructive' as const, label: 'Cancelled' }
+      cancelled: { variant: 'destructive' as const, label: 'Cancelled' },
     }
-    
+
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.pending
     return <Badge variant={config.variant}>{config.label}</Badge>
   }
@@ -178,7 +186,7 @@ export default function AdminAnalyticsPage() {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     })
   }
 
@@ -199,7 +207,7 @@ export default function AdminAnalyticsPage() {
     <AdminAuthWrapper>
       <div className="flex h-screen bg-gray-50">
         <AdminSidebar />
-        
+
         <div className="flex-1 overflow-auto">
           <div className="p-6">
             {/* Header */}
@@ -229,10 +237,10 @@ export default function AdminAnalyticsPage() {
                   <DollarSign className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{formatCurrency(analyticsData?.totalRevenue || 0)}</div>
-                  <p className="text-xs text-muted-foreground">
-                    +20.1% from last month
-                  </p>
+                  <div className="text-2xl font-bold">
+                    {formatCurrency(analyticsData?.totalRevenue || 0)}
+                  </div>
+                  <p className="text-xs text-muted-foreground">+20.1% from last month</p>
                 </CardContent>
               </Card>
 
@@ -323,7 +331,9 @@ export default function AdminAnalyticsPage() {
                       <div key={product.product_id} className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                           <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
-                            <span className="text-sm font-medium text-yellow-600">#{index + 1}</span>
+                            <span className="text-sm font-medium text-yellow-600">
+                              #{index + 1}
+                            </span>
                           </div>
                           <div>
                             <p className="font-medium">{product.name}</p>
@@ -332,7 +342,9 @@ export default function AdminAnalyticsPage() {
                         </div>
                         <div className="text-right">
                           <p className="font-medium">{formatCurrency(product.total_revenue)}</p>
-                          <p className="text-sm text-gray-500">{formatCurrency(product.price)} each</p>
+                          <p className="text-sm text-gray-500">
+                            {formatCurrency(product.price)} each
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -382,8 +394,12 @@ export default function AdminAnalyticsPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold text-blue-600">
-                    {analyticsData?.totalOrders ? 
-                      Math.round((analyticsData.deliveredOrders / analyticsData.totalOrders) * 100) : 0}%
+                    {analyticsData?.totalOrders
+                      ? Math.round(
+                          (analyticsData.deliveredOrders / analyticsData.totalOrders) * 100
+                        )
+                      : 0}
+                    %
                   </div>
                   <p className="text-sm text-gray-500">Orders delivered</p>
                 </CardContent>

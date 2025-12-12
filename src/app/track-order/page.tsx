@@ -8,18 +8,18 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import MainLayout from '@/components/layout/MainLayout'
 
 interface TrackingResult {
-  orderNumber: string;
-  status: string;
-  estimatedDelivery: string;
-  trackingNumber: string;
-  currentLocation: string;
+  orderNumber: string
+  status: string
+  estimatedDelivery: string
+  trackingNumber: string
+  currentLocation: string
   updates: Array<{
-    date: string;
-    time: string;
-    status: string;
-    description: string;
-    location: string;
-  }>;
+    date: string
+    time: string
+    status: string
+    description: string
+    location: string
+  }>
 }
 
 export default function TrackOrderPage() {
@@ -47,30 +47,30 @@ export default function TrackOrderPage() {
             time: '10:30 AM',
             status: 'Order Placed',
             description: 'Your order has been confirmed and payment received.',
-            location: 'TechPinik Warehouse'
+            location: 'TechPinik Warehouse',
           },
           {
             date: '2024-01-11',
             time: '2:15 PM',
             status: 'Processing',
             description: 'Your order is being prepared for shipment.',
-            location: 'TechPinik Warehouse'
+            location: 'TechPinik Warehouse',
           },
           {
             date: '2024-01-12',
             time: '9:45 AM',
             status: 'Shipped',
             description: 'Your order has been shipped and is on its way.',
-            location: 'Dhaka Distribution Center'
+            location: 'Dhaka Distribution Center',
           },
           {
             date: '2024-01-13',
             time: '3:20 PM',
             status: 'In Transit',
             description: 'Your order is in transit to your location.',
-            location: 'En route to delivery address'
-          }
-        ]
+            location: 'En route to delivery address',
+          },
+        ],
       })
       setIsLoading(false)
     }, 1500)
@@ -78,25 +78,39 @@ export default function TrackOrderPage() {
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'order placed': return 'bg-blue-100 text-blue-800'
-      case 'processing': return 'bg-yellow-100 text-yellow-800'
-      case 'shipped': return 'bg-purple-100 text-purple-800'
-      case 'in transit': return 'bg-indigo-100 text-indigo-800'
-      case 'out for delivery': return 'bg-orange-100 text-orange-800'
-      case 'delivered': return 'bg-yellow-100 text-yellow-800'
-      default: return 'bg-gray-100 text-gray-800'
+      case 'order placed':
+        return 'bg-blue-100 text-blue-800'
+      case 'processing':
+        return 'bg-yellow-100 text-yellow-800'
+      case 'shipped':
+        return 'bg-purple-100 text-purple-800'
+      case 'in transit':
+        return 'bg-indigo-100 text-indigo-800'
+      case 'out for delivery':
+        return 'bg-orange-100 text-orange-800'
+      case 'delivered':
+        return 'bg-yellow-100 text-yellow-800'
+      default:
+        return 'bg-gray-100 text-gray-800'
     }
   }
 
   const getStatusIcon = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'order placed': return <Package className="h-4 w-4" />
-      case 'processing': return <Clock className="h-4 w-4" />
-      case 'shipped': return <Truck className="h-4 w-4" />
-      case 'in transit': return <Truck className="h-4 w-4" />
-      case 'out for delivery': return <Truck className="h-4 w-4" />
-      case 'delivered': return <CheckCircle className="h-4 w-4" />
-      default: return <Clock className="h-4 w-4" />
+      case 'order placed':
+        return <Package className="h-4 w-4" />
+      case 'processing':
+        return <Clock className="h-4 w-4" />
+      case 'shipped':
+        return <Truck className="h-4 w-4" />
+      case 'in transit':
+        return <Truck className="h-4 w-4" />
+      case 'out for delivery':
+        return <Truck className="h-4 w-4" />
+      case 'delivered':
+        return <CheckCircle className="h-4 w-4" />
+      default:
+        return <Clock className="h-4 w-4" />
     }
   }
 
@@ -106,9 +120,7 @@ export default function TrackOrderPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <Search className="h-16 w-16 text-yellow-600 mx-auto mb-4" />
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Track Your Order
-          </h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Track Your Order</h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Enter your order number and email to track your package in real-time.
           </p>
@@ -123,7 +135,10 @@ export default function TrackOrderPage() {
             <CardContent>
               <form onSubmit={handleTrackOrder} className="space-y-4">
                 <div>
-                  <label htmlFor="orderNumber" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="orderNumber"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Order Number
                   </label>
                   <Input
@@ -173,7 +188,9 @@ export default function TrackOrderPage() {
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <span>Order #{trackingResult.orderNumber}</span>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(trackingResult.status)}`}>
+                  <span
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(trackingResult.status)}`}
+                  >
                     {trackingResult.status}
                   </span>
                 </CardTitle>

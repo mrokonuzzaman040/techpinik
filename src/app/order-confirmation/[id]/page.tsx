@@ -15,7 +15,7 @@ import { Order, OrderItem } from '@/types'
 export default function OrderConfirmationPage() {
   const params = useParams()
   const orderId = params.id as string
-  
+
   const [order, setOrder] = useState<Order | null>(null)
   const [orderItems, setOrderItems] = useState<OrderItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -78,21 +78,31 @@ export default function OrderConfirmationPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'pending': return 'bg-yellow-100 text-yellow-800'
-      case 'confirmed': return 'bg-blue-100 text-blue-800'
-      case 'shipped': return 'bg-purple-100 text-purple-800'
-      case 'delivered': return 'bg-yellow-100 text-yellow-800'
-      case 'cancelled': return 'bg-red-100 text-red-800'
-      default: return 'bg-gray-100 text-gray-800'
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800'
+      case 'confirmed':
+        return 'bg-blue-100 text-blue-800'
+      case 'shipped':
+        return 'bg-purple-100 text-purple-800'
+      case 'delivered':
+        return 'bg-yellow-100 text-yellow-800'
+      case 'cancelled':
+        return 'bg-red-100 text-red-800'
+      default:
+        return 'bg-gray-100 text-gray-800'
     }
   }
 
   const getPaymentStatusColor = (status: string) => {
     switch (status) {
-      case 'pending': return 'bg-yellow-100 text-yellow-800'
-      case 'paid': return 'bg-yellow-100 text-yellow-800'
-      case 'failed': return 'bg-red-100 text-red-800'
-      default: return 'bg-gray-100 text-gray-800'
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800'
+      case 'paid':
+        return 'bg-yellow-100 text-yellow-800'
+      case 'failed':
+        return 'bg-red-100 text-red-800'
+      default:
+        return 'bg-gray-100 text-gray-800'
     }
   }
 
@@ -134,7 +144,8 @@ export default function OrderConfirmationPage() {
                   <div>
                     <p className="text-sm text-gray-600">Order Status</p>
                     <Badge className={getStatusColor(order.order_status ?? order.status)}>
-                      {(order.order_status ?? order.status).charAt(0).toUpperCase() + (order.order_status ?? order.status).slice(1)}
+                      {(order.order_status ?? order.status).charAt(0).toUpperCase() +
+                        (order.order_status ?? order.status).slice(1)}
                     </Badge>
                   </div>
                   <div>
@@ -194,7 +205,10 @@ export default function OrderConfirmationPage() {
               <CardContent>
                 <div className="space-y-4">
                   {orderItems.map((item) => (
-                    <div key={item.id} className="flex justify-between items-center py-3 border-b last:border-b-0">
+                    <div
+                      key={item.id}
+                      className="flex justify-between items-center py-3 border-b last:border-b-0"
+                    >
                       <div className="flex-1">
                         <p className="font-medium">{item.product_name}</p>
                         <p className="text-sm text-gray-600">
@@ -202,7 +216,7 @@ export default function OrderConfirmationPage() {
                         </p>
                       </div>
                       <div className="font-medium">
-                        ৳{(item.total_price ?? (item.unit_price * item.quantity)).toLocaleString()}
+                        ৳{(item.total_price ?? item.unit_price * item.quantity).toLocaleString()}
                       </div>
                     </div>
                   ))}
@@ -221,23 +235,47 @@ export default function OrderConfirmationPage() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Subtotal</span>
-                    <span>৳{((typeof order.total_amount === 'string' ? parseFloat(order.total_amount) : order.total_amount || 0) - (typeof order.delivery_charge === 'string' ? parseFloat(order.delivery_charge) : order.delivery_charge || 0)).toLocaleString()}</span>
+                    <span>
+                      ৳
+                      {(
+                        (typeof order.total_amount === 'string'
+                          ? parseFloat(order.total_amount)
+                          : order.total_amount || 0) -
+                        (typeof order.delivery_charge === 'string'
+                          ? parseFloat(order.delivery_charge)
+                          : order.delivery_charge || 0)
+                      ).toLocaleString()}
+                    </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Shipping</span>
-                    <span>৳{(typeof order.delivery_charge === 'string' ? parseFloat(order.delivery_charge) : order.delivery_charge || 0).toLocaleString()}</span>
+                    <span>
+                      ৳
+                      {(typeof order.delivery_charge === 'string'
+                        ? parseFloat(order.delivery_charge)
+                        : order.delivery_charge || 0
+                      ).toLocaleString()}
+                    </span>
                   </div>
                   <Separator />
                   <div className="flex justify-between font-bold text-lg">
                     <span>Total</span>
-                    <span className="text-yellow-600">৳{(typeof order.total_amount === 'string' ? parseFloat(order.total_amount) : order.total_amount || 0).toLocaleString()}</span>
+                    <span className="text-yellow-600">
+                      ৳
+                      {(typeof order.total_amount === 'string'
+                        ? parseFloat(order.total_amount)
+                        : order.total_amount || 0
+                      ).toLocaleString()}
+                    </span>
                   </div>
                 </div>
 
                 <div className="pt-4 border-t">
                   <p className="text-sm text-gray-600 mb-2">Payment Method</p>
                   <p className="font-medium">
-                    {order.payment_method === 'cash_on_delivery' ? 'Cash on Delivery' : order.payment_method}
+                    {order.payment_method === 'cash_on_delivery'
+                      ? 'Cash on Delivery'
+                      : order.payment_method}
                   </p>
                 </div>
 
@@ -259,10 +297,7 @@ export default function OrderConfirmationPage() {
               Continue Shopping
             </Button>
           </Link>
-          <Button 
-            size="lg"
-            onClick={() => window.print()}
-          >
+          <Button size="lg" onClick={() => window.print()}>
             Print Order
           </Button>
         </div>

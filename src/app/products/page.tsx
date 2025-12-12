@@ -5,7 +5,13 @@ import { useSearchParams } from 'next/navigation'
 import { Filter, Grid, List, SlidersHorizontal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
@@ -27,7 +33,7 @@ function ProductsPageContent() {
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null)
   const [priceRange, setPriceRange] = useState({ min: '', max: '' })
   const [searchQuery, setSearchQuery] = useState('')
-  
+
   const searchParams = useSearchParams()
   const categoryParam = searchParams.get('category')
 
@@ -56,7 +62,7 @@ function ProductsPageContent() {
         const uniqueBrands = Array.from(
           new Set(
             (productsData || [])
-              .map(p => p.brand)
+              .map((p) => p.brand)
               .filter((brand): brand is string => Boolean(brand))
           )
         ).sort()
@@ -81,10 +87,7 @@ function ProductsPageContent() {
       const supabase = createClient()
 
       try {
-        let query = supabase
-          .from('products')
-          .select('*')
-          .eq('is_active', true)
+        let query = supabase.from('products').select('*').eq('is_active', true)
 
         // Apply category filter
         if (selectedCategories.length > 0) {
@@ -139,15 +142,15 @@ function ProductsPageContent() {
 
   const handleCategoryChange = (categoryId: string, checked: boolean) => {
     if (checked) {
-      setSelectedCategories(prev => [...prev, categoryId])
+      setSelectedCategories((prev) => [...prev, categoryId])
     } else {
-      setSelectedCategories(prev => prev.filter(id => id !== categoryId))
+      setSelectedCategories((prev) => prev.filter((id) => id !== categoryId))
     }
   }
 
   const handleBrandChange = (brand: string) => {
     // Toggle: if already selected, deselect; otherwise, select this brand only
-    setSelectedBrand(prev => prev === brand ? null : brand)
+    setSelectedBrand((prev) => (prev === brand ? null : brand))
   }
 
   const clearFilters = () => {
@@ -161,7 +164,9 @@ function ProductsPageContent() {
     <div className="space-y-6">
       {/* Search */}
       <div>
-        <Label htmlFor="search" className="text-sm font-medium">Search Products</Label>
+        <Label htmlFor="search" className="text-sm font-medium">
+          Search Products
+        </Label>
         <Input
           id="search"
           placeholder="Search by name..."
@@ -180,9 +185,7 @@ function ProductsPageContent() {
               <Checkbox
                 id={category.id}
                 checked={selectedCategories.includes(category.id)}
-                onCheckedChange={(checked) => 
-                  handleCategoryChange(category.id, checked as boolean)
-                }
+                onCheckedChange={(checked) => handleCategoryChange(category.id, checked as boolean)}
               />
               <Label htmlFor={category.id} className="text-sm">
                 {category.name}
@@ -221,13 +224,13 @@ function ProductsPageContent() {
             placeholder="Min"
             type="number"
             value={priceRange.min}
-            onChange={(e) => setPriceRange(prev => ({ ...prev, min: e.target.value }))}
+            onChange={(e) => setPriceRange((prev) => ({ ...prev, min: e.target.value }))}
           />
           <Input
             placeholder="Max"
             type="number"
             value={priceRange.max}
-            onChange={(e) => setPriceRange(prev => ({ ...prev, max: e.target.value }))}
+            onChange={(e) => setPriceRange((prev) => ({ ...prev, max: e.target.value }))}
           />
         </div>
       </div>
@@ -270,11 +273,11 @@ function ProductsPageContent() {
                 return (
                   <Badge
                     key={brand}
-                    variant={isSelected ? "default" : "outline"}
+                    variant={isSelected ? 'default' : 'outline'}
                     className={`cursor-pointer px-3 py-1.5 text-sm font-medium transition-colors ${
                       isSelected
-                        ? "bg-yellow-600 hover:bg-yellow-700 text-white border-yellow-600"
-                        : "bg-white hover:bg-yellow-50 text-gray-700 border-gray-300 hover:border-yellow-400"
+                        ? 'bg-yellow-600 hover:bg-yellow-700 text-white border-yellow-600'
+                        : 'bg-white hover:bg-yellow-50 text-gray-700 border-gray-300 hover:border-yellow-400'
                     }`}
                     onClick={() => handleBrandChange(brand)}
                   >
@@ -323,9 +326,7 @@ function ProductsPageContent() {
                   </SheetContent>
                 </Sheet>
 
-                <span className="text-sm text-gray-600">
-                  {products.length} products found
-                </span>
+                <span className="text-sm text-gray-600">{products.length} products found</span>
               </div>
 
               <div className="flex items-center gap-2">
@@ -377,14 +378,14 @@ function ProductsPageContent() {
                 </Button>
               </div>
             ) : (
-              <div className={`grid gap-4 md:gap-6 ${
-                viewMode === 'grid' 
-                  ? 'grid-cols-2 md:grid-cols-3 xl:grid-cols-4' 
-                  : 'grid-cols-1'
-              }`}>
+              <div
+                className={`grid gap-4 md:gap-6 ${
+                  viewMode === 'grid' ? 'grid-cols-2 md:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'
+                }`}
+              >
                 {products.map((product) => (
-                  <ProductCard 
-                    key={product.id} 
+                  <ProductCard
+                    key={product.id}
                     product={product}
                     className={viewMode === 'list' ? 'flex-row' : ''}
                   />

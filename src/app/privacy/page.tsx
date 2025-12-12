@@ -8,11 +8,10 @@ export default function PrivacyPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <Shield className="h-16 w-16 text-yellow-600 mx-auto mb-4" />
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Privacy Policy
-          </h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Privacy Policy</h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Your privacy is important to us. This policy explains how we collect, use, and protect your information.
+            Your privacy is important to us. This policy explains how we collect, use, and protect
+            your information.
           </p>
         </div>
 
@@ -26,7 +25,8 @@ export default function PrivacyPage() {
                 1. Information We Collect
               </h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                We collect information you provide directly to us, such as when you create an account, make a purchase, or contact us for support.
+                We collect information you provide directly to us, such as when you create an
+                account, make a purchase, or contact us for support.
               </p>
               <div className="space-y-4">
                 <div>
@@ -76,7 +76,8 @@ export default function PrivacyPage() {
                 3. Information Security
               </h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.
+                We implement appropriate security measures to protect your personal information
+                against unauthorized access, alteration, disclosure, or destruction.
               </p>
               <div className="bg-yellow-50 p-4 rounded-lg">
                 <h3 className="font-semibold text-yellow-800 mb-2">Security Measures Include:</h3>
@@ -100,30 +101,49 @@ export default function PrivacyPage() {
                 You have certain rights regarding your personal information:
               </p>
               <ul className="list-disc list-inside text-gray-700 space-y-2">
-                <li><strong>Access:</strong> Request a copy of your personal information</li>
-                <li><strong>Correction:</strong> Update or correct your information</li>
-                <li><strong>Deletion:</strong> Request deletion of your account and data</li>
-                <li><strong>Portability:</strong> Export your data in a readable format</li>
-                <li><strong>Opt-out:</strong> Unsubscribe from marketing communications</li>
+                <li>
+                  <strong>Access:</strong> Request a copy of your personal information
+                </li>
+                <li>
+                  <strong>Correction:</strong> Update or correct your information
+                </li>
+                <li>
+                  <strong>Deletion:</strong> Request deletion of your account and data
+                </li>
+                <li>
+                  <strong>Portability:</strong> Export your data in a readable format
+                </li>
+                <li>
+                  <strong>Opt-out:</strong> Unsubscribe from marketing communications
+                </li>
               </ul>
             </section>
 
             {/* Section 5 */}
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                5. Cookies and Tracking
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Cookies and Tracking</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                We use cookies and similar technologies to enhance your browsing experience and analyze website traffic.
+                We use cookies and similar technologies to enhance your browsing experience and
+                analyze website traffic.
               </p>
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Types of Cookies We Use:</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    Types of Cookies We Use:
+                  </h3>
                   <ul className="list-disc list-inside text-gray-700 space-y-1">
-                    <li><strong>Essential Cookies:</strong> Required for website functionality</li>
-                    <li><strong>Analytics Cookies:</strong> Help us understand website usage</li>
-                    <li><strong>Marketing Cookies:</strong> Used for targeted advertising</li>
-                    <li><strong>Preference Cookies:</strong> Remember your settings and preferences</li>
+                    <li>
+                      <strong>Essential Cookies:</strong> Required for website functionality
+                    </li>
+                    <li>
+                      <strong>Analytics Cookies:</strong> Help us understand website usage
+                    </li>
+                    <li>
+                      <strong>Marketing Cookies:</strong> Used for targeted advertising
+                    </li>
+                    <li>
+                      <strong>Preference Cookies:</strong> Remember your settings and preferences
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -136,7 +156,8 @@ export default function PrivacyPage() {
                 6. Third-Party Services
               </h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                We may share your information with trusted third-party service providers who assist us in operating our website and conducting our business.
+                We may share your information with trusted third-party service providers who assist
+                us in operating our website and conducting our business.
               </p>
               <ul className="list-disc list-inside text-gray-700 space-y-2">
                 <li>Payment processors for secure transactions</li>
@@ -149,47 +170,56 @@ export default function PrivacyPage() {
 
             {/* Section 7 */}
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                7. Data Retention
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Data Retention</h2>
               <p className="text-gray-700 leading-relaxed">
-                We retain your personal information for as long as necessary to provide our services and comply with legal obligations. Typically, we retain account information for 3 years after account closure, unless a longer retention period is required by law.
+                We retain your personal information for as long as necessary to provide our services
+                and comply with legal obligations. Typically, we retain account information for 3
+                years after account closure, unless a longer retention period is required by law.
               </p>
             </section>
 
             {/* Section 8 */}
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                8. Children's Privacy
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Children's Privacy</h2>
               <p className="text-gray-700 leading-relaxed">
-                Our services are not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13. If you are a parent or guardian and believe your child has provided us with personal information, please contact us.
+                Our services are not intended for children under 13 years of age. We do not
+                knowingly collect personal information from children under 13. If you are a parent
+                or guardian and believe your child has provided us with personal information, please
+                contact us.
               </p>
             </section>
 
             {/* Section 9 */}
             <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                9. Changes to This Policy
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">9. Changes to This Policy</h2>
               <p className="text-gray-700 leading-relaxed">
-                We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date. You are advised to review this Privacy Policy periodically for any changes.
+                We may update this Privacy Policy from time to time. We will notify you of any
+                changes by posting the new Privacy Policy on this page and updating the "Last
+                Updated" date. You are advised to review this Privacy Policy periodically for any
+                changes.
               </p>
             </section>
 
             {/* Contact Information */}
             <section className="bg-gray-50 p-6 rounded-lg">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Contact Us
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Contact Us</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                If you have any questions about this Privacy Policy or our data practices, please contact us:
+                If you have any questions about this Privacy Policy or our data practices, please
+                contact us:
               </p>
               <div className="space-y-2">
-                <p className="text-gray-700"><strong>Email:</strong> privacy@techpinik.com</p>
-                <p className="text-gray-700"><strong>Phone:</strong> +880 1234 567890</p>
-                <p className="text-gray-700"><strong>Address:</strong> Dhaka, Bangladesh</p>
-                <p className="text-gray-700"><strong>Last Updated:</strong> {new Date().toLocaleDateString()}</p>
+                <p className="text-gray-700">
+                  <strong>Email:</strong> privacy@techpinik.com
+                </p>
+                <p className="text-gray-700">
+                  <strong>Phone:</strong> +880 1234 567890
+                </p>
+                <p className="text-gray-700">
+                  <strong>Address:</strong> Dhaka, Bangladesh
+                </p>
+                <p className="text-gray-700">
+                  <strong>Last Updated:</strong> {new Date().toLocaleDateString()}
+                </p>
               </div>
             </section>
           </div>

@@ -11,14 +11,8 @@ import MainLayout from '@/components/layout/MainLayout'
 import { useCartStore } from '@/store/cart'
 
 export default function CartPage() {
-  const { 
-    items, 
-    updateQuantity, 
-    removeItem, 
-    clearCart, 
-    getTotalItems, 
-    getTotalPrice 
-  } = useCartStore()
+  const { items, updateQuantity, removeItem, clearCart, getTotalItems, getTotalPrice } =
+    useCartStore()
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -51,9 +45,7 @@ export default function CartPage() {
               Looks like you haven't added any items to your cart yet.
             </p>
             <Link href="/products">
-              <Button size="lg">
-                Start Shopping
-              </Button>
+              <Button size="lg">Start Shopping</Button>
             </Link>
           </div>
         </div>
@@ -76,7 +68,11 @@ export default function CartPage() {
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Shopping Cart</h1>
             <p className="text-gray-600">{getTotalItems()} items in your cart</p>
           </div>
-          <Button variant="outline" onClick={handleClearCart} className="text-red-600 hover:text-red-700">
+          <Button
+            variant="outline"
+            onClick={handleClearCart}
+            className="text-red-600 hover:text-red-700"
+          >
             <Trash2 className="h-4 w-4 mr-2" />
             Clear Cart
           </Button>
@@ -147,7 +143,10 @@ export default function CartPage() {
                     {/* Item Total */}
                     <div className="text-right">
                       <p className="font-bold text-gray-900">
-                        ৳{((item.product.sale_price || item.product.price) * item.quantity).toLocaleString()}
+                        ৳
+                        {(
+                          (item.product.sale_price || item.product.price) * item.quantity
+                        ).toLocaleString()}
                       </p>
                     </div>
                   </div>
@@ -161,13 +160,13 @@ export default function CartPage() {
             <Card className="sticky top-6">
               <CardContent className="p-6">
                 <h2 className="text-xl font-bold text-gray-900 mb-4">Order Summary</h2>
-                
+
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Subtotal ({getTotalItems()} items)</span>
                     <span className="font-medium">৳{subtotal.toLocaleString()}</span>
                   </div>
-                  
+
                   <div className="flex justify-between">
                     <span className="text-gray-600">Delivery Charge</span>
                     <span className="font-medium">
@@ -184,9 +183,9 @@ export default function CartPage() {
                       Add ৳{(1000 - subtotal).toLocaleString()} more for free delivery
                     </p>
                   )}
-                  
+
                   <Separator />
-                  
+
                   <div className="flex justify-between text-lg font-bold">
                     <span>Total</span>
                     <span className="text-yellow-600">৳{total.toLocaleString()}</span>
@@ -200,9 +199,7 @@ export default function CartPage() {
                 </Link>
 
                 <div className="mt-4 text-center">
-                  <p className="text-sm text-gray-500">
-                    Secure checkout with SSL encryption
-                  </p>
+                  <p className="text-sm text-gray-500">Secure checkout with SSL encryption</p>
                 </div>
               </CardContent>
             </Card>

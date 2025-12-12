@@ -7,7 +7,13 @@ import Image from 'next/image'
 import { ArrowLeft, Filter, Grid, List, SlidersHorizontal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -20,7 +26,7 @@ import { Product, Category } from '@/types'
 export default function CategoryDetailPage() {
   const params = useParams()
   const categoryId = params.id as string
-  
+
   const [category, setCategory] = useState<Category | null>(null)
   const [products, setProducts] = useState<Product[]>([])
   const [brands, setBrands] = useState<string[]>([])
@@ -59,7 +65,7 @@ export default function CategoryDetailPage() {
         const uniqueBrands = Array.from(
           new Set(
             (productsData || [])
-              .map(p => p.brand)
+              .map((p) => p.brand)
               .filter((brand): brand is string => Boolean(brand))
           )
         ).sort()
@@ -135,9 +141,9 @@ export default function CategoryDetailPage() {
 
   const handleBrandChange = (brand: string, checked: boolean) => {
     if (checked) {
-      setSelectedBrands(prev => [...prev, brand])
+      setSelectedBrands((prev) => [...prev, brand])
     } else {
-      setSelectedBrands(prev => prev.filter(b => b !== brand))
+      setSelectedBrands((prev) => prev.filter((b) => b !== brand))
     }
   }
 
@@ -151,7 +157,9 @@ export default function CategoryDetailPage() {
     <div className="space-y-6">
       {/* Search */}
       <div>
-        <Label htmlFor="search" className="text-sm font-medium">Search Products</Label>
+        <Label htmlFor="search" className="text-sm font-medium">
+          Search Products
+        </Label>
         <Input
           id="search"
           placeholder="Search by name..."
@@ -171,9 +179,7 @@ export default function CategoryDetailPage() {
                 <Checkbox
                   id={`brand-${brand}`}
                   checked={selectedBrands.includes(brand)}
-                  onCheckedChange={(checked) => 
-                    handleBrandChange(brand, checked as boolean)
-                  }
+                  onCheckedChange={(checked) => handleBrandChange(brand, checked as boolean)}
                 />
                 <Label htmlFor={`brand-${brand}`} className="text-sm">
                   {brand}
@@ -192,13 +198,13 @@ export default function CategoryDetailPage() {
             placeholder="Min"
             type="number"
             value={priceRange.min}
-            onChange={(e) => setPriceRange(prev => ({ ...prev, min: e.target.value }))}
+            onChange={(e) => setPriceRange((prev) => ({ ...prev, min: e.target.value }))}
           />
           <Input
             placeholder="Max"
             type="number"
             value={priceRange.max}
-            onChange={(e) => setPriceRange(prev => ({ ...prev, max: e.target.value }))}
+            onChange={(e) => setPriceRange((prev) => ({ ...prev, max: e.target.value }))}
           />
         </div>
       </div>
@@ -229,9 +235,13 @@ export default function CategoryDetailPage() {
       <div className="container mx-auto px-4 py-6">
         {/* Breadcrumb */}
         <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
-          <Link href="/" className="hover:text-yellow-600">Home</Link>
+          <Link href="/" className="hover:text-yellow-600">
+            Home
+          </Link>
           <span>/</span>
-          <Link href="/categories" className="hover:text-yellow-600">Categories</Link>
+          <Link href="/categories" className="hover:text-yellow-600">
+            Categories
+          </Link>
           <span>/</span>
           <span className="text-gray-900">{category?.name}</span>
         </nav>
@@ -266,10 +276,10 @@ export default function CategoryDetailPage() {
 
             {!category.banner_image_url && (
               <div className="text-center mb-6">
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{category.name}</h1>
-                {category.description && (
-                  <p className="text-gray-600">{category.description}</p>
-                )}
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+                  {category.name}
+                </h1>
+                {category.description && <p className="text-gray-600">{category.description}</p>}
               </div>
             )}
           </div>
@@ -312,9 +322,7 @@ export default function CategoryDetailPage() {
                   </SheetContent>
                 </Sheet>
 
-                <span className="text-sm text-gray-600">
-                  {products.length} products found
-                </span>
+                <span className="text-sm text-gray-600">{products.length} products found</span>
               </div>
 
               <div className="flex items-center gap-2">
@@ -366,14 +374,14 @@ export default function CategoryDetailPage() {
                 </Button>
               </div>
             ) : (
-              <div className={`grid gap-4 md:gap-6 ${
-                viewMode === 'grid' 
-                  ? 'grid-cols-2 md:grid-cols-3 xl:grid-cols-4' 
-                  : 'grid-cols-1'
-              }`}>
+              <div
+                className={`grid gap-4 md:gap-6 ${
+                  viewMode === 'grid' ? 'grid-cols-2 md:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'
+                }`}
+              >
                 {products.map((product) => (
-                  <ProductCard 
-                    key={product.id} 
+                  <ProductCard
+                    key={product.id}
                     product={product}
                     className={viewMode === 'list' ? 'flex-row' : ''}
                   />

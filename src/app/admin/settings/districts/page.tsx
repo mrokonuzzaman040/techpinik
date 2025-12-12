@@ -6,12 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import {
   Table,
   TableBody,
@@ -36,7 +31,7 @@ export default function DistrictsManagementPage() {
 
   const [formData, setFormData] = useState({
     name: '',
-    delivery_charge: ''
+    delivery_charge: '',
   })
 
   useEffect(() => {
@@ -44,7 +39,7 @@ export default function DistrictsManagementPage() {
   }, [])
 
   useEffect(() => {
-    const filtered = districts.filter(district =>
+    const filtered = districts.filter((district) =>
       district.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
     setFilteredDistricts(filtered)
@@ -54,10 +49,7 @@ export default function DistrictsManagementPage() {
     const supabase = createClient()
 
     try {
-      const { data, error } = await supabase
-        .from('districts')
-        .select('*')
-        .order('name')
+      const { data, error } = await supabase.from('districts').select('*').order('name')
 
       if (error) throw error
 
@@ -72,7 +64,7 @@ export default function DistrictsManagementPage() {
   const resetForm = () => {
     setFormData({
       name: '',
-      delivery_charge: ''
+      delivery_charge: '',
     })
     setEditingDistrict(null)
   }
@@ -86,15 +78,15 @@ export default function DistrictsManagementPage() {
     setEditingDistrict(district)
     setFormData({
       name: district.name || '',
-      delivery_charge: district.delivery_charge?.toString() || ''
+      delivery_charge: district.delivery_charge?.toString() || '',
     })
     setIsDialogOpen(true)
   }
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }))
   }
 
@@ -104,10 +96,10 @@ export default function DistrictsManagementPage() {
 
     try {
       const supabase = createClient()
-      
+
       const districtData = {
         name: formData.name,
-        delivery_charge: parseFloat(formData.delivery_charge) || 0
+        delivery_charge: parseFloat(formData.delivery_charge) || 0,
       }
 
       if (editingDistrict) {
@@ -120,9 +112,7 @@ export default function DistrictsManagementPage() {
         if (error) throw error
       } else {
         // Create new district
-        const { error } = await supabase
-          .from('districts')
-          .insert([districtData])
+        const { error } = await supabase.from('districts').insert([districtData])
 
         if (error) throw error
       }
@@ -140,17 +130,16 @@ export default function DistrictsManagementPage() {
   }
 
   const deleteDistrict = async (district: District) => {
-    if (!confirm(`Are you sure you want to delete "${district.name}"? This action cannot be undone.`)) {
+    if (
+      !confirm(`Are you sure you want to delete "${district.name}"? This action cannot be undone.`)
+    ) {
       return
     }
 
     const supabase = createClient()
 
     try {
-      const { error } = await supabase
-        .from('districts')
-        .delete()
-        .eq('id', district.id)
+      const { error } = await supabase.from('districts').delete().eq('id', district.id)
 
       if (error) throw error
 
@@ -163,22 +152,79 @@ export default function DistrictsManagementPage() {
   }
 
   const populateBangladeshDistricts = async () => {
-    if (!confirm('This will add all 64 districts of Bangladesh with default shipping costs. Continue?')) {
+    if (
+      !confirm(
+        'This will add all 64 districts of Bangladesh with default shipping costs. Continue?'
+      )
+    ) {
       return
     }
 
     const bangladeshDistricts = [
-      'Bagerhat', 'Bandarban', 'Barguna', 'Barisal', 'Bhola', 'Bogra', 'Brahmanbaria',
-      'Chandpur', 'Chittagong', 'Chuadanga', 'Comilla', 'Cox\'s Bazar', 'Dhaka',
-      'Dinajpur', 'Faridpur', 'Feni', 'Gaibandha', 'Gazipur', 'Gopalganj', 'Habiganj',
-      'Jamalpur', 'Jessore', 'Jhalokati', 'Jhenaidah', 'Joypurhat', 'Khagrachhari',
-      'Khulna', 'Kishoreganj', 'Kurigram', 'Kushtia', 'Lakshmipur', 'Lalmonirhat',
-      'Madaripur', 'Magura', 'Manikganj', 'Meherpur', 'Moulvibazar', 'Munshiganj',
-      'Mymensingh', 'Naogaon', 'Narail', 'Narayanganj', 'Narsingdi', 'Natore',
-      'Nawabganj', 'Netrokona', 'Nilphamari', 'Noakhali', 'Pabna', 'Panchagarh',
-      'Patuakhali', 'Pirojpur', 'Rajbari', 'Rajshahi', 'Rangamati', 'Rangpur',
-      'Satkhira', 'Shariatpur', 'Sherpur', 'Sirajganj', 'Sunamganj', 'Sylhet',
-      'Tangail', 'Thakurgaon'
+      'Bagerhat',
+      'Bandarban',
+      'Barguna',
+      'Barisal',
+      'Bhola',
+      'Bogra',
+      'Brahmanbaria',
+      'Chandpur',
+      'Chittagong',
+      'Chuadanga',
+      'Comilla',
+      "Cox's Bazar",
+      'Dhaka',
+      'Dinajpur',
+      'Faridpur',
+      'Feni',
+      'Gaibandha',
+      'Gazipur',
+      'Gopalganj',
+      'Habiganj',
+      'Jamalpur',
+      'Jessore',
+      'Jhalokati',
+      'Jhenaidah',
+      'Joypurhat',
+      'Khagrachhari',
+      'Khulna',
+      'Kishoreganj',
+      'Kurigram',
+      'Kushtia',
+      'Lakshmipur',
+      'Lalmonirhat',
+      'Madaripur',
+      'Magura',
+      'Manikganj',
+      'Meherpur',
+      'Moulvibazar',
+      'Munshiganj',
+      'Mymensingh',
+      'Naogaon',
+      'Narail',
+      'Narayanganj',
+      'Narsingdi',
+      'Natore',
+      'Nawabganj',
+      'Netrokona',
+      'Nilphamari',
+      'Noakhali',
+      'Pabna',
+      'Panchagarh',
+      'Patuakhali',
+      'Pirojpur',
+      'Rajbari',
+      'Rajshahi',
+      'Rangamati',
+      'Rangpur',
+      'Satkhira',
+      'Shariatpur',
+      'Sherpur',
+      'Sirajganj',
+      'Sunamganj',
+      'Sylhet',
+      'Tangail',
+      'Thakurgaon',
     ]
 
     const supabase = createClient()
@@ -187,16 +233,14 @@ export default function DistrictsManagementPage() {
       setSaving(true)
 
       // Check which districts already exist
-      const { data: existingDistricts } = await supabase
-        .from('districts')
-        .select('name')
+      const { data: existingDistricts } = await supabase.from('districts').select('name')
 
-      const existingNames = existingDistricts?.map(d => d.name) || []
+      const existingNames = existingDistricts?.map((d) => d.name) || []
       const newDistricts = bangladeshDistricts
-        .filter(name => !existingNames.includes(name))
-        .map(name => ({
+        .filter((name) => !existingNames.includes(name))
+        .map((name) => ({
           name,
-          delivery_charge: name === 'Dhaka' ? 60 : 120 // Dhaka: 60 BDT, Others: 120 BDT
+          delivery_charge: name === 'Dhaka' ? 60 : 120, // Dhaka: 60 BDT, Others: 120 BDT
         }))
 
       if (newDistricts.length === 0) {
@@ -204,9 +248,7 @@ export default function DistrictsManagementPage() {
         return
       }
 
-      const { error } = await supabase
-        .from('districts')
-        .insert(newDistricts)
+      const { error } = await supabase.from('districts').insert(newDistricts)
 
       if (error) throw error
 
@@ -226,7 +268,7 @@ export default function DistrictsManagementPage() {
     return new Intl.NumberFormat('en-BD', {
       style: 'currency',
       currency: 'BDT',
-      minimumFractionDigits: 0
+      minimumFractionDigits: 0,
     }).format(numAmount)
   }
 
@@ -244,7 +286,7 @@ export default function DistrictsManagementPage() {
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
-      
+
       <div className="flex-1 overflow-auto">
         <div className="p-6">
           {/* Header */}
@@ -297,7 +339,12 @@ export default function DistrictsManagementPage() {
               <CardContent className="p-4">
                 <div className="text-center">
                   <p className="text-2xl font-bold text-gray-900">
-                    {districts.length > 0 ? formatCurrency(districts.reduce((sum, d) => sum + Number(d.delivery_charge), 0) / districts.length) : '৳0'}
+                    {districts.length > 0
+                      ? formatCurrency(
+                          districts.reduce((sum, d) => sum + Number(d.delivery_charge), 0) /
+                            districts.length
+                        )
+                      : '৳0'}
                   </p>
                   <p className="text-sm text-gray-600">Avg. Shipping</p>
                 </div>
@@ -384,9 +431,7 @@ export default function DistrictsManagementPage() {
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>
-                  {editingDistrict ? 'Edit District' : 'Add New District'}
-                </DialogTitle>
+                <DialogTitle>{editingDistrict ? 'Edit District' : 'Add New District'}</DialogTitle>
               </DialogHeader>
 
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -412,9 +457,7 @@ export default function DistrictsManagementPage() {
                     placeholder="e.g., 60"
                     required
                   />
-                  <p className="text-sm text-gray-500 mt-1">
-                    Delivery charge for this district
-                  </p>
+                  <p className="text-sm text-gray-500 mt-1">Delivery charge for this district</p>
                 </div>
 
                 <div className="flex gap-4 pt-4">
