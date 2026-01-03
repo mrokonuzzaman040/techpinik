@@ -92,7 +92,7 @@ export default function ContactPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600">
-                    +880 1234-567890
+                    ‪+880 1814‑931931‬
                     <br />
                     +880 1234-567891
                   </p>
@@ -208,7 +208,7 @@ export default function ContactPage() {
                         value={formData.phone}
                         onChange={handleInputChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                        placeholder="+880 1234-567890"
+                        placeholder="‪+880 1814‑931931‬"
                       />
                     </div>
                     <div>

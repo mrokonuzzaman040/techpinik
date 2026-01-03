@@ -110,7 +110,7 @@ export default function AboutPage() {
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Call Us</h3>
               <p className="text-gray-600 text-sm">
-                +880 1234-567890
+                ‪+880 1814‑931931‬
                 <br />
                 +880 1234-567891
                 <br />

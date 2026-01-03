@@ -25,7 +25,7 @@ export default function GeneralSettingsPage() {
 
     // Contact Information
     contact_email: 'info@techpinik.com',
-    contact_phone: '+880 1234-567890',
+    contact_phone: '‪+880 1814‑931931‬',
     contact_address: 'Dhaka, Bangladesh',
     support_email: 'support@techpinik.com',
 
