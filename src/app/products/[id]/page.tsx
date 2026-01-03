@@ -56,7 +56,47 @@ export default function ProductDetailPage() {
           .single()
 
         if (productData) {
-          setProduct(productData)
+          // Transform product data to match Product type
+          const transformedProduct: Product = {
+            id: productData.id,
+            name: productData.name,
+            description: productData.description || '',
+            price: productData.price || 0,
+            sale_price: productData.sale_price || undefined,
+            sku: productData.sku || '',
+            stock_quantity: productData.stock_quantity || 0,
+            category_id: productData.category_id || undefined,
+            images: Array.isArray(productData.images) 
+              ? productData.images 
+              : productData.image_url 
+                ? [productData.image_url] 
+                : [],
+            image_url: Array.isArray(productData.images) && productData.images.length > 0
+              ? productData.images[0]
+              : productData.image_url || undefined,
+            is_active: productData.is_active ?? true,
+            is_featured: productData.is_featured ?? false,
+            weight: productData.weight || undefined,
+            dimensions: productData.dimensions || undefined,
+            availability_status: productData.availability_status || 'in_stock',
+            warranty: productData.warranty || undefined,
+            brand: productData.brand || undefined,
+            origin: productData.origin || undefined,
+            key_features: Array.isArray(productData.key_features)
+              ? productData.key_features
+              : productData.key_features
+                ? [productData.key_features]
+                : undefined,
+            box_contents: Array.isArray(productData.box_contents)
+              ? productData.box_contents
+              : productData.box_contents
+                ? [productData.box_contents]
+                : undefined,
+            slug: productData.slug || '',
+            created_at: productData.created_at || new Date().toISOString(),
+            updated_at: productData.updated_at || new Date().toISOString(),
+          }
+          setProduct(transformedProduct)
 
           // Fetch category
           if (productData.category_id) {
@@ -91,8 +131,19 @@ export default function ProductDetailPage() {
   }, [productId])
 
   const handleAddToCart = () => {
-    if (!product) return
-    addToCart(product, quantity)
+    if (!product) {
+      console.error('Cannot add to cart: product is null')
+      return
+    }
+    
+    try {
+      console.log('Adding to cart:', { productId: product.id, productName: product.name, quantity })
+      addToCart(product, quantity)
+      console.log('Successfully added to cart')
+    } catch (error) {
+      console.error('Error adding to cart:', error)
+      alert('Failed to add product to cart. Please try again.')
+    }
   }
 
   const handleOrderNow = () => {
@@ -296,12 +347,24 @@ export default function ProductDetailPage() {
 
                 <div className="space-y-3">
                   <div className="flex gap-3">
-                    <Button onClick={handleAddToCart} variant="outline" className="flex-1">
+                    <Button 
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        handleAddToCart()
+                      }} 
+                      variant="outline" 
+                      className="flex-1"
+                    >
                       <ShoppingCart className="h-4 w-4 mr-2" />
                       Add to Cart
                     </Button>
                     <Button
-                      onClick={handleOrderNow}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        handleOrderNow()
+                      }}
                       className="flex-1 bg-yellow-600 hover:bg-yellow-700"
                     >
                       <Zap className="h-4 w-4 mr-2" />

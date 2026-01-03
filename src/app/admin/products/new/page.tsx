@@ -99,6 +99,15 @@ export default function AddProductPage() {
     return `PRD-${timestamp}-${random}`
   }
 
+  const generateSlug = (name: string) => {
+    return name
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/[\s_-]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -108,23 +117,52 @@ export default function AddProductPage() {
     try {
       // Generate SKU if not provided
       const sku = formData.sku || generateSKU()
+      
+      // Generate slug from name
+      const slug = generateSlug(formData.name)
 
-      const productData = {
-        ...formData,
-        sku,
-        price: Number(formData.price),
-        sale_price: formData.sale_price ? Number(formData.sale_price) : null,
-        stock_quantity: Number(formData.stock_quantity),
+      // Prepare images array - convert image_url to images array if it's a valid URL
+      const images: string[] = []
+      if (formData.image_url && formData.image_url.startsWith('http')) {
+        images.push(formData.image_url)
       }
 
-      const { error } = await supabase.from('products').insert([productData])
+      // Prepare product data - only include fields that exist in the database schema
+      const productData = {
+        name: formData.name,
+        description: formData.description || null,
+        price: Number(formData.price) || 0,
+        category_id: formData.category_id || null,
+        images: images.length > 0 ? images : [],
+        stock_quantity: Number(formData.stock_quantity) || 0,
+        is_featured: formData.is_featured || false,
+        is_active: formData.is_active ?? true,
+        slug,
+        sku,
+      }
 
-      if (error) throw error
+      const { error, data } = await supabase.from('products').insert([productData]).select()
 
+      if (error) {
+        console.error('Supabase error:', error)
+        throw new Error(error.message || 'Failed to create product')
+      }
+
+      if (!data || data.length === 0) {
+        throw new Error('Product was not created successfully')
+      }
+
+      alert('Product created successfully!')
       router.push('/admin/products')
     } catch (error) {
       console.error('Error creating product:', error)
-      alert('Error creating product. Please try again.')
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : typeof error === 'object' && error !== null && 'message' in error
+            ? String(error.message)
+            : 'Unknown error occurred'
+      alert(`Error creating product: ${errorMessage}. Please try again.`)
     } finally {
       setLoading(false)
     }

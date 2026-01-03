@@ -133,20 +133,30 @@ export default function EditProductPage() {
   }
 
   const uploadImage = async (file: File): Promise<string> => {
-    const supabase = createClient()
-    const fileExt = file.name.split('.').pop()
-    const fileName = `${Date.now()}.${fileExt}`
-    const filePath = `products/${fileName}`
+    try {
+      const supabase = createClient()
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${Date.now()}.${fileExt}`
+      const filePath = `products/${fileName}`
 
-    const { error: uploadError } = await supabase.storage.from('images').upload(filePath, file)
+      const { error: uploadError } = await supabase.storage.from('images').upload(filePath, file)
 
-    if (uploadError) {
-      throw uploadError
+      if (uploadError) {
+        console.error('Image upload error:', uploadError)
+        throw new Error(uploadError.message || 'Failed to upload image')
+      }
+
+      const { data } = supabase.storage.from('images').getPublicUrl(filePath)
+
+      if (!data?.publicUrl) {
+        throw new Error('Failed to get public URL for uploaded image')
+      }
+
+      return data.publicUrl
+    } catch (error) {
+      console.error('Error in uploadImage:', error)
+      throw error
     }
-
-    const { data } = supabase.storage.from('images').getPublicUrl(filePath)
-
-    return data.publicUrl
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -188,13 +198,22 @@ export default function EditProductPage() {
 
       const { error } = await supabase.from('products').update(updateData).eq('id', productId)
 
-      if (error) throw error
+      if (error) {
+        console.error('Supabase error:', error)
+        throw new Error(error.message || 'Failed to update product')
+      }
 
       alert('Product updated successfully!')
       router.push('/admin/products')
     } catch (error) {
       console.error('Error updating product:', error)
-      alert('Error updating product. Please try again.')
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : typeof error === 'object' && error !== null && 'message' in error
+            ? String(error.message)
+            : 'Unknown error occurred'
+      alert(`Error updating product: ${errorMessage}. Please try again.`)
     } finally {
       setSaving(false)
     }

@@ -253,10 +253,12 @@ export default function Navbar() {
                       className="flex items-center space-x-2 p-2 rounded hover:bg-gray-50"
                     >
                       {category.image_url && (
-                        <img
-                          src={category.image_url}
+                        <Image
+                          src={category.image_url || ''}
+                          width={24}
+                          height={24}
                           alt={category.name}
-                          className="w-6 h-6 object-cover rounded"
+                          className="w-4 h-4 object-cover rounded"
                         />
                       )}
                       <span className="text-sm">{category.name}</span>
