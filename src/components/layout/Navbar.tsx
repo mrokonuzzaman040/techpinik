@@ -56,8 +56,8 @@ export default function Navbar() {
                         src="/logo.png"
                         alt="TechPinik Logo"
                         width={120}
-                        height={43}
-                        className="h-10 w-auto object-contain"
+                        height={35}
+                        className="h-8 w-auto object-contain"
                         priority
                       />
                     </Link>
@@ -93,9 +93,11 @@ export default function Navbar() {
                             onClick={() => setIsMenuOpen(false)}
                           >
                             {category.image_url ? (
-                              <img
-                                src={category.image_url}
+                              <Image
+                                src={category.image_url || ''}
                                 alt={category.name}
+                                width={32}
+                                height={32}
                                 className="w-8 h-8 object-cover rounded-md"
                               />
                             ) : (
@@ -206,9 +208,9 @@ export default function Navbar() {
             <Image
               src="/logo.png"
               alt="TechPinik Logo"
-              width={140}
-              height={50}
-              className="h-12 w-auto object-contain"
+              width={120}
+              height={43}
+              className="h-10 w-auto object-contain"
               priority
             />
           </Link>
