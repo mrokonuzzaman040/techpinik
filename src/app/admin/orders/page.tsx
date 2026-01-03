@@ -160,7 +160,7 @@ export default function AdminOrdersPage() {
     })
   }
 
-  const generateInvoice = (order: Order) => {
+  const generateInvoice = async (order: Order) => {
     // Helper function to safely format currency
     const safeFormatCurrency = (amount: number | string | undefined) => {
       if (amount === undefined || amount === null) return '৳0'
@@ -184,6 +184,30 @@ export default function AdminOrdersPage() {
         : order.delivery_charge || 0
     const subtotal = totalAmount - shippingCost
 
+    // Get logo as base64 - fetch from public folder
+    let logoBase64 = ''
+    try {
+      const logoUrl = window.location.origin + '/logo.png'
+      const response = await fetch(logoUrl)
+      if (response.ok) {
+        const blob = await response.blob()
+        const reader = new FileReader()
+        logoBase64 = await new Promise<string>((resolve, reject) => {
+          reader.onloadend = () => {
+            const result = reader.result as string
+            const base64String = result.split(',')[1] || ''
+            resolve(base64String)
+          }
+          reader.onerror = reject
+          reader.readAsDataURL(blob)
+        })
+      }
+    } catch (error) {
+      console.error('Error loading logo:', error)
+      // Continue without logo if fetch fails
+      logoBase64 = ''
+    }
+
     // Create invoice content
     const invoiceContent = `
       <!DOCTYPE html>
@@ -194,175 +218,226 @@ export default function AdminOrdersPage() {
         <style>
           * { margin: 0; padding: 0; box-sizing: border-box; }
           body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif; 
             line-height: 1.6; 
-            color: #333; 
-            background: #f8f9fa;
-            padding: 20px;
+            color: #2c3e50; 
+            background: #ffffff;
+            padding: 40px 20px;
           }
           .invoice-container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
           }
           .header {
-            background: linear-gradient(135deg, #059669, #10b981);
+            background: #2c3e50;
             color: white;
-            padding: 40px;
-            text-align: center;
+            padding: 50px 50px 40px;
+            border-bottom: 4px solid #1a252f;
+          }
+          .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          }
+          .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+          }
+          .logo {
+            height: 60px;
+            width: auto;
+          }
+          .company-info {
+            flex: 1;
           }
           .company-name {
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 8px;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
           }
           .company-tagline {
-            font-size: 16px;
+            font-size: 14px;
             opacity: 0.9;
+            font-weight: 300;
+          }
+          .invoice-title {
+            text-align: right;
+          }
+          .invoice-title-text {
+            font-size: 36px;
+            font-weight: 300;
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+          }
+          .invoice-number {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 400;
           }
           .invoice-details {
             display: flex;
-            padding: 40px;
-            gap: 40px;
-            background: #f8f9fa;
+            padding: 40px 50px;
+            gap: 60px;
+            background: #fafafa;
+            border-bottom: 1px solid #e0e0e0;
           }
           .customer-info, .invoice-info {
             flex: 1;
-            background: white;
-            padding: 24px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
           }
           .section-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #059669;
-            margin-bottom: 16px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #e5e7eb;
+            font-size: 12px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2c3e50;
+            text-transform: uppercase;
+            letter-spacing: 1px;
           }
           .info-row {
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
           }
           .info-label {
             font-weight: 600;
-            color: #6b7280;
-            min-width: 120px;
+            color: #7f8c8d;
+            min-width: 100px;
+            font-size: 13px;
           }
           .info-value {
-            color: #111827;
-            font-weight: 500;
+            color: #2c3e50;
+            font-weight: 400;
+            font-size: 14px;
+            flex: 1;
           }
           .table-container {
-            padding: 40px;
+            padding: 40px 50px;
             background: white;
           }
           .table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 30px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
           }
           .table th {
-            background: linear-gradient(135deg, #059669, #10b981);
+            background: #2c3e50;
             color: white;
-            padding: 16px;
+            padding: 16px 12px;
             text-align: left;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 12px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
+            border-bottom: 2px solid #1a252f;
           }
           .table td {
-            padding: 16px;
-            border-bottom: 1px solid #e5e7eb;
+            padding: 16px 12px;
+            border-bottom: 1px solid #ecf0f1;
             background: white;
+            font-size: 14px;
+            color: #2c3e50;
           }
-          .table tr:nth-child(even) td {
-            background: #f9fafb;
-          }
-          .table tr:hover td {
-            background: #f3f4f6;
+          .table tr:last-child td {
+            border-bottom: none;
           }
           .total-section {
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 8px;
-            margin: 20px 0;
+            padding: 0 50px 40px;
+            background: white;
           }
           .total-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 12px 0;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid #ecf0f1;
           }
           .total-row:last-child {
             border-bottom: none;
           }
           .total-label {
             font-weight: 600;
-            color: #374151;
+            color: #2c3e50;
+            font-size: 14px;
           }
           .total-value {
             font-weight: 600;
-            color: #111827;
+            color: #2c3e50;
+            font-size: 14px;
           }
           .grand-total {
-            background: linear-gradient(135deg, #059669, #10b981);
+            background: #2c3e50;
             color: white;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 20px 30px;
             margin-top: 20px;
             font-size: 18px;
-            font-weight: bold;
+            font-weight: 700;
           }
           .grand-total .total-label,
           .grand-total .total-value {
             color: white;
+            font-size: 18px;
           }
           .footer {
-            background: #f8f9fa;
-            padding: 40px;
+            background: #fafafa;
+            padding: 40px 50px;
             text-align: center;
-            color: #6b7280;
+            color: #7f8c8d;
+            border-top: 1px solid #e0e0e0;
           }
           .footer h3 {
-            color: #059669;
+            color: #2c3e50;
             margin-bottom: 16px;
-            font-size: 18px;
+            font-size: 16px;
+            font-weight: 600;
           }
           .footer p {
             margin-bottom: 8px;
+            font-size: 13px;
           }
           .status-badge {
             display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 3px;
+            font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            background: #ecf0f1;
+            color: #2c3e50;
           }
-          .status-pending { background: #fef3c7; color: #92400e; }
-          .status-processing { background: #dbeafe; color: #1e40af; }
-          .status-shipped { background: #e0e7ff; color: #3730a3; }
-          .status-delivered { background: #d1fae5; color: #065f46; }
-          .status-cancelled { background: #fee2e2; color: #991b1b; }
+          .status-pending { background: #ecf0f1; color: #2c3e50; }
+          .status-processing { background: #ecf0f1; color: #2c3e50; }
+          .status-shipped { background: #ecf0f1; color: #2c3e50; }
+          .status-delivered { background: #ecf0f1; color: #2c3e50; }
+          .status-cancelled { background: #ecf0f1; color: #2c3e50; }
+          @media print {
+            body { padding: 0; }
+            .invoice-container { box-shadow: none; border: none; }
+          }
         </style>
       </head>
       <body>
         <div class="invoice-container">
           <div class="header">
-            <div class="company-name">TechPinik</div>
-            <div class="company-tagline">Your Trusted Electronics Store in Bangladesh</div>
+            <div class="header-content">
+              <div class="logo-section">
+                ${logoBase64 ? `<img src="data:image/png;base64,${logoBase64}" alt="TechPinik Logo" class="logo" />` : ''}
+                <div class="company-info">
+                  <div class="company-name">TECH PINIK</div>
+                  <div class="company-tagline">Your Trusted Electronics Store in Bangladesh</div>
+                </div>
+              </div>
+              <div class="invoice-title">
+                <div class="invoice-title-text">INVOICE</div>
+                <div class="invoice-number">#${order.order_number || 'N/A'}</div>
+              </div>
+            </div>
           </div>
           
           <div class="invoice-details">
@@ -674,7 +749,7 @@ export default function AdminOrdersPage() {
                                     View Details
                                   </Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => generateInvoice(order)}>
+                                <DropdownMenuItem onClick={() => generateInvoice(order).catch(console.error)}>
                                   <FileText className="h-4 w-4 mr-2" />
                                   Generate Invoice
                                 </DropdownMenuItem>
