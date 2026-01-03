@@ -308,7 +308,7 @@ export default function HomePage() {
 
           <div
             ref={categoryScrollRef}
-            className="flex gap-6 overflow-x-auto scrollbar-hide pb-4 cursor-grab"
+            className="flex gap-3 md:gap-6 overflow-x-auto scrollbar-hide pb-4 cursor-grab"
             style={{
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
@@ -323,7 +323,7 @@ export default function HomePage() {
           >
             {/* Render categories twice for seamless infinite scroll */}
             {[...categories, ...categories].map((category, index) => (
-              <div key={`${category.id}-${index}`} className="shrink-0 w-[140px] md:w-[160px]">
+              <div key={`${category.id}-${index}`} className="shrink-0 w-[calc((100%-36px)/4)] min-w-[calc((100%-36px)/4)] md:w-[160px]">
                 <CategoryCard category={category} />
               </div>
             ))}
