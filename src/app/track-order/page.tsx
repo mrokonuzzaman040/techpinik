@@ -272,7 +272,7 @@ export default function TrackOrderPage() {
                     </p>
                     <p className="text-gray-700 flex items-center">
                       <Phone className="h-4 w-4 mr-2" />
-                      +880 1234 567890
+                      ‪+880 1814‑931931‬
                     </p>
                     <p className="text-gray-700">Live chat available 24/7</p>
                   </div>

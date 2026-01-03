@@ -151,7 +151,7 @@ export default function WarrantyPage() {
                   <div>
                     <h3 className="font-semibold text-gray-900">Contact Support</h3>
                     <p className="text-gray-700">
-                      Email us at warranty@techpinik.com or call +880 1234 567890 with your order
+                      Email us at warranty@techpinik.com or call ‪+880 1814‑931931‬ with your order
                       details and issue description.
                     </p>
                   </div>
@@ -341,7 +341,7 @@ export default function WarrantyPage() {
                   <strong>Email:</strong> warranty@techpinik.com
                 </p>
                 <p className="text-gray-700">
-                  <strong>Phone:</strong> +880 1234 567890
+                  <strong>Phone:</strong> ‪+880 1814‑931931‬
                 </p>
                 <p className="text-gray-700">
                   <strong>Live Chat:</strong> Available 24/7 on our website

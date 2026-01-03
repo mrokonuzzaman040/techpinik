@@ -255,7 +255,7 @@ export default function ShippingPage() {
                   <strong>Email:</strong> shipping@techpinik.com
                 </p>
                 <p className="text-gray-700">
-                  <strong>Phone:</strong> +880 1234 567890
+                  <strong>Phone:</strong> ‪+880 1814‑931931‬
                 </p>
                 <p className="text-gray-700">
                   <strong>Live Chat:</strong> Available 24/7 on our website

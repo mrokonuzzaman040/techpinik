@@ -259,7 +259,7 @@ export default function HelpPage() {
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-2">General Inquiries</h3>
                   <p className="text-gray-700">Email: info@techpinik.com</p>
-                  <p className="text-gray-700">Phone: +880 1234 567890</p>
+                  <p className="text-gray-700">Phone: ‪+880 1814‑931931‬</p>
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-2">Technical Support</h3>

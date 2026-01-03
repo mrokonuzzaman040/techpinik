@@ -212,7 +212,7 @@ export default function PrivacyPage() {
                   <strong>Email:</strong> privacy@techpinik.com
                 </p>
                 <p className="text-gray-700">
-                  <strong>Phone:</strong> +880 1234 567890
+                  <strong>Phone:</strong> ‪+880 1814‑931931‬
                 </p>
                 <p className="text-gray-700">
                   <strong>Address:</strong> Dhaka, Bangladesh

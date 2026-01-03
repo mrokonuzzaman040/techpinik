@@ -91,7 +91,7 @@ export default function ReturnsPage() {
                   <div>
                     <h3 className="font-semibold text-gray-900">Contact Support</h3>
                     <p className="text-gray-700">
-                      Email us at returns@techpinik.com or call +880 1234 567890 to initiate your
+                      Email us at returns@techpinik.com or call ‪+880 1814‑931931‬ to initiate your
                       return.
                     </p>
                   </div>
@@ -257,7 +257,7 @@ export default function ReturnsPage() {
                   <strong>Email:</strong> returns@techpinik.com
                 </p>
                 <p className="text-gray-700">
-                  <strong>Phone:</strong> +880 1234 567890
+                  <strong>Phone:</strong> ‪+880 1814‑931931‬
                 </p>
                 <p className="text-gray-700">
                   <strong>Live Chat:</strong> Available 24/7 on our website

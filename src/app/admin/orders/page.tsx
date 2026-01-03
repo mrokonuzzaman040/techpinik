@@ -538,7 +538,7 @@ export default function AdminOrdersPage() {
             <h3>Thank You for Your Business!</h3>
             <p>For any questions or support, please contact us:</p>
             <p><strong>Email:</strong> support@techpinik.com</p>
-            <p><strong>Phone:</strong> +880 1234 567890</p>
+            <p><strong>Phone:</strong> ‪+880 1814‑931931‬</p>
             <p><strong>Website:</strong> www.techpinik.com</p>
             <p style="margin-top: 20px; font-size: 12px; color: #9ca3af;">
               This is a computer-generated invoice. No signature required.
