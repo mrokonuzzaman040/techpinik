@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Search } from 'lucide-react'
 import ProductCard from '@/components/ui/product-card'
+import MainLayout from '@/components/layout/MainLayout'
 import { Product } from '@/types'
 
 function SearchPageContent() {
@@ -123,8 +124,10 @@ function SearchPageContent() {
 
 export default function SearchPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <SearchPageContent />
-    </Suspense>
+    <MainLayout>
+      <Suspense fallback={<div>Loading...</div>}>
+        <SearchPageContent />
+      </Suspense>
+    </MainLayout>
   )
 }
