@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -14,7 +15,7 @@ import {
   Settings,
   Users,
   BarChart3,
-  Image,
+  Image as ImageIcon,
   MapPin,
   ChevronDown,
   ChevronRight,
@@ -71,7 +72,7 @@ const sidebarItems: SidebarItem[] = [
     title: 'Settings',
     icon: Settings,
     children: [
-      { title: 'Slider Management', href: '/admin/settings/slider', icon: Image },
+      { title: 'Slider Management', href: '/admin/settings/slider', icon: ImageIcon },
       { title: 'Districts', href: '/admin/settings/districts', icon: MapPin },
       { title: 'General Settings', href: '/admin/settings/general', icon: Settings },
     ],
@@ -118,10 +119,15 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
     <div className="flex flex-col h-full bg-white">
       {/* Logo */}
       <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-yellow-50 to-white">
-        <Link href="/admin" className="flex items-center space-x-2 group">
-          <div className="bg-yellow-600 text-white px-3 py-2 rounded-lg font-bold text-lg shadow-md group-hover:shadow-lg transition-shadow">
-            TechPinik
-          </div>
+        <Link href="/admin" className="flex items-center space-x-3 group">
+          <Image
+            src="/logo.png"
+            alt="TechPinik Logo"
+            width={120}
+            height={43}
+            className="h-10 w-auto object-contain"
+            priority
+          />
           <span className="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded">
             Admin
           </span>
