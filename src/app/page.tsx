@@ -289,7 +289,7 @@ export default function HomePage() {
         onMouseLeave={handleMouseLeaveCategory}
       >
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-6 md:mb-12">
+          <div className="flex items-center justify-between mb-6 md:mb-10">
             <div>
               <h2 className="text-xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 md:mb-2">
                 Shop by Category
@@ -323,7 +323,7 @@ export default function HomePage() {
           >
             {/* Render categories twice for seamless infinite scroll */}
             {[...categories, ...categories].map((category, index) => (
-              <div key={`${category.id}-${index}`} className="shrink-0 w-[calc((100%-36px)/4)] min-w-[calc((100%-36px)/4)] md:w-[160px]">
+              <div key={`${category.id}-${index}`} className="shrink-0 w-[calc((100%-36px)/4)] min-w-[calc((100%-36px)/4)] md:w-[180px]">
                 <CategoryCard category={category} />
               </div>
             ))}
