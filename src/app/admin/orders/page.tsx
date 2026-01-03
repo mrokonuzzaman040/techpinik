@@ -457,7 +457,7 @@ export default function AdminOrdersPage() {
               </div>
               <div class="info-row">
                 <div class="info-label">Address:</div>
-                <div class="info-value">${order.shipping_address || 'N/A'}</div>
+                <div class="info-value">${order.customer_address || order.shipping_address || 'N/A'}</div>
               </div>
             </div>
             
