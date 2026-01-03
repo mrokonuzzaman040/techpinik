@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Search, ShoppingCart, User, Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -67,10 +68,15 @@ export default function Navbar() {
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="bg-yellow-600 text-white px-3 py-2 rounded-lg font-bold text-xl">
-              TechPinik
-            </div>
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/logo.png"
+              alt="TechPinik Logo"
+              width={140}
+              height={50}
+              className="h-12 w-auto object-contain"
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation */}
@@ -173,9 +179,14 @@ export default function Navbar() {
                 <div className="sticky top-0 z-10 bg-white border-b px-6 py-4">
                   <div className="flex items-center justify-between">
                     <Link href="/" onClick={() => setIsMenuOpen(false)}>
-                      <div className="bg-yellow-600 text-white px-3 py-2 rounded-lg font-bold text-lg">
-                        TechPinik
-                      </div>
+                      <Image
+                        src="/logo.png"
+                        alt="TechPinik Logo"
+                        width={120}
+                        height={43}
+                        className="h-10 w-auto object-contain"
+                        priority
+                      />
                     </Link>
                   </div>
                 </div>
