@@ -55,38 +55,42 @@ export default function CartPage() {
 
   return (
     <MainLayout>
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 pb-20 sm:pb-6">
         {/* Header */}
-        <div className="flex items-center gap-4 mb-6">
-          <Link href="/products">
-            <Button variant="ghost" size="sm">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+          <Link href="/products" className="w-fit">
+            <Button variant="ghost" size="sm" className="text-sm">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Continue Shopping
+              <span className="hidden sm:inline">Continue Shopping</span>
+              <span className="sm:hidden">Back</span>
             </Button>
           </Link>
-          <div className="flex-1">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Shopping Cart</h1>
-            <p className="text-gray-600">{getTotalItems()} items in your cart</p>
+          <div className="flex-1 flex items-center justify-between sm:justify-start gap-3">
+            <div>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Shopping Cart</h1>
+              <p className="text-sm sm:text-base text-gray-600">{getTotalItems()} items in your cart</p>
+            </div>
+            <Button
+              variant="outline"
+              onClick={handleClearCart}
+              className="text-red-600 hover:text-red-700 text-xs sm:text-sm h-8 sm:h-10 px-2 sm:px-4"
+            >
+              <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Clear Cart</span>
+            </Button>
           </div>
-          <Button
-            variant="outline"
-            onClick={handleClearCart}
-            className="text-red-600 hover:text-red-700"
-          >
-            <Trash2 className="h-4 w-4 mr-2" />
-            Clear Cart
-          </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {/* Cart Items */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="lg:col-span-2 space-y-3 sm:space-y-4">
             {items.map((item) => (
               <Card key={item.product.id}>
-                <CardContent className="p-4">
-                  <div className="flex gap-4">
-                    {/* Product Image */}
-                    <div className="relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0 overflow-hidden rounded-lg border">
+                <CardContent className="p-3 sm:p-4">
+                  {/* Mobile Layout: Stack vertically */}
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                    {/* Product Image - Larger on mobile */}
+                    <div className="relative w-full sm:w-20 md:w-24 h-48 sm:h-20 md:h-24 shrink-0 overflow-hidden rounded-lg border mx-auto sm:mx-0">
                       <Image
                         src={
                           (item.product.images && item.product.images.length > 0 && item.product.images[0]) ||
@@ -100,52 +104,64 @@ export default function CartPage() {
                     </div>
 
                     {/* Product Details */}
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-gray-900 line-clamp-2 mb-2">
-                        {item.product.name}
-                      </h3>
-                      <p className="text-lg font-bold text-yellow-600 mb-3">
-                        ৳{(item.product.sale_price || item.product.price).toLocaleString()}
-                      </p>
+                    <div className="flex-1 min-w-0 flex flex-col">
+                      <div className="flex-1">
+                        <h3 className="font-medium text-base sm:text-lg text-gray-900 line-clamp-2 mb-2">
+                          {item.product.name}
+                        </h3>
+                        <div className="flex items-center justify-between sm:justify-start gap-4 mb-3">
+                          <p className="text-lg sm:text-xl font-bold text-yellow-600">
+                            ৳{(item.product.sale_price || item.product.price).toLocaleString()}
+                          </p>
+                          {/* Item Total - Show on mobile, hide on desktop (shown in different location) */}
+                          <p className="text-lg font-bold text-gray-900 sm:hidden">
+                            ৳
+                            {(
+                              (item.product.sale_price || item.product.price) * item.quantity
+                            ).toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
 
-                      <div className="flex items-center justify-between">
-                        {/* Quantity Controls */}
+                      <div className="flex items-center justify-between gap-3 sm:gap-4">
+                        {/* Quantity Controls - Larger touch targets on mobile */}
                         <div className="flex items-center border rounded-lg">
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => handleUpdateQuantity(item.product.id, item.quantity - 1)}
-                            className="h-8 w-8 p-0"
+                            className="h-9 sm:h-8 w-9 sm:w-8 p-0"
                           >
-                            <Minus className="h-4 w-4" />
+                            <Minus className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
                           </Button>
-                          <span className="px-3 py-1 min-w-[40px] text-center text-sm">
+                          <span className="px-4 sm:px-3 py-1 min-w-[50px] sm:min-w-[40px] text-center text-base sm:text-sm font-medium">
                             {item.quantity}
                           </span>
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => handleUpdateQuantity(item.product.id, item.quantity + 1)}
-                            className="h-8 w-8 p-0"
+                            className="h-9 sm:h-8 w-9 sm:w-8 p-0"
                           >
-                            <Plus className="h-4 w-4" />
+                            <Plus className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
                           </Button>
                         </div>
 
-                        {/* Remove Button */}
+                        {/* Remove Button - Larger on mobile */}
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => removeItem(item.product.id)}
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50 h-9 sm:h-8 px-3 sm:px-2"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-4 w-4 sm:h-3.5 sm:w-3.5 sm:mr-0" />
+                          <span className="ml-2 sm:hidden text-sm">Remove</span>
                         </Button>
                       </div>
                     </div>
 
-                    {/* Item Total */}
-                    <div className="text-right">
+                    {/* Item Total - Desktop only */}
+                    <div className="hidden sm:block text-right">
                       <p className="font-bold text-gray-900">
                         ৳
                         {(
@@ -161,17 +177,17 @@ export default function CartPage() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <Card className="sticky top-6">
-              <CardContent className="p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Order Summary</h2>
+            <Card className="sticky top-4 sm:top-6 lg:top-6">
+              <CardContent className="p-4 sm:p-6">
+                <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">Order Summary</h2>
 
                 <div className="space-y-3">
-                  <div className="flex justify-between">
+                  <div className="flex justify-between text-sm sm:text-base">
                     <span className="text-gray-600">Subtotal ({getTotalItems()} items)</span>
                     <span className="font-medium">৳{subtotal.toLocaleString()}</span>
                   </div>
 
-                  <div className="flex justify-between">
+                  <div className="flex justify-between text-sm sm:text-base">
                     <span className="text-gray-600">Delivery Charge</span>
                     <span className="font-medium">
                       {deliveryCharge === 0 ? (
@@ -183,27 +199,27 @@ export default function CartPage() {
                   </div>
 
                   {subtotal < 1000 && (
-                    <p className="text-sm text-gray-500">
+                    <p className="text-xs sm:text-sm text-gray-500">
                       Add ৳{(1000 - subtotal).toLocaleString()} more for free delivery
                     </p>
                   )}
 
                   <Separator />
 
-                  <div className="flex justify-between text-lg font-bold">
+                  <div className="flex justify-between text-base sm:text-lg font-bold">
                     <span>Total</span>
                     <span className="text-yellow-600">৳{total.toLocaleString()}</span>
                   </div>
                 </div>
 
-                <Link href="/checkout" className="block mt-6">
-                  <Button className="w-full" size="lg" disabled={isLoading}>
+                <Link href="/checkout" className="block mt-4 sm:mt-6">
+                  <Button className="w-full h-11 sm:h-12 text-base sm:text-lg" size="lg" disabled={isLoading}>
                     {isLoading ? 'Processing...' : 'Proceed to Checkout'}
                   </Button>
                 </Link>
 
-                <div className="mt-4 text-center">
-                  <p className="text-sm text-gray-500">Secure checkout with SSL encryption</p>
+                <div className="mt-3 sm:mt-4 text-center">
+                  <p className="text-xs sm:text-sm text-gray-500">Secure checkout with SSL encryption</p>
                 </div>
               </CardContent>
             </Card>
