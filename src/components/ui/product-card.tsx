@@ -48,12 +48,12 @@ export default function ProductCard({ product, className }: ProductCardProps) {
             {/* Badges */}
             <div className="absolute top-2 left-2 flex flex-col gap-1">
               {discountPercentage > 0 && (
-                <Badge variant="destructive" className="text-xs">
+                <Badge variant="destructive" className="text-xs sm:text-sm font-semibold">
                   -{discountPercentage}%
                 </Badge>
               )}
               {product.stock_quantity === 0 && (
-                <Badge variant="secondary" className="text-xs">
+                <Badge variant="secondary" className="text-xs sm:text-sm font-semibold">
                   Out of Stock
                 </Badge>
               )}
@@ -61,19 +61,19 @@ export default function ProductCard({ product, className }: ProductCardProps) {
           </div>
 
           {/* Product Info */}
-          <div className="p-3">
+          <div className="p-3 sm:p-4">
             {/* Product Name */}
-            <h3 className="font-medium text-sm line-clamp-2 mb-2 group-hover:text-yellow-600 transition-colors">
+            <h3 className="font-medium text-sm sm:text-base line-clamp-2 mb-2 sm:mb-3 group-hover:text-yellow-600 transition-colors">
               {product.name}
             </h3>
 
             {/* Price */}
-            <div className="flex items-center gap-2 mb-2">
-              <span className="font-bold text-yellow-600 text-sm">
+            <div className="flex items-center gap-2 mb-2 sm:mb-3">
+              <span className="font-bold text-yellow-600 text-sm sm:text-base">
                 ৳{(product.sale_price || product.price).toLocaleString()}
               </span>
               {product.sale_price && (
-                <span className="text-xs text-gray-500 line-through">
+                <span className="text-xs sm:text-sm text-gray-500 line-through">
                   ৳{product.price.toLocaleString()}
                 </span>
               )}
@@ -83,10 +83,10 @@ export default function ProductCard({ product, className }: ProductCardProps) {
             <Button
               onClick={handleAddToCart}
               disabled={product.stock_quantity === 0}
-              className="w-full h-8 text-xs"
+              className="w-full h-9 sm:h-10 text-xs sm:text-sm"
               variant={product.stock_quantity === 0 ? 'secondary' : 'default'}
             >
-              <ShoppingCart className="h-3 w-3 mr-1" />
+              <ShoppingCart className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />
               {product.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
             </Button>
           </div>

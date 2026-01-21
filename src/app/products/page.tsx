@@ -326,7 +326,7 @@ function ProductsPageContent() {
                   </SheetContent>
                 </Sheet>
 
-                <span className="text-sm text-gray-600">{products.length} products found</span>
+                <span className="text-sm sm:text-base text-gray-600">{products.length} products found</span>
               </div>
 
               <div className="flex items-center gap-2">

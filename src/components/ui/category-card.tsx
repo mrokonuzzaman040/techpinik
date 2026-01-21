@@ -36,7 +36,7 @@ export default function CategoryCard({ category, className }: CategoryCardProps)
           </div>
 
           {/* Category Name */}
-          <h3 className="font-semibold text-[10px] sm:text-xs md:text-sm lg:text-base text-gray-900 group-hover:text-yellow-600 transition-colors leading-tight">
+          <h3 className="font-semibold text-xs sm:text-sm md:text-base lg:text-lg text-gray-900 group-hover:text-yellow-600 transition-colors leading-tight">
             {category.name}
           </h3>
         </div>

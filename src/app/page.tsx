@@ -291,10 +291,10 @@ export default function HomePage() {
         <div className="container mx-auto px-3 sm:px-4">
           <div className="flex items-center justify-between mb-4 sm:mb-6 md:mb-10">
             <div>
-              <h2 className="text-lg sm:text-xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 md:mb-2">
+              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">
                 Shop by Category
               </h2>
-              <p className="text-xs sm:text-sm md:text-base text-gray-600">Discover products by category</p>
+              <p className="text-sm sm:text-base md:text-lg text-gray-600">Discover products by category</p>
             </div>
             <Link href="/categories">
               <Button
@@ -344,9 +344,9 @@ export default function HomePage() {
 
       {/* Featured Products */}
       <section className="bg-gray-50 py-8 md:py-12">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-6 md:mb-8">
-            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">
+        <div className="container mx-auto px-3 sm:px-4">
+          <div className="flex items-center justify-between mb-4 sm:mb-6 md:mb-8">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
               Featured Products
             </h2>
             <Link href="/products">
@@ -401,11 +401,11 @@ export default function HomePage() {
                     <Package className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-yellow-500" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h2 className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold text-gray-900">
+                    <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">
                       {category.name}
                     </h2>
                     {category.description && (
-                      <p className="text-xs md:text-sm text-gray-600 line-clamp-1 sm:line-clamp-2 hidden sm:block">
+                      <p className="text-sm md:text-base text-gray-600 line-clamp-1 sm:line-clamp-2 hidden sm:block">
                         {category.description}
                       </p>
                     )}
