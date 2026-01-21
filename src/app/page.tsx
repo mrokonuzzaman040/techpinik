@@ -284,7 +284,7 @@ export default function HomePage() {
 
       {/* Categories */}
       <section
-        className="py-4 md:py-6 bg-linear-to-br from-gray-50 to-white"
+        className="py-4 md:py-6 bg-linear-to-br from-gray-50 to-white overflow-hidden"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeaveCategory}
       >
@@ -306,27 +306,29 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div
-            ref={categoryScrollRef}
-            className="flex gap-2.5 md:gap-4 overflow-x-auto scrollbar-hide pb-2 cursor-grab -mx-4 px-4"
-            style={{
-              scrollbarWidth: 'none',
-              msOverflowStyle: 'none',
-              WebkitOverflowScrolling: 'touch',
-            }}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseLeave}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-          >
-            {/* Render categories twice for seamless infinite scroll */}
-            {[...categories, ...categories].map((category, index) => (
-              <div key={`${category.id}-${index}`} className="shrink-0 flex-[0_0_calc(25%-7.5px)] md:flex-none md:w-[160px] h-[140px] sm:h-[160px] md:h-[180px]">
-                <CategoryCard category={category} />
-              </div>
-            ))}
+          <div className="overflow-x-auto scrollbar-hide -mx-3 sm:-mx-4">
+            <div
+              ref={categoryScrollRef}
+              className="flex gap-2.5 md:gap-4 pb-2 cursor-grab px-3 sm:px-4"
+              style={{
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+                WebkitOverflowScrolling: 'touch',
+              }}
+              onMouseDown={handleMouseDown}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseLeave}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
+              {/* Render categories twice for seamless infinite scroll */}
+              {[...categories, ...categories].map((category, index) => (
+                <div key={`${category.id}-${index}`} className="shrink-0 flex-[0_0_calc(25%-7.5px)] md:flex-none md:w-[160px] h-[140px] sm:h-[160px] md:h-[180px]">
+                  <CategoryCard category={category} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

@@ -39,7 +39,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 bg-white shadow-sm border-b">
       {/* Main Navigation */}
       <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-3">
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
           {/* Mobile Menu Button - Before Logo */}
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild>
@@ -216,8 +216,10 @@ export default function Navbar() {
             />
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-6 ml-auto">
+          {/* Desktop Navigation and Search - Right Side */}
+          <div className="flex items-center gap-4 lg:gap-6">
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center space-x-6">
             <Link href="/" className="text-gray-700 hover:text-yellow-600 font-medium">
               Home
             </Link>
@@ -257,10 +259,10 @@ export default function Navbar() {
             <Link href="/contact" className="text-gray-700 hover:text-yellow-600 font-medium">
               Contact
             </Link>
-          </nav>
+            </nav>
 
-          {/* Search Input - Right Side */}
-          <div className="max-w-40 min-w-0 ml-auto lg:ml-4">
+            {/* Search Input - Right Side */}
+            <div className="max-w-40 min-w-0">
             <div className="relative">
               <input
                 type="text"
@@ -278,6 +280,7 @@ export default function Navbar() {
               <Search className="absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-400 h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </div>
           </div>
+        </div>
         </div>
       </div>
     </header>
