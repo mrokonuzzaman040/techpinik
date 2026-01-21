@@ -38,16 +38,16 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm border-b">
       {/* Main Navigation */}
-      <div className="container mx-auto px-4 py-3">
-        <div className="flex items-center gap-4">
+      <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-3">
+        <div className="flex items-center gap-2 sm:gap-4">
           {/* Mobile Menu Button - Before Logo */}
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="lg:hidden">
-                <Menu className="h-5 w-5" />
+              <Button variant="ghost" size="icon" className="lg:hidden h-9 w-9">
+                <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-80 sm:w-96 p-0 overflow-y-auto">
+            <SheetContent side="left" className="w-[280px] sm:w-80 p-0 overflow-y-auto">
                 {/* Header */}
                 <div className="sticky top-0 z-10 bg-white border-b px-6 py-4">
                   <div className="flex items-center justify-between">
@@ -204,24 +204,24 @@ export default function Navbar() {
           </Sheet>
 
           {/* Logo */}
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center shrink-0">
             <Image
               src="/logo.png"
               alt="TechPinik Logo"
               width={120}
               height={43}
-              className="h-10 w-auto object-contain"
+              className="h-8 sm:h-10 w-auto object-contain"
               priority
             />
           </Link>
 
           {/* Short Search Input - After Logo */}
-          <div className="flex-1 max-w-xs">
+          <div className="flex-1 max-w-xs min-w-0">
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search products..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm"
+                placeholder="Search..."
+                className="w-full pl-8 sm:pl-10 pr-3 sm:pr-4 py-1.5 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-xs sm:text-sm"
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
                     const query = (e.target as HTMLInputElement).value
@@ -231,7 +231,7 @@ export default function Navbar() {
                   }
                 }}
               />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Search className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </div>
           </div>
 

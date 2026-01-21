@@ -288,13 +288,13 @@ export default function HomePage() {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeaveCategory}
       >
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-6 md:mb-10">
+        <div className="container mx-auto px-3 sm:px-4">
+          <div className="flex items-center justify-between mb-4 sm:mb-6 md:mb-10">
             <div>
-              <h2 className="text-xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 md:mb-2">
+              <h2 className="text-lg sm:text-xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 md:mb-2">
                 Shop by Category
               </h2>
-              <p className="text-sm md:text-base text-gray-600">Discover products by category</p>
+              <p className="text-xs sm:text-sm md:text-base text-gray-600">Discover products by category</p>
             </div>
             <Link href="/categories">
               <Button
@@ -308,7 +308,7 @@ export default function HomePage() {
 
           <div
             ref={categoryScrollRef}
-            className="flex gap-3 md:gap-6 overflow-x-auto scrollbar-hide pb-4 cursor-grab"
+            className="flex gap-2.5 md:gap-6 overflow-x-auto scrollbar-hide pb-4 cursor-grab -mx-4 px-4"
             style={{
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
@@ -323,7 +323,7 @@ export default function HomePage() {
           >
             {/* Render categories twice for seamless infinite scroll */}
             {[...categories, ...categories].map((category, index) => (
-              <div key={`${category.id}-${index}`} className="shrink-0 w-[calc((100%-36px)/4)] min-w-[calc((100%-36px)/4)] md:w-[180px]">
+              <div key={`${category.id}-${index}`} className="shrink-0 flex-[0_0_calc(25%-7.5px)] md:flex-none md:w-[180px]">
                 <CategoryCard category={category} />
               </div>
             ))}
@@ -356,7 +356,7 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -420,7 +420,7 @@ export default function HomePage() {
               </div>
 
               {/* Products Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
                 {products.slice(0, 10).map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}

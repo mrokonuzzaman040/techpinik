@@ -244,11 +244,11 @@ function ProductsPageContent() {
 
   return (
     <MainLayout>
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
         {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">All Products</h1>
-          <p className="text-gray-600">Discover our complete range of electronics and gadgets</p>
+        <div className="mb-4 sm:mb-6">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">All Products</h1>
+          <p className="text-sm sm:text-base text-gray-600">Discover our complete range of electronics and gadgets</p>
         </div>
 
         {/* Brand Filters - Top Section */}
@@ -379,8 +379,8 @@ function ProductsPageContent() {
               </div>
             ) : (
               <div
-                className={`grid gap-4 md:gap-6 ${
-                  viewMode === 'grid' ? 'grid-cols-2 md:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'
+                className={`grid gap-3 sm:gap-4 md:gap-6 ${
+                  viewMode === 'grid' ? 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'
                 }`}
               >
                 {products.map((product) => (
