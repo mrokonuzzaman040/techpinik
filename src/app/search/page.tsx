@@ -44,50 +44,51 @@ function SearchPageContent() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-3 sm:px-4 py-6 md:py-8">
       {/* Search Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-4">
-          <Search className="h-6 w-6 text-gray-500" />
-          <h1 className="text-2xl font-bold text-gray-900">Search Results</h1>
+      <div className="mb-6 md:mb-8">
+        <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+          <Search className="h-5 w-5 sm:h-6 sm:w-6 text-gray-500" />
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Search Results</h1>
         </div>
 
         {query && (
-          <p className="text-gray-600">
-            Showing results for: <span className="font-semibold">"{query}"</span>
-          </p>
-        )}
-
-        {!loading && products.length > 0 && (
-          <p className="text-sm text-gray-500 mt-2">
-            Found {products.length} product{products.length !== 1 ? 's' : ''}
-          </p>
+          <div className="mb-2">
+            <p className="text-sm sm:text-base text-gray-600">
+              Showing results for: <span className="font-semibold text-gray-900">"{query}"</span>
+            </p>
+            {!loading && products.length > 0 && (
+              <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                Found {products.length} product{products.length !== 1 ? 's' : ''}
+              </p>
+            )}
+          </div>
         )}
       </div>
 
       {/* Loading State */}
       {loading && (
-        <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600"></div>
-          <span className="ml-3 text-gray-600">Searching products...</span>
+        <div className="flex flex-col justify-center items-center py-12 md:py-16">
+          <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-yellow-600"></div>
+          <span className="mt-4 text-sm sm:text-base text-gray-600">Searching products...</span>
         </div>
       )}
 
       {/* Error State */}
       {error && (
-        <div className="text-center py-12">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
-            <p className="text-red-600">{error}</p>
+        <div className="text-center py-12 md:py-16">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 sm:p-6 max-w-md mx-auto">
+            <p className="text-sm sm:text-base text-red-600">{error}</p>
           </div>
         </div>
       )}
 
       {/* No Query */}
       {!query && !loading && (
-        <div className="text-center py-12">
-          <Search className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-600 mb-2">Start your search</h2>
-          <p className="text-gray-500">
+        <div className="text-center py-12 md:py-16">
+          <Search className="h-12 w-12 sm:h-16 sm:w-16 text-gray-300 mx-auto mb-4" />
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-600 mb-2">Start your search</h2>
+          <p className="text-sm sm:text-base text-gray-500 px-4">
             Enter a product name or keyword to find what you're looking for
           </p>
         </div>
@@ -95,13 +96,15 @@ function SearchPageContent() {
 
       {/* No Results */}
       {query && !loading && products.length === 0 && !error && (
-        <div className="text-center py-12">
-          <Search className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-600 mb-2">No products found</h2>
-          <p className="text-gray-500 mb-4">We couldn't find any products matching "{query}"</p>
-          <div className="text-sm text-gray-500">
-            <p>Try:</p>
-            <ul className="list-disc list-inside mt-2 space-y-1">
+        <div className="text-center py-12 md:py-16">
+          <Search className="h-12 w-12 sm:h-16 sm:w-16 text-gray-300 mx-auto mb-4" />
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-600 mb-2">No products found</h2>
+          <p className="text-sm sm:text-base text-gray-500 mb-4 px-4">
+            We couldn't find any products matching "{query}"
+          </p>
+          <div className="text-xs sm:text-sm text-gray-500 max-w-md mx-auto px-4">
+            <p className="font-medium mb-2">Try:</p>
+            <ul className="list-disc list-inside space-y-1 text-left inline-block">
               <li>Checking your spelling</li>
               <li>Using different keywords</li>
               <li>Using more general terms</li>
@@ -112,7 +115,7 @@ function SearchPageContent() {
 
       {/* Search Results */}
       {!loading && products.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
