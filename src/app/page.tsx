@@ -424,7 +424,7 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="hidden sm:block flex-1 h-px bg-gray-200"></div>
-                <Link href={`/products?category=${categoryId}`} className="self-start sm:self-auto">
+                <Link href={`/products?category=${categoryId}`} className="self-start sm:self-auto hidden md:block">
                   <Button variant="outline" size="sm" className="text-xs sm:text-sm">
                     View All <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
