@@ -284,17 +284,17 @@ export default function HomePage() {
 
       {/* Categories */}
       <section
-        className="py-8 md:py-16 bg-linear-to-br from-gray-50 to-white"
+        className="py-4 md:py-6 bg-linear-to-br from-gray-50 to-white"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeaveCategory}
       >
         <div className="container mx-auto px-3 sm:px-4">
-          <div className="flex items-center justify-between mb-4 sm:mb-6 md:mb-10">
+          <div className="flex items-center justify-between mb-3 sm:mb-4 md:mb-5">
             <div>
-              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1">
                 Shop by Category
               </h2>
-              <p className="text-sm sm:text-base md:text-lg text-gray-600">Discover products by category</p>
+              <p className="text-sm sm:text-base text-gray-600">Discover products by category</p>
             </div>
             <Link href="/categories">
               <Button
@@ -308,7 +308,7 @@ export default function HomePage() {
 
           <div
             ref={categoryScrollRef}
-            className="flex gap-2.5 md:gap-6 overflow-x-auto scrollbar-hide pb-4 cursor-grab -mx-4 px-4"
+            className="flex gap-2.5 md:gap-4 overflow-x-auto scrollbar-hide pb-2 cursor-grab -mx-4 px-4"
             style={{
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
@@ -323,7 +323,7 @@ export default function HomePage() {
           >
             {/* Render categories twice for seamless infinite scroll */}
             {[...categories, ...categories].map((category, index) => (
-              <div key={`${category.id}-${index}`} className="shrink-0 flex-[0_0_calc(25%-7.5px)] md:flex-none md:w-[180px]">
+              <div key={`${category.id}-${index}`} className="shrink-0 flex-[0_0_calc(25%-7.5px)] md:flex-none md:w-[160px] h-[140px] sm:h-[160px] md:h-[180px]">
                 <CategoryCard category={category} />
               </div>
             ))}

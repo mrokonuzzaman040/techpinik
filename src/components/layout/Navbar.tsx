@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Search, Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import { createClient } from '@/lib/supabase'
 import { Category } from '@/types'
 
@@ -48,6 +48,7 @@ export default function Navbar() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-[280px] sm:w-80 p-0 overflow-y-auto">
+                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                 {/* Header */}
                 <div className="sticky top-0 z-10 bg-white border-b px-6 py-4">
                   <div className="flex items-center justify-between">
@@ -215,26 +216,6 @@ export default function Navbar() {
             />
           </Link>
 
-          {/* Short Search Input - After Logo */}
-          <div className="flex-1 max-w-xs min-w-0">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-full pl-8 sm:pl-10 pr-3 sm:pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm sm:text-base"
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    const query = (e.target as HTMLInputElement).value
-                    if (query.trim()) {
-                      router.push(`/search?q=${encodeURIComponent(query)}`)
-                    }
-                  }
-                }}
-              />
-              <Search className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            </div>
-          </div>
-
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-6 ml-auto">
             <Link href="/" className="text-gray-700 hover:text-yellow-600 font-medium">
@@ -277,6 +258,26 @@ export default function Navbar() {
               Contact
             </Link>
           </nav>
+
+          {/* Search Input - Right Side */}
+          <div className="max-w-40 min-w-0 ml-auto lg:ml-4">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search..."
+                className="w-full pl-3 sm:pl-4 pr-8 sm:pr-10 py-2 sm:py-2.5 bg-transparent border-0 border-b-2 border-gray-300 focus:outline-none focus:border-yellow-500 transition-colors text-sm sm:text-base text-right"
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    const query = (e.target as HTMLInputElement).value
+                    if (query.trim()) {
+                      router.push(`/search?q=${encodeURIComponent(query)}`)
+                    }
+                  }
+                }}
+              />
+              <Search className="absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-400 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            </div>
+          </div>
         </div>
       </div>
     </header>
