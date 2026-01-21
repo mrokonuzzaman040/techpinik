@@ -90,18 +90,30 @@ export default function HomePage() {
     const scrollContainer = categoryScrollRef.current
     if (!scrollContainer || categories.length === 0) return
 
+    // Wait for DOM to be ready and calculate gap from computed styles
+    const getGap = () => {
+      // Get gap from the inner flex container (first child of scroll container)
+      const flexContainer = scrollContainer.children[0] as HTMLElement
+      if (!flexContainer) return 10
+      
+      const computedStyle = window.getComputedStyle(flexContainer)
+      const gap = computedStyle.gap || computedStyle.columnGap
+      return gap ? parseFloat(gap) : 10 // Default to 10px if can't parse
+    }
+
     // Calculate the width of one set of categories for seamless loop
     const calculateSingleSetWidth = () => {
-      if (scrollContainer.children.length === 0) return 0
+      const flexContainer = scrollContainer.children[0] as HTMLElement
+      if (!flexContainer || flexContainer.children.length === 0) return 0
 
-      // Get the actual width of all items in the first set
+      const gap = getGap()
       let totalWidth = 0
       for (let i = 0; i < categories.length; i++) {
-        const child = scrollContainer.children[i] as HTMLElement
+        const child = flexContainer.children[i] as HTMLElement
         if (child) {
           totalWidth += child.offsetWidth
           if (i < categories.length - 1) {
-            totalWidth += 24 // gap-6 = 24px
+            totalWidth += gap
           }
         }
       }
@@ -112,6 +124,8 @@ export default function HomePage() {
     const handleScrollReset = () => {
       if (!scrollContainer) return
       const singleSetWidth = calculateSingleSetWidth()
+      if (singleSetWidth === 0) return
+      
       const currentScroll = scrollContainer.scrollLeft
 
       // If we've scrolled past the first set, reset to start instantly (seamless loop)
@@ -125,23 +139,28 @@ export default function HomePage() {
         clearInterval(autoScrollIntervalRef.current)
       }
 
-      // Set initial scroll position to the start of the first set
-      scrollContainer.scrollLeft = 0
+      // Wait a bit for layout to settle
+      setTimeout(() => {
+        // Set initial scroll position to the start of the first set
+        scrollContainer.scrollLeft = 0
 
-      autoScrollIntervalRef.current = setInterval(() => {
-        if (!isPausedRef.current && !isDraggingRef.current && scrollContainer) {
-          const singleSetWidth = calculateSingleSetWidth()
-          const currentScroll = scrollContainer.scrollLeft
+        autoScrollIntervalRef.current = setInterval(() => {
+          if (!isPausedRef.current && !isDraggingRef.current && scrollContainer) {
+            const singleSetWidth = calculateSingleSetWidth()
+            if (singleSetWidth === 0) return
+            
+            const currentScroll = scrollContainer.scrollLeft
 
-          // If we've scrolled past the first set, reset to start instantly (seamless loop)
-          if (currentScroll >= singleSetWidth - 1) {
-            scrollContainer.scrollLeft = currentScroll - singleSetWidth
-          } else {
-            // Scroll forward
-            scrollContainer.scrollLeft += 2
+            // If we've scrolled past the first set, reset to start instantly (seamless loop)
+            if (currentScroll >= singleSetWidth - 1) {
+              scrollContainer.scrollLeft = currentScroll - singleSetWidth
+            } else {
+              // Scroll forward
+              scrollContainer.scrollLeft += 2
+            }
           }
-        }
-      }, 50) // Smooth scrolling every 50ms
+        }, 50) // Smooth scrolling every 50ms
+      }, 100)
     }
 
     // Also handle manual scrolling to ensure infinite loop
@@ -306,25 +325,27 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="overflow-x-auto scrollbar-hide -mx-3 sm:-mx-4">
+          <div 
+            ref={categoryScrollRef}
+            className="overflow-x-auto scrollbar-hide -mx-3 sm:-mx-4 cursor-grab"
+            style={{
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+              WebkitOverflowScrolling: 'touch',
+            }}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
             <div
-              ref={categoryScrollRef}
-              className="flex gap-2.5 md:gap-4 pb-2 cursor-grab px-3 sm:px-4"
-              style={{
-                scrollbarWidth: 'none',
-                msOverflowStyle: 'none',
-                WebkitOverflowScrolling: 'touch',
-              }}
-              onMouseDown={handleMouseDown}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseLeave}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
+              className="flex gap-2.5 md:gap-4 pb-2 px-3 sm:px-4"
             >
               {/* Render categories twice for seamless infinite scroll */}
               {[...categories, ...categories].map((category, index) => (
-                <div key={`${category.id}-${index}`} className="shrink-0 flex-[0_0_calc(25%-7.5px)] md:flex-none md:w-[160px] h-[140px] sm:h-[160px] md:h-[180px]">
+                <div key={`${category.id}-${index}`} className="shrink-0 flex-[0_0_calc(25%-7.5px)] md:flex-none md:w-[140px] h-[90px] sm:h-[100px] md:h-[110px]">
                   <CategoryCard category={category} />
                 </div>
               ))}

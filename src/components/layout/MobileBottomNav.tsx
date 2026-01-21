@@ -41,7 +41,7 @@ export default function MobileBottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 lg:hidden safe-area-inset-bottom">
-      <div className="flex items-center justify-around h-14 sm:h-16 px-2">
+      <div className="flex items-center justify-around h-16 sm:h-18 px-2 py-1">
         {navItems.map((item) => {
           const Icon = item.icon
           const active = isActive(item.href, item.external)
@@ -53,15 +53,20 @@ export default function MobileBottomNav() {
                 href={item.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center flex-1 h-full transition-colors hover:bg-gray-50 active:bg-gray-100 rounded-t-lg"
+                className="flex flex-col items-center justify-center flex-1 h-full transition-colors hover:bg-gray-50 active:bg-gray-100 rounded-t-lg gap-0.5"
                 aria-label={item.name}
                 title={item.name}
               >
                 <Icon
-                  className={`h-6 w-6 sm:h-7 sm:w-7 transition-colors ${
+                  className={`h-5 w-5 sm:h-6 sm:w-6 transition-colors ${
                     active ? 'text-yellow-600' : 'text-gray-500'
                   }`}
                 />
+                <span className={`text-[10px] sm:text-xs font-medium transition-colors ${
+                  active ? 'text-yellow-600' : 'text-gray-500'
+                }`}>
+                  {item.name}
+                </span>
               </a>
             )
           }
@@ -70,15 +75,20 @@ export default function MobileBottomNav() {
             <Link
               key={item.name}
               href={item.href}
-              className="flex items-center justify-center flex-1 h-full transition-colors hover:bg-gray-50 active:bg-gray-100 rounded-t-lg"
+              className="flex flex-col items-center justify-center flex-1 h-full transition-colors hover:bg-gray-50 active:bg-gray-100 rounded-t-lg gap-0.5"
               aria-label={item.name}
               title={item.name}
             >
               <Icon
-                className={`h-6 w-6 sm:h-7 sm:w-7 transition-colors ${
+                className={`h-5 w-5 sm:h-6 sm:w-6 transition-colors ${
                   active ? 'text-yellow-600' : 'text-gray-500'
                 }`}
               />
+              <span className={`text-[10px] sm:text-xs font-medium transition-colors ${
+                active ? 'text-yellow-600' : 'text-gray-500'
+              }`}>
+                {item.name}
+              </span>
             </Link>
           )
         })}
