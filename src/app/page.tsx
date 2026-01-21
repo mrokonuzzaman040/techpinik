@@ -328,17 +328,6 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-
-          <div className="text-center mt-8 md:hidden">
-            <Link href="/categories">
-              <Button
-                variant="outline"
-                className="border-yellow-200 text-yellow-600 hover:bg-yellow-50"
-              >
-                View All Categories <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
         </div>
       </section>
 

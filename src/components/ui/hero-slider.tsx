@@ -34,12 +34,12 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
 
   if (slides.length === 0) {
     return (
-      <div className="relative h-64 md:h-96 lg:h-[500px] bg-linear-to-r from-yellow-400 to-blue-500 flex items-center justify-center">
+      <div className="relative h-48 md:h-64 lg:h-80 bg-linear-to-r from-yellow-400 to-blue-500 flex items-center justify-center">
         <div className="text-center text-white px-4">
-          <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 md:mb-4">
             Welcome to TechPinik
           </h1>
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl mb-4 md:mb-6">
+          <p className="text-sm sm:text-base md:text-lg mb-4 md:mb-6">
             Your trusted electronics store in Bangladesh
           </p>
           <Button
@@ -54,7 +54,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
   }
 
   return (
-    <div className="relative h-64 md:h-96 lg:h-[500px] overflow-hidden rounded-lg">
+    <div className="relative h-48 md:h-64 lg:h-80 overflow-hidden rounded-lg">
       {/* Slides */}
       <div
         className="flex transition-transform duration-500 ease-in-out h-full"
@@ -62,21 +62,31 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
       >
         {slides.map((slide, index) => (
           <div key={slide.id} className="w-full h-full shrink-0 relative">
-            <Image
-              src={slide.image_url}
-              alt={slide.title || ''}
-              fill
-              sizes="100vw"
-              className="object-cover"
-              priority={index === 0}
-            />
+            {slide.image_url ? (
+              <Image
+                src={slide.image_url}
+                alt={slide.title || 'Slider image'}
+                fill
+                sizes="100vw"
+                className="object-cover"
+                priority={index === 0}
+                unoptimized={!slide.image_url.includes('supabase.co')}
+                onError={(e) => {
+                  console.error('Image failed to load:', slide.image_url)
+                  const target = e.target as HTMLImageElement
+                  target.style.display = 'none'
+                }}
+              />
+            ) : (
+              <div className="w-full h-full bg-linear-to-r from-yellow-400 to-blue-500" />
+            )}
             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
               <div className="text-center text-white max-w-4xl px-4">
-                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl xl:text-6xl font-bold mb-2 md:mb-4">
+                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-2 md:mb-4">
                   {slide.title}
                 </h2>
                 {slide.subtitle && (
-                  <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl mb-4 md:mb-6 opacity-90">
+                  <p className="text-sm sm:text-base md:text-lg lg:text-xl mb-4 md:mb-6 opacity-90">
                     {slide.subtitle}
                   </p>
                 )}
