@@ -66,14 +66,15 @@ export default function ProductDetailPage() {
             sku: productData.sku || '',
             stock_quantity: productData.stock_quantity || 0,
             category_id: productData.category_id || undefined,
-            images: Array.isArray(productData.images) 
-              ? productData.images 
-              : productData.image_url 
-                ? [productData.image_url] 
+            images: Array.isArray(productData.images)
+              ? productData.images
+              : productData.image_url
+                ? [productData.image_url]
                 : [],
-            image_url: Array.isArray(productData.images) && productData.images.length > 0
-              ? productData.images[0]
-              : productData.image_url || undefined,
+            image_url:
+              Array.isArray(productData.images) && productData.images.length > 0
+                ? productData.images[0]
+                : productData.image_url || undefined,
             is_active: productData.is_active ?? true,
             is_featured: productData.is_featured ?? false,
             weight: productData.weight || undefined,
@@ -135,7 +136,7 @@ export default function ProductDetailPage() {
       console.error('Cannot add to cart: product is null')
       return
     }
-    
+
     try {
       console.log('Adding to cart:', { productId: product.id, productName: product.name, quantity })
       addToCart(product, quantity)
@@ -178,8 +179,12 @@ export default function ProductDetailPage() {
     return (
       <MainLayout>
         <div className="container mx-auto px-3 sm:px-4 py-8 sm:py-12 text-center">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">Product Not Found</h1>
-          <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">The product you're looking for doesn't exist.</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
+            Product Not Found
+          </h1>
+          <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
+            The product you're looking for doesn't exist.
+          </p>
           <Link href="/products">
             <Button className="text-sm sm:text-base">Browse Products</Button>
           </Link>
@@ -203,7 +208,10 @@ export default function ProductDetailPage() {
           {category && (
             <>
               <span>/</span>
-              <Link href={`/categories/${category.id}`} className="hover:text-yellow-600 truncate max-w-[100px] sm:max-w-none">
+              <Link
+                href={`/categories/${category.id}`}
+                className="hover:text-yellow-600 truncate max-w-[100px] sm:max-w-none"
+              >
                 {category.name}
               </Link>
             </>
@@ -213,7 +221,11 @@ export default function ProductDetailPage() {
         </nav>
 
         {/* Back Button */}
-        <Button variant="ghost" className="mb-4 sm:mb-6 text-sm" onClick={() => window.history.back()}>
+        <Button
+          variant="ghost"
+          className="mb-4 sm:mb-6 text-sm"
+          onClick={() => window.history.back()}
+        >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
         </Button>
@@ -231,7 +243,10 @@ export default function ProductDetailPage() {
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
               {discountPercentage > 0 && (
-                <Badge variant="destructive" className="absolute top-2 left-2 sm:top-4 sm:left-4 text-xs sm:text-sm">
+                <Badge
+                  variant="destructive"
+                  className="absolute top-2 left-2 sm:top-4 sm:left-4 text-xs sm:text-sm"
+                >
                   -{discountPercentage}%
                 </Badge>
               )}
@@ -267,7 +282,9 @@ export default function ProductDetailPage() {
             {product.brand && <p className="text-sm sm:text-base text-gray-600">{product.brand}</p>}
 
             {/* Title */}
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 leading-tight">{product.name}</h1>
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
+              {product.name}
+            </h1>
 
             {/* Rating */}
             <div className="flex items-center gap-2 flex-wrap">
@@ -335,7 +352,9 @@ export default function ProductDetailPage() {
                     >
                       <Minus className="h-4 w-4" />
                     </Button>
-                    <span className="px-4 py-2 min-w-[60px] text-center text-sm sm:text-base">{quantity}</span>
+                    <span className="px-4 py-2 min-w-[60px] text-center text-sm sm:text-base">
+                      {quantity}
+                    </span>
                     <Button
                       variant="ghost"
                       size="sm"
@@ -346,18 +365,20 @@ export default function ProductDetailPage() {
                       <Plus className="h-4 w-4" />
                     </Button>
                   </div>
-                  <span className="text-xs sm:text-sm text-gray-500">{product.stock_quantity} available</span>
+                  <span className="text-xs sm:text-sm text-gray-500">
+                    {product.stock_quantity} available
+                  </span>
                 </div>
 
                 <div className="space-y-3">
                   <div className="flex flex-col sm:flex-row gap-3">
-                    <Button 
+                    <Button
                       onClick={(e) => {
                         e.preventDefault()
                         e.stopPropagation()
                         handleAddToCart()
-                      }} 
-                      variant="outline" 
+                      }}
+                      variant="outline"
                       className="flex-1 h-11 sm:h-10 text-sm sm:text-base"
                     >
                       <ShoppingCart className="h-4 w-4 mr-2" />
@@ -410,9 +431,15 @@ export default function ProductDetailPage() {
           <CardContent className="p-4 sm:p-6">
             <Tabs defaultValue="description" className="w-full">
               <TabsList className="grid w-full grid-cols-3 h-auto">
-                <TabsTrigger value="description" className="text-xs sm:text-sm py-2 sm:py-2.5">Description</TabsTrigger>
-                <TabsTrigger value="specifications" className="text-xs sm:text-sm py-2 sm:py-2.5">Specifications</TabsTrigger>
-                <TabsTrigger value="reviews" className="text-xs sm:text-sm py-2 sm:py-2.5">Reviews</TabsTrigger>
+                <TabsTrigger value="description" className="text-xs sm:text-sm py-2 sm:py-2.5">
+                  Description
+                </TabsTrigger>
+                <TabsTrigger value="specifications" className="text-xs sm:text-sm py-2 sm:py-2.5">
+                  Specifications
+                </TabsTrigger>
+                <TabsTrigger value="reviews" className="text-xs sm:text-sm py-2 sm:py-2.5">
+                  Reviews
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="description" className="mt-4 sm:mt-6">
@@ -423,7 +450,9 @@ export default function ProductDetailPage() {
 
                   {product.key_features && (
                     <div className="mt-4 sm:mt-6">
-                      <h3 className="font-semibold text-base sm:text-lg text-gray-900 mb-2 sm:mb-3">Key Features:</h3>
+                      <h3 className="font-semibold text-base sm:text-lg text-gray-900 mb-2 sm:mb-3">
+                        Key Features:
+                      </h3>
                       <div className="whitespace-pre-line text-sm sm:text-base text-gray-700">
                         {product.key_features}
                       </div>
@@ -482,7 +511,9 @@ export default function ProductDetailPage() {
         {/* Related Products */}
         {relatedProducts.length > 0 && (
           <section>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Related Products</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
+              Related Products
+            </h2>
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
               {relatedProducts.map((relatedProduct) => (
                 <ProductCard key={relatedProduct.id} product={relatedProduct} />

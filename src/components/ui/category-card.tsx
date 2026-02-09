@@ -24,10 +24,12 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 export default function CategoryCard({ category, className }: CategoryCardProps) {
   // Get the appropriate icon component
   const IconComponent = category.icon && iconMap[category.icon] ? iconMap[category.icon] : Package
-  
+
   // Check if category has an image
-  const hasImage = category.image_url || category.icon_url || category.banner_image_url || category.banner_url
-  const imageUrl = category.image_url || category.icon_url || category.banner_image_url || category.banner_url
+  const hasImage =
+    category.image_url || category.icon_url || category.banner_image_url || category.banner_url
+  const imageUrl =
+    category.image_url || category.icon_url || category.banner_image_url || category.banner_url
 
   return (
     <Link href={`/products?category=${category.id}`}>

@@ -5,6 +5,7 @@ A modern, full-featured e-commerce platform built with Next.js, React, TypeScrip
 ## 🚀 Features
 
 ### Customer Features
+
 - **Product Catalog**: Browse products by categories with search functionality
 - **Shopping Cart**: Persistent cart with Zustand state management
 - **Checkout System**: Complete checkout flow with district-based delivery charges
@@ -14,6 +15,7 @@ A modern, full-featured e-commerce platform built with Next.js, React, TypeScrip
 - **Floating Cart Button**: Quick access to cart from any page
 
 ### Admin Features
+
 - **Dashboard**: Comprehensive analytics and statistics
 - **Product Management**: Create, edit, and manage products with image uploads
 - **Category Management**: Organize products with categories
@@ -24,6 +26,7 @@ A modern, full-featured e-commerce platform built with Next.js, React, TypeScrip
 - **Invoice Generation**: Professional HTML invoices with company branding
 
 ### Technical Features
+
 - **Server-Side Rendering (SSR)**: Fast page loads with Next.js
 - **Type Safety**: Full TypeScript implementation
 - **Database**: Supabase PostgreSQL with Row Level Security (RLS)
@@ -48,6 +51,7 @@ A modern, full-featured e-commerce platform built with Next.js, React, TypeScrip
 ## 📋 Prerequisites
 
 Before you begin, ensure you have the following installed:
+
 - Node.js 18+ and npm/pnpm/yarn
 - A Supabase account and project
 - Git
@@ -55,12 +59,14 @@ Before you begin, ensure you have the following installed:
 ## 🔧 Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd techpinik
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    # or
@@ -70,8 +76,9 @@ Before you begin, ensure you have the following installed:
    ```
 
 3. **Set up environment variables**
-   
+
    Create a `.env.local` file in the root directory:
+
    ```env
    # Supabase Configuration
    NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
@@ -80,8 +87,9 @@ Before you begin, ensure you have the following installed:
    ```
 
 4. **Set up the database**
-   
+
    Run the Supabase migrations in order:
+
    ```bash
    # Apply all migrations from supabase/migrations/
    # You can use Supabase CLI or run them manually in Supabase SQL Editor
@@ -95,18 +103,22 @@ Before you begin, ensure you have the following installed:
 ## 🚀 Running the Application
 
 ### Development Mode
+
 ```bash
 npm run dev
 ```
+
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### Production Build
+
 ```bash
 npm run build
 npm start
 ```
 
 ### Other Commands
+
 ```bash
 # Lint code
 npm run lint
@@ -182,6 +194,7 @@ techpinik/
 ### Admin User Setup
 
 1. Create an admin user in Supabase:
+
    ```sql
    -- Use the scripts in supabase/migrations/ for admin setup
    -- Or create manually in Supabase Auth
@@ -194,11 +207,13 @@ techpinik/
 ## 🎨 Customization
 
 ### Branding
+
 - **Logo**: Replace `public/logo.png` with your logo
 - **Colors**: Update Tailwind colors in `tailwind.config.js`
 - **Company Info**: Update company details in invoice template (`src/app/admin/orders/page.tsx`)
 
 ### Styling
+
 - Global styles: `src/app/globals.css`
 - Component styles: Tailwind classes in components
 - Theme colors: Yellow (#fbbf24) is the primary brand color
@@ -206,6 +221,7 @@ techpinik/
 ## 📱 Key Pages
 
 ### Customer Pages
+
 - `/` - Homepage with hero slider and featured products
 - `/products` - Product listing with filters
 - `/products/[id]` - Product detail page
@@ -215,6 +231,7 @@ techpinik/
 - `/categories/[id]` - Category pages
 
 ### Admin Pages
+
 - `/admin` - Dashboard
 - `/admin/products` - Product management
 - `/admin/orders` - Order management
@@ -234,6 +251,7 @@ techpinik/
 ## 🧪 Testing
 
 Currently, the project doesn't include automated tests. Manual testing is recommended:
+
 - Test checkout flow
 - Verify admin operations
 - Test responsive design on multiple devices
@@ -242,12 +260,14 @@ Currently, the project doesn't include automated tests. Manual testing is recomm
 ## 🚢 Deployment
 
 ### Vercel (Recommended)
+
 1. Push code to GitHub
 2. Import project in Vercel
 3. Add environment variables
 4. Deploy
 
 ### Other Platforms
+
 - Ensure Node.js 18+ is supported
 - Set environment variables
 - Run `npm run build` before deployment
@@ -280,21 +300,25 @@ This project is private and proprietary.
 ### Common Issues
 
 **Issue**: Supabase connection errors
+
 - **Solution**: Verify environment variables are set correctly
 - Check Supabase project is active
 - Verify network connectivity
 
 **Issue**: Images not loading
+
 - **Solution**: Check Supabase Storage bucket configuration
 - Verify image URLs in database
 - Check CORS settings
 
 **Issue**: Admin login not working
+
 - **Solution**: Verify admin user exists in Supabase Auth
 - Check RLS policies for admin access
 - Verify authentication middleware
 
 **Issue**: Cart not persisting
+
 - **Solution**: Check browser localStorage
 - Verify Zustand persist configuration
 - Clear browser cache if needed
@@ -302,6 +326,7 @@ This project is private and proprietary.
 ## 📞 Support
 
 For issues and questions:
+
 - Check the documentation in `/doc` folder
 - Review migration files for database setup
 - Check Supabase logs for database errors

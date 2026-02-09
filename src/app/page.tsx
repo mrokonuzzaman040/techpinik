@@ -95,7 +95,7 @@ export default function HomePage() {
       // Get gap from the inner flex container (first child of scroll container)
       const flexContainer = scrollContainer.children[0] as HTMLElement
       if (!flexContainer) return 10
-      
+
       const computedStyle = window.getComputedStyle(flexContainer)
       const gap = computedStyle.gap || computedStyle.columnGap
       return gap ? parseFloat(gap) : 10 // Default to 10px if can't parse
@@ -125,7 +125,7 @@ export default function HomePage() {
       if (!scrollContainer) return
       const singleSetWidth = calculateSingleSetWidth()
       if (singleSetWidth === 0) return
-      
+
       const currentScroll = scrollContainer.scrollLeft
 
       // If we've scrolled past the first set, reset to start instantly (seamless loop)
@@ -148,7 +148,7 @@ export default function HomePage() {
           if (!isPausedRef.current && !isDraggingRef.current && scrollContainer) {
             const singleSetWidth = calculateSingleSetWidth()
             if (singleSetWidth === 0) return
-            
+
             const currentScroll = scrollContainer.scrollLeft
 
             // If we've scrolled past the first set, reset to start instantly (seamless loop)
@@ -325,7 +325,7 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div 
+          <div
             ref={categoryScrollRef}
             className="overflow-x-auto scrollbar-hide -mx-3 sm:-mx-4 cursor-grab"
             style={{
@@ -340,12 +340,13 @@ export default function HomePage() {
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           >
-            <div
-              className="flex gap-2.5 md:gap-4 pb-2 px-3 sm:px-4"
-            >
+            <div className="flex gap-2.5 md:gap-4 pb-2 px-3 sm:px-4">
               {/* Render categories twice for seamless infinite scroll */}
               {[...categories, ...categories].map((category, index) => (
-                <div key={`${category.id}-${index}`} className="shrink-0 flex-[0_0_calc(25%-7.5px)] md:flex-none md:w-[140px] h-[90px] sm:h-[100px] md:h-[110px]">
+                <div
+                  key={`${category.id}-${index}`}
+                  className="shrink-0 flex-[0_0_calc(25%-7.5px)] md:flex-none md:w-[140px] h-[90px] sm:h-[100px] md:h-[110px]"
+                >
                   <CategoryCard category={category} />
                 </div>
               ))}
@@ -424,7 +425,10 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="hidden sm:block flex-1 h-px bg-gray-200"></div>
-                <Link href={`/products?category=${categoryId}`} className="self-start sm:self-auto hidden md:block">
+                <Link
+                  href={`/products?category=${categoryId}`}
+                  className="self-start sm:self-auto hidden md:block"
+                >
                   <Button variant="outline" size="sm" className="text-xs sm:text-sm">
                     View All <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>

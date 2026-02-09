@@ -67,8 +67,12 @@ export default function CartPage() {
           </Link>
           <div className="flex-1 flex items-center justify-between sm:justify-start gap-3">
             <div>
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Shopping Cart</h1>
-              <p className="text-sm sm:text-base text-gray-600">{getTotalItems()} items in your cart</p>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
+                Shopping Cart
+              </h1>
+              <p className="text-sm sm:text-base text-gray-600">
+                {getTotalItems()} items in your cart
+              </p>
             </div>
             <Button
               variant="outline"
@@ -93,7 +97,9 @@ export default function CartPage() {
                     <div className="relative w-full sm:w-20 md:w-24 h-48 sm:h-20 md:h-24 shrink-0 overflow-hidden rounded-lg border mx-auto sm:mx-0">
                       <Image
                         src={
-                          (item.product.images && item.product.images.length > 0 && item.product.images[0]) ||
+                          (item.product.images &&
+                            item.product.images.length > 0 &&
+                            item.product.images[0]) ||
                           item.product.image_url ||
                           'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=product%20placeholder%20image&image_size=square'
                         }
@@ -213,13 +219,19 @@ export default function CartPage() {
                 </div>
 
                 <Link href="/checkout" className="block mt-4 sm:mt-6">
-                  <Button className="w-full h-11 sm:h-12 text-base sm:text-lg" size="lg" disabled={isLoading}>
+                  <Button
+                    className="w-full h-11 sm:h-12 text-base sm:text-lg"
+                    size="lg"
+                    disabled={isLoading}
+                  >
                     {isLoading ? 'Processing...' : 'Proceed to Checkout'}
                   </Button>
                 </Link>
 
                 <div className="mt-3 sm:mt-4 text-center">
-                  <p className="text-xs sm:text-sm text-gray-500">Secure checkout with SSL encryption</p>
+                  <p className="text-xs sm:text-sm text-gray-500">
+                    Secure checkout with SSL encryption
+                  </p>
                 </div>
               </CardContent>
             </Card>

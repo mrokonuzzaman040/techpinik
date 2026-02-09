@@ -82,7 +82,12 @@ export default function EditProductPage() {
 
       // Product images are stored in `images` (JSON array), not image_url
       const images = productData.images as string[] | null | undefined
-      const firstImage = Array.isArray(images) && images.length > 0 ? images[0] : typeof images === 'string' ? images : ''
+      const firstImage =
+        Array.isArray(images) && images.length > 0
+          ? images[0]
+          : typeof images === 'string'
+            ? images
+            : ''
       setImagePreview(firstImage || '')
 
       // Populate form data - only DB columns: name, description, price, category_id, stock_quantity, is_featured
@@ -92,7 +97,10 @@ export default function EditProductPage() {
         price: productData.price?.toString() ?? '',
         brand: (productData as any).brand || '',
         origin: (productData as any).origin || '',
-        key_features: typeof (productData as any).key_features === 'string' ? (productData as any).key_features : '',
+        key_features:
+          typeof (productData as any).key_features === 'string'
+            ? (productData as any).key_features
+            : '',
         box_contents: (productData as any).box_contents || '',
         sale_price: (productData as any).sale_price?.toString() || '',
         sku: (productData as any).sku || '',

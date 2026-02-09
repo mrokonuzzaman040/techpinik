@@ -10,10 +10,10 @@ import { useCartStore } from '@/store/cart'
 export default function FloatingCartButton() {
   const router = useRouter()
   const [mounted, setMounted] = useState(false)
-  
+
   // Subscribe to cart items for real-time updates
   const items = useCartStore((state) => state.items)
-  
+
   // Calculate total items from the subscribed items array
   const totalItems = useMemo(() => {
     return items.reduce((total, item) => total + item.quantity, 0)
@@ -50,4 +50,3 @@ export default function FloatingCartButton() {
     </Button>
   )
 }
-

@@ -749,7 +749,9 @@ export default function AdminOrdersPage() {
                                     View Details
                                   </Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => generateInvoice(order).catch(console.error)}>
+                                <DropdownMenuItem
+                                  onClick={() => generateInvoice(order).catch(console.error)}
+                                >
                                   <FileText className="h-4 w-4 mr-2" />
                                   Generate Invoice
                                 </DropdownMenuItem>

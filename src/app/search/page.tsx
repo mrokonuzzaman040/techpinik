@@ -49,7 +49,9 @@ function SearchPageContent() {
       <div className="mb-6 md:mb-8">
         <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
           <Search className="h-5 w-5 sm:h-6 sm:w-6 text-gray-500" />
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Search Results</h1>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
+            Search Results
+          </h1>
         </div>
 
         {query && (

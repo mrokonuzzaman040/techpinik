@@ -28,7 +28,7 @@ export default function MobileBottomNav() {
       href: 'https://m.me/661656337036736', // Replace YOUR_PAGE_ID with your Facebook Page username or ID (e.g., https://m.me/yourpagename)
       icon: MessageCircle,
       external: true,
-    }
+    },
   ]
 
   const isActive = (href: string, external?: boolean) => {
@@ -45,7 +45,7 @@ export default function MobileBottomNav() {
         {navItems.map((item) => {
           const Icon = item.icon
           const active = isActive(item.href, item.external)
-          
+
           if (item.external) {
             return (
               <a
@@ -62,9 +62,11 @@ export default function MobileBottomNav() {
                     active ? 'text-yellow-600' : 'text-gray-500'
                   }`}
                 />
-                <span className={`text-[10px] sm:text-xs font-medium transition-colors ${
-                  active ? 'text-yellow-600' : 'text-gray-500'
-                }`}>
+                <span
+                  className={`text-[10px] sm:text-xs font-medium transition-colors ${
+                    active ? 'text-yellow-600' : 'text-gray-500'
+                  }`}
+                >
                   {item.name}
                 </span>
               </a>
@@ -84,9 +86,11 @@ export default function MobileBottomNav() {
                   active ? 'text-yellow-600' : 'text-gray-500'
                 }`}
               />
-              <span className={`text-[10px] sm:text-xs font-medium transition-colors ${
-                active ? 'text-yellow-600' : 'text-gray-500'
-              }`}>
+              <span
+                className={`text-[10px] sm:text-xs font-medium transition-colors ${
+                  active ? 'text-yellow-600' : 'text-gray-500'
+                }`}
+              >
                 {item.name}
               </span>
             </Link>

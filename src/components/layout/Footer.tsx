@@ -27,7 +27,9 @@ export default function Footer() {
               </div>
               <div>
                 <h3 className="font-semibold text-sm sm:text-base">Free Delivery</h3>
-                <p className="text-xs sm:text-sm text-gray-400">Free shipping on orders over ৳500</p>
+                <p className="text-xs sm:text-sm text-gray-400">
+                  Free shipping on orders over ৳500
+                </p>
               </div>
             </div>
 
@@ -79,16 +81,32 @@ export default function Footer() {
               authentic products with excellent customer service.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors" aria-label="Facebook">
+              <a
+                href="#"
+                className="text-gray-400 hover:text-yellow-400 transition-colors"
+                aria-label="Facebook"
+              >
                 <Facebook className="h-5 w-5 sm:h-6 sm:w-6" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors" aria-label="Instagram">
+              <a
+                href="#"
+                className="text-gray-400 hover:text-yellow-400 transition-colors"
+                aria-label="Instagram"
+              >
                 <Instagram className="h-5 w-5 sm:h-6 sm:w-6" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors" aria-label="Twitter">
+              <a
+                href="#"
+                className="text-gray-400 hover:text-yellow-400 transition-colors"
+                aria-label="Twitter"
+              >
                 <Twitter className="h-5 w-5 sm:h-6 sm:w-6" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors" aria-label="YouTube">
+              <a
+                href="#"
+                className="text-gray-400 hover:text-yellow-400 transition-colors"
+                aria-label="YouTube"
+              >
                 <Youtube className="h-5 w-5 sm:h-6 sm:w-6" />
               </a>
             </div>

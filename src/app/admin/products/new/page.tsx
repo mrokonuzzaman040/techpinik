@@ -69,7 +69,10 @@ export default function AddProductPage() {
     }
   }
 
-  const handleInputChange = (field: keyof ProductForm, value: string | number | boolean | string[]) => {
+  const handleInputChange = (
+    field: keyof ProductForm,
+    value: string | number | boolean | string[]
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -399,7 +402,12 @@ export default function AddProductPage() {
                             disabled={imageUploading}
                           />
                           <Label htmlFor="image-upload" className="cursor-pointer">
-                            <Button type="button" variant="outline" size="sm" disabled={imageUploading}>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              disabled={imageUploading}
+                            >
                               Choose File
                             </Button>
                           </Label>

@@ -272,7 +272,9 @@ export default function CheckoutPage() {
                         <div className="relative w-12 h-12 flex-shrink-0 overflow-hidden rounded border">
                           <Image
                             src={
-                              (item.product.images && item.product.images.length > 0 && item.product.images[0]) ||
+                              (item.product.images &&
+                                item.product.images.length > 0 &&
+                                item.product.images[0]) ||
                               item.product.image_url ||
                               'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=product%20placeholder%20image&image_size=square'
                             }
