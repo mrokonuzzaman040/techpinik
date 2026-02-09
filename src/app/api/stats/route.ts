@@ -45,12 +45,11 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false })
       .limit(5)
 
-    // Get low stock products
+    // Get low stock products (products table has images, not image_url)
     const { data: lowStockProducts } = await supabase
       .from('products')
-      .select('id, name, stock_quantity, image_url')
+      .select('id, name, stock_quantity, images')
       .lte('stock_quantity', 10)
-      .eq('is_active', true)
       .order('stock_quantity', { ascending: true })
       .limit(5)
 
@@ -61,7 +60,7 @@ export async function GET(request: NextRequest) {
         products (
           id,
           name,
-          image_url
+          images
         )
       `)
 

@@ -35,11 +35,11 @@ export default function EditProductPage() {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
+    price: '',
     brand: '',
     origin: '',
     key_features: '',
     box_contents: '',
-    regular_price: '',
     sale_price: '',
     sku: '',
     stock_quantity: '',
@@ -79,26 +79,30 @@ export default function EditProductPage() {
 
       setProduct(productData)
       setCategories(categoriesData || [])
-      setImagePreview(productData.image_url || '')
 
-      // Populate form data
+      // Product images are stored in `images` (JSON array), not image_url
+      const images = productData.images as string[] | null | undefined
+      const firstImage = Array.isArray(images) && images.length > 0 ? images[0] : typeof images === 'string' ? images : ''
+      setImagePreview(firstImage || '')
+
+      // Populate form data - only DB columns: name, description, price, category_id, stock_quantity, is_featured
       setFormData({
         name: productData.name || '',
         description: productData.description || '',
-        brand: productData.brand || '',
-        origin: productData.origin || '',
-        key_features: productData.key_features || '',
-        box_contents: productData.box_contents || '',
-        regular_price: productData.regular_price?.toString() || '',
-        sale_price: productData.sale_price?.toString() || '',
-        sku: productData.sku || '',
-        stock_quantity: productData.stock_quantity?.toString() || '',
-        weight: productData.weight?.toString() || '',
-        dimensions: productData.dimensions || '',
-        warranty: productData.warranty || '',
+        price: productData.price?.toString() ?? '',
+        brand: (productData as any).brand || '',
+        origin: (productData as any).origin || '',
+        key_features: typeof (productData as any).key_features === 'string' ? (productData as any).key_features : '',
+        box_contents: (productData as any).box_contents || '',
+        sale_price: (productData as any).sale_price?.toString() || '',
+        sku: (productData as any).sku || '',
+        stock_quantity: productData.stock_quantity?.toString() ?? '',
+        weight: (productData as any).weight?.toString() || '',
+        dimensions: (productData as any).dimensions || '',
+        warranty: (productData as any).warranty || '',
         category_id: productData.category_id || '',
-        availability_status: productData.availability_status || 'in_stock',
-        is_active: productData.is_active ?? true,
+        availability_status: (productData as any).availability_status || 'in_stock',
+        is_active: (productData as any).is_active ?? true,
       })
     } catch (error) {
       console.error('Error fetching data:', error)
@@ -166,33 +170,25 @@ export default function EditProductPage() {
     try {
       const supabase = createClient()
 
-      let imageUrl = product?.image_url || ''
-
-      // Upload new image if selected
+      // Build images array: product uses `images` (JSON array), not image_url
+      let images: string[] = []
       if (imageFile) {
-        imageUrl = await uploadImage(imageFile)
-      } else if (!imagePreview) {
-        imageUrl = ''
+        const url = await uploadImage(imageFile)
+        images = [url]
+      } else if (imagePreview) {
+        const existing = (product?.images as string[] | null) || []
+        images = Array.isArray(existing) ? [...existing] : [existing].filter(Boolean)
       }
 
+      // Only update columns that exist in the products table: name, description, price, category_id, images, stock_quantity, is_featured, updated_at
       const updateData = {
         name: formData.name,
-        description: formData.description,
-        brand: formData.brand,
-        origin: formData.origin,
-        key_features: formData.key_features,
-        box_contents: formData.box_contents,
-        regular_price: parseFloat(formData.regular_price) || 0,
-        sale_price: formData.sale_price ? parseFloat(formData.sale_price) : null,
-        sku: formData.sku,
-        stock_quantity: parseInt(formData.stock_quantity) || 0,
-        weight: formData.weight ? parseFloat(formData.weight) : null,
-        dimensions: formData.dimensions,
-        warranty: formData.warranty,
-        category_id: formData.category_id,
-        availability_status: formData.availability_status,
-        is_active: formData.is_active,
-        image_url: imageUrl,
+        description: formData.description || null,
+        price: parseFloat(formData.price) || 0,
+        category_id: formData.category_id || null,
+        images,
+        stock_quantity: parseInt(formData.stock_quantity, 10) || 0,
+        is_featured: (product as any)?.is_featured ?? false,
         updated_at: new Date().toISOString(),
       }
 
@@ -353,13 +349,13 @@ export default function EditProductPage() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <Label htmlFor="regular_price">Regular Price (৳) *</Label>
+                    <Label htmlFor="price">Price (৳) *</Label>
                     <Input
-                      id="regular_price"
+                      id="price"
                       type="number"
                       step="0.01"
-                      value={formData.regular_price}
-                      onChange={(e) => handleInputChange('regular_price', e.target.value)}
+                      value={formData.price}
+                      onChange={(e) => handleInputChange('price', e.target.value)}
                       required
                     />
                   </div>

@@ -47,6 +47,7 @@ export default function AddProductPage() {
     key_features: [],
     box_contents: [],
   })
+  const [imageUploading, setImageUploading] = useState(false)
 
   useEffect(() => {
     fetchCategories()
@@ -68,35 +69,39 @@ export default function AddProductPage() {
     }
   }
 
-  const handleInputChange = (field: keyof ProductForm, value: any) => {
+  const handleInputChange = (field: keyof ProductForm, value: string | number | boolean | string[]) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }))
   }
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const result = e.target?.result as string
-        setImagePreview(result)
-        setFormData((prev) => ({ ...prev, image_url: result }))
-      }
-      reader.readAsDataURL(file)
+    if (!file) return
+    setImageUploading(true)
+    try {
+      const form = new FormData()
+      form.append('file', file)
+      form.append('folder', 'products')
+      const res = await fetch('/api/upload', { method: 'POST', body: form })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Upload failed')
+      const url = data.url
+      setImagePreview(url)
+      setFormData((prev) => ({ ...prev, images: [url], image_url: url }))
+    } catch (err) {
+      console.error('Image upload error:', err)
+      alert(err instanceof Error ? err.message : 'Failed to upload image')
+    } finally {
+      setImageUploading(false)
+      e.target.value = ''
     }
   }
 
   const removeImage = () => {
     setImagePreview('')
-    setFormData((prev) => ({ ...prev, image_url: '' }))
-  }
-
-  const generateSKU = () => {
-    const timestamp = Date.now().toString().slice(-6)
-    const random = Math.random().toString(36).substring(2, 5).toUpperCase()
-    return `PRD-${timestamp}-${random}`
+    setFormData((prev) => ({ ...prev, images: [], image_url: '' }))
   }
 
   const generateSlug = (name: string) => {
@@ -108,6 +113,12 @@ export default function AddProductPage() {
       .replace(/^-+|-+$/g, '')
   }
 
+  const generateSKU = () => {
+    const timestamp = Date.now().toString().slice(-6)
+    const random = Math.random().toString(36).substring(2, 5).toUpperCase()
+    return `PRD-${timestamp}-${random}`
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -115,28 +126,19 @@ export default function AddProductPage() {
     const supabase = createClient()
 
     try {
-      // Generate SKU if not provided
-      const sku = formData.sku || generateSKU()
-      
       // Generate slug from name
       const slug = generateSlug(formData.name)
+      const sku = formData.sku?.trim() || generateSKU()
 
-      // Prepare images array - convert image_url to images array if it's a valid URL
-      const images: string[] = []
-      if (formData.image_url && formData.image_url.startsWith('http')) {
-        images.push(formData.image_url)
-      }
-
-      // Prepare product data - only include fields that exist in the database schema
+      // Prepare product data - include sku (required by DB), slug, and other schema fields
       const productData = {
         name: formData.name,
         description: formData.description || null,
         price: Number(formData.price) || 0,
         category_id: formData.category_id || null,
-        images: images.length > 0 ? images : [],
+        images: Array.isArray(formData.images) ? formData.images : [],
         stock_quantity: Number(formData.stock_quantity) || 0,
         is_featured: formData.is_featured || false,
-        is_active: formData.is_active ?? true,
         slug,
         sku,
       }
@@ -385,16 +387,19 @@ export default function AddProductPage() {
                       ) : (
                         <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                           <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                          <p className="text-sm text-gray-600 mb-2">Upload product image</p>
+                          <p className="text-sm text-gray-600 mb-2">
+                            {imageUploading ? 'Uploading...' : 'Upload product image'}
+                          </p>
                           <Input
                             type="file"
                             accept="image/*"
                             onChange={handleImageUpload}
                             className="hidden"
                             id="image-upload"
+                            disabled={imageUploading}
                           />
                           <Label htmlFor="image-upload" className="cursor-pointer">
-                            <Button type="button" variant="outline" size="sm">
+                            <Button type="button" variant="outline" size="sm" disabled={imageUploading}>
                               Choose File
                             </Button>
                           </Label>
