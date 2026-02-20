@@ -30,6 +30,9 @@ export default function CheckoutPage() {
 
   const [districts, setDistricts] = useState<District[]>([])
   const [loading, setLoading] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [validationErrors, setValidationErrors] = useState<Partial<Record<keyof CheckoutForm, string>>>({})
+  const [orderSuccess, setOrderSuccess] = useState(false)
   const [formData, setFormData] = useState<CheckoutForm>({
     customer_name: '',
     customer_phone: '',
@@ -67,10 +70,51 @@ export default function CheckoutPage() {
 
   const handleInputChange = (field: keyof CheckoutForm, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
+    // Clear validation error for this field when user types
+    if (validationErrors[field]) {
+      setValidationErrors((prev) => {
+        const next = { ...prev }
+        delete next[field]
+        return next
+      })
+    }
+    setSubmitError(null)
+  }
+
+  const validateForm = (): boolean => {
+    const errors: Partial<Record<keyof CheckoutForm, string>> = {}
+    const trimmedName = formData.customer_name.trim()
+    const trimmedPhone = formData.customer_phone.trim().replace(/\s/g, '')
+    const trimmedAddress = formData.customer_address.trim()
+
+    if (!trimmedName) {
+      errors.customer_name = 'Please enter your full name.'
+    }
+    if (!trimmedPhone) {
+      errors.customer_phone = 'Please enter your phone number.'
+    } else if (!/^[\d+-\s]{10,}$/.test(trimmedPhone)) {
+      errors.customer_phone = 'Please enter a valid phone number (at least 10 digits).'
+    }
+    if (!trimmedAddress) {
+      errors.customer_address = 'Please enter your complete address.'
+    }
+    if (!formData.district_id) {
+      errors.district_id = 'Please select a district for delivery.'
+    }
+
+    setValidationErrors(errors)
+    return Object.keys(errors).length === 0
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setSubmitError(null)
+    setValidationErrors({})
+
+    if (!validateForm()) {
+      return
+    }
+
     setLoading(true)
 
     try {
@@ -122,21 +166,22 @@ export default function CheckoutPage() {
 
       console.log('Order items created successfully')
 
-      // Clear cart and redirect
       clearCart()
-      router.push(`/order-confirmation/${order.id}`)
+      setOrderSuccess(true)
+      // Show confirmation message briefly then redirect
+      setTimeout(() => {
+        router.push(`/order-confirmation/${order.id}`)
+      }, 1500)
     } catch (error) {
       console.error('Error placing order:', error)
 
-      // Better error handling
       let errorMessage = 'Failed to place order. Please try again.'
       if (error && typeof error === 'object' && 'message' in error) {
-        errorMessage = `Error: ${error.message}`
+        errorMessage = String((error as { message: string }).message)
       } else if (error && typeof error === 'object' && 'details' in error) {
-        errorMessage = `Error: ${error.details}`
+        errorMessage = String((error as { details: string }).details)
       }
-
-      alert(errorMessage)
+      setSubmitError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -155,6 +200,24 @@ export default function CheckoutPage() {
     return null // Will redirect
   }
 
+  if (orderSuccess) {
+    return (
+      <MainLayout>
+        <div className="container mx-auto px-4 py-12">
+          <div className="max-w-md mx-auto text-center">
+            <div className="rounded-lg border border-green-200 bg-green-50 p-6">
+              <h2 className="text-xl font-semibold text-green-800 mb-2">Order placed successfully!</h2>
+              <p className="text-green-700 mb-4">
+                Thank you for your order. Redirecting you to your order confirmation…
+              </p>
+              <div className="animate-spin rounded-full h-8 w-8 border-2 border-green-600 border-t-transparent mx-auto" />
+            </div>
+          </div>
+        </div>
+      </MainLayout>
+    )
+  }
+
   return (
     <MainLayout>
       <div className="container mx-auto px-4 py-6">
@@ -168,6 +231,12 @@ export default function CheckoutPage() {
           </Link>
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Checkout</h1>
         </div>
+
+        {submitError && (
+          <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-red-800 text-sm">
+            {submitError}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -190,7 +259,11 @@ export default function CheckoutPage() {
                       onChange={(e) => handleInputChange('customer_name', e.target.value)}
                       placeholder="Enter your full name"
                       required
+                      className={validationErrors.customer_name ? 'border-red-500' : ''}
                     />
+                    {validationErrors.customer_name && (
+                      <p className="text-sm text-red-600 mt-1">{validationErrors.customer_name}</p>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="customer_phone">Phone Number *</Label>
@@ -200,7 +273,11 @@ export default function CheckoutPage() {
                       onChange={(e) => handleInputChange('customer_phone', e.target.value)}
                       placeholder="Enter your phone number"
                       required
+                      className={validationErrors.customer_phone ? 'border-red-500' : ''}
                     />
+                    {validationErrors.customer_phone && (
+                      <p className="text-sm text-red-600 mt-1">{validationErrors.customer_phone}</p>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -223,7 +300,11 @@ export default function CheckoutPage() {
                       placeholder="Enter your complete address (House/Flat number, Street, Area, City)"
                       rows={3}
                       required
+                      className={validationErrors.customer_address ? 'border-red-500' : ''}
                     />
+                    {validationErrors.customer_address && (
+                      <p className="text-sm text-red-600 mt-1">{validationErrors.customer_address}</p>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="district_id">District *</Label>
@@ -232,7 +313,7 @@ export default function CheckoutPage() {
                       onValueChange={(value) => handleInputChange('district_id', value)}
                       required
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className={validationErrors.district_id ? 'border-red-500' : ''}>
                         <SelectValue placeholder="Select district" />
                       </SelectTrigger>
                       <SelectContent>
@@ -243,6 +324,9 @@ export default function CheckoutPage() {
                         ))}
                       </SelectContent>
                     </Select>
+                    {validationErrors.district_id && (
+                      <p className="text-sm text-red-600 mt-1">{validationErrors.district_id}</p>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="notes">Order Notes</Label>
@@ -327,7 +411,7 @@ export default function CheckoutPage() {
                     type="submit"
                     className="w-full"
                     size="lg"
-                    disabled={loading || !isFormValid()}
+                    disabled={loading}
                   >
                     {loading ? 'Placing Order...' : 'Place Order'}
                   </Button>

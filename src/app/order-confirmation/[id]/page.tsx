@@ -109,12 +109,17 @@ export default function OrderConfirmationPage() {
   return (
     <MainLayout>
       <div className="container mx-auto px-4 py-6">
-        {/* Success Header */}
-        <div className="text-center mb-8">
-          <CheckCircle className="h-16 w-16 text-yellow-600 mx-auto mb-4" />
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Order Confirmed!</h1>
-          <p className="text-gray-600">
-            Thank you for your order. We'll send you a confirmation email shortly.
+        {/* Order confirmation message */}
+        <div className="rounded-xl border border-green-200 bg-green-50 dark:bg-green-950/30 dark:border-green-800 p-6 md:p-8 text-center mb-8">
+          <CheckCircle className="h-16 w-16 text-green-600 dark:text-green-500 mx-auto mb-4" />
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Order placed successfully
+          </h1>
+          <p className="text-green-800 dark:text-green-200 font-medium mb-1">
+            Thank you for your order.
+          </p>
+          <p className="text-gray-600 dark:text-gray-400 text-sm">
+            We&apos;ve received your order and will send you a confirmation email shortly. You can track your order using the link below.
           </p>
         </div>
 
