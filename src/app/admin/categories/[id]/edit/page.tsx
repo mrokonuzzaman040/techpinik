@@ -153,18 +153,28 @@ export default function EditCategoryPage() {
         icon_url: iconUrl,
         banner_url: bannerUrl,
         is_active: formData.is_active,
-        updated_at: new Date().toISOString(),
       }
 
-      const { error } = await supabase.from('categories').update(updateData).eq('id', categoryId)
+      const response = await fetch(`/api/categories/${categoryId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updateData),
+      })
 
-      if (error) throw error
+      const result = await response.json().catch(() => ({}))
+
+      if (!response.ok || !result?.success) {
+        throw new Error(result?.error || 'Failed to update category')
+      }
 
       alert('Category updated successfully!')
       router.push('/admin/categories')
     } catch (error) {
       console.error('Error updating category:', error)
-      alert('Error updating category. Please try again.')
+      const message = error instanceof Error ? error.message : 'Error updating category. Please try again.'
+      alert(message)
     } finally {
       setSaving(false)
     }
