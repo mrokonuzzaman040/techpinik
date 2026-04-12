@@ -219,35 +219,34 @@ export default function Footer() {
             <h3 className="text-base sm:text-lg font-semibold">Contact Info</h3>
             <div className="space-y-3">
               <div className="flex items-start space-x-3">
-                <MapPin className="h-5 w-5 text-yellow-400 mt-0.5 flex-shrink-0" />
-                <div>
+                {/* <MapPin className="h-5 w-5 text-yellow-400 mt-0.5 flex-shrink-0" /> */}
+                {/* <div>
                   <p className="text-sm sm:text-base text-gray-400">
                     123 Tech Street, Dhanmondi
                     <br />
                     Dhaka 1205, Bangladesh
                   </p>
-                </div>
+                </div> */}
               </div>
 
               <div className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 text-yellow-400 flex-shrink-0" />
                 <div>
-                  <p className="text-sm sm:text-base text-gray-400">‪+880 1814‑931931‬</p>
+                  <p className="text-sm sm:text-base text-gray-400">‪+880 1815‑115533‬</p>
                 </div>
               </div>
 
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-yellow-400 flex-shrink-0" />
-                <p className="text-sm sm:text-base text-gray-400">info@techpinik.com</p>
+                <p className="text-sm sm:text-base text-gray-400">techpinik.com@gmail.com</p>
               </div>
 
-              <div className="flex items-start space-x-3">
-                <Clock className="h-5 w-5 text-yellow-400 mt-0.5 flex-shrink-0" />
+                <div className="flex items-start space-x-3">
+                <Clock className="h-5 w-5 text-yellow-400 mt-0.5 shrink-0" />
                 <div>
-                  <p className="text-sm sm:text-base text-gray-400">Mon - Sat: 9:00 AM - 8:00 PM</p>
-                  <p className="text-sm sm:text-base text-gray-400">Sunday: 10:00 AM - 6:00 PM</p>
+                  <p className="text-sm sm:text-base text-gray-400">24/7 Customer Support</p>
                 </div>
-              </div>
+                </div>
             </div>
           </div>
         </div>
@@ -260,7 +259,7 @@ export default function Footer() {
             <div className="text-xs sm:text-sm text-gray-400 text-center sm:text-left">
               © 2024 TechPinik. All rights reserved.
             </div>
-            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6">
+            {/* <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6">
               <span className="text-xs sm:text-sm text-gray-400">We Accept:</span>
               <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
                 <div className="bg-white rounded px-2 sm:px-3 py-1 sm:py-1.5">
@@ -276,7 +275,7 @@ export default function Footer() {
                   <span className="text-xs sm:text-sm font-bold text-gray-800">Rocket</span>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
