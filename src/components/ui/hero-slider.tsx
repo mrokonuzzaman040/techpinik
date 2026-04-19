@@ -53,15 +53,26 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
     )
   }
 
+  const slideCount = slides.length
+  const trackPct = slideCount * 100
+  const slidePct = 100 / slideCount
+
   return (
     <div className="relative h-48 md:h-64 lg:h-80 overflow-hidden rounded-lg">
-      {/* Slides */}
+      {/* Track: width = N × viewport; translate by one viewport per slide */}
       <div
-        className="flex transition-transform duration-500 ease-in-out h-full"
-        style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+        className="flex h-full transition-transform duration-500 ease-in-out"
+        style={{
+          width: `${trackPct}%`,
+          transform: `translateX(-${(currentSlide * 100) / slideCount}%)`,
+        }}
       >
         {slides.map((slide, index) => (
-          <div key={slide.id} className="w-full h-full shrink-0 relative">
+          <div
+            key={slide.id}
+            className="relative h-full shrink-0"
+            style={{ width: `${slidePct}%` }}
+          >
             {slide.image_url ? (
               <Image
                 src={slide.image_url}
@@ -70,7 +81,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
                 sizes="100vw"
                 className="object-cover"
                 priority={index === 0}
-                unoptimized={!slide.image_url.includes('supabase.co')}
+                unoptimized
                 onError={(e) => {
                   console.error('Image failed to load:', slide.image_url)
                   const target = e.target as HTMLImageElement
@@ -80,13 +91,18 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
             ) : (
               <div className="w-full h-full bg-linear-to-r from-yellow-400 to-blue-500" />
             )}
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-              <div className="text-center text-white max-w-4xl px-4">
-                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-2 md:mb-4">
+            {/* Light gradient: clearer image on top/center, slightly darker only toward bottom for text contrast */}
+            <div
+              className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/45 via-black/10 to-transparent"
+              aria-hidden
+            />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="pointer-events-auto max-w-4xl px-4 text-center text-white">
+                <h2 className="mb-2 text-lg font-bold drop-shadow-md sm:mb-4 sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl [text-shadow:0_1px_2px_rgba(0,0,0,0.8)]">
                   {slide.title}
                 </h2>
                 {slide.subtitle && (
-                  <p className="text-sm sm:text-base md:text-lg lg:text-xl mb-4 md:mb-6 opacity-90">
+                  <p className="mb-4 text-sm opacity-95 drop-shadow-md sm:mb-6 sm:text-base md:text-lg lg:text-xl [text-shadow:0_1px_2px_rgba(0,0,0,0.75)]">
                     {slide.subtitle}
                   </p>
                 )}
@@ -94,7 +110,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
                   <Link href={slide.link_url}>
                     <Button
                       size="sm"
-                      className="sm:h-11 sm:px-6 sm:text-base bg-yellow-600 hover:bg-yellow-700"
+                      className="sm:h-11 sm:px-6 sm:text-base bg-yellow-600 hover:bg-yellow-700 shadow-lg"
                     >
                       Shop Now
                     </Button>

@@ -29,12 +29,16 @@ export default function HomePage() {
     const fetchData = async () => {
       try {
         // Fetch slider items
-        const { data: sliders } = await supabase
+        const { data: sliders, error: sliderError } = await supabase
           .from('slider_items')
           .select('*')
           .eq('is_active', true)
           .order('sort_order', { ascending: true })
           .limit(5)
+
+        if (sliderError) {
+          console.error('Homepage slider fetch error:', sliderError)
+        }
 
         // Fetch categories
         const { data: categoriesData } = await supabase
