@@ -34,7 +34,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
 
   if (slides.length === 0) {
     return (
-      <div className="relative h-48 md:h-64 lg:h-80 bg-linear-to-r from-yellow-400 to-blue-500 flex items-center justify-center">
+      <div className="relative flex aspect-[2.35/1] w-full items-center justify-center overflow-hidden rounded-lg bg-linear-to-r from-yellow-400 to-blue-500">
         <div className="text-center text-white px-4">
           <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 md:mb-4">
             Welcome to TechPinik
@@ -58,10 +58,10 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
   const slidePct = 100 / slideCount
 
   return (
-    <div className="relative h-48 md:h-64 lg:h-80 overflow-hidden rounded-lg">
+    <div className="relative aspect-[2.35/1] w-full overflow-hidden rounded-lg">
       {/* Track: width = N × viewport; translate by one viewport per slide */}
       <div
-        className="flex h-full transition-transform duration-500 ease-in-out"
+        className="flex h-full min-h-0 w-full transition-transform duration-500 ease-in-out"
         style={{
           width: `${trackPct}%`,
           transform: `translateX(-${(currentSlide * 100) / slideCount}%)`,
@@ -70,26 +70,28 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
         {slides.map((slide, index) => (
           <div
             key={slide.id}
-            className="relative h-full shrink-0"
+            className="relative h-full min-h-0 min-w-0 shrink-0 overflow-hidden"
             style={{ width: `${slidePct}%` }}
           >
             {slide.image_url ? (
-              <Image
-                src={slide.image_url}
-                alt={slide.title || 'Slider image'}
-                fill
-                sizes="100vw"
-                className="object-cover"
-                priority={index === 0}
-                unoptimized
-                onError={(e) => {
-                  console.error('Image failed to load:', slide.image_url)
-                  const target = e.target as HTMLImageElement
-                  target.style.display = 'none'
-                }}
-              />
+              <div className="absolute inset-0">
+                <Image
+                  src={slide.image_url}
+                  alt={slide.title || 'Slider image'}
+                  fill
+                  sizes="100vw"
+                  className="object-cover object-center"
+                  priority={index === 0}
+                  unoptimized
+                  onError={(e) => {
+                    console.error('Image failed to load:', slide.image_url)
+                    const target = e.target as HTMLImageElement
+                    target.style.display = 'none'
+                  }}
+                />
+              </div>
             ) : (
-              <div className="w-full h-full bg-linear-to-r from-yellow-400 to-blue-500" />
+              <div className="absolute inset-0 bg-linear-to-r from-yellow-400 to-blue-500" />
             )}
             {/* Light gradient: clearer image on top/center, slightly darker only toward bottom for text contrast */}
             <div
