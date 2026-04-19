@@ -65,16 +65,37 @@ export default function AdminOrderDetailPage() {
 
       if (orderError) throw orderError
 
-      // Fetch order items
+      // Fetch order items (names live on products — order_items has no product_name column)
       const { data: itemsData, error: itemsError } = await supabase
         .from('order_items')
-        .select('*')
+        .select(
+          `
+          id,
+          order_id,
+          product_id,
+          quantity,
+          unit_price,
+          products ( name, slug )
+        `
+        )
         .eq('order_id', orderId)
 
       if (itemsError) throw itemsError
 
+      const rows = itemsData || []
+      const normalized = rows.map((row: any) => ({
+        id: row.id,
+        order_id: row.order_id,
+        product_id: row.product_id,
+        quantity: row.quantity,
+        unit_price: row.unit_price,
+        product_name: row.products?.name ?? 'Product',
+        product_sku: row.products?.slug,
+        total_price: row.unit_price * row.quantity,
+      }))
+
       setOrder(orderData)
-      setOrderItems(itemsData || [])
+      setOrderItems(normalized)
     } catch (error) {
       console.error('Error fetching order details:', error)
     } finally {

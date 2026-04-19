@@ -214,7 +214,7 @@ export interface Database {
           title: string | null
           subtitle: string | null
           link_url: string | null
-          order_index: number
+          sort_order: number
           is_active: boolean | null
           created_at: string
           updated_at: string | null
@@ -225,7 +225,7 @@ export interface Database {
           title?: string | null
           subtitle?: string | null
           link_url?: string | null
-          order_index?: number
+          sort_order?: number
           is_active?: boolean | null
           created_at?: string
           updated_at?: string | null
@@ -236,7 +236,7 @@ export interface Database {
           title?: string | null
           subtitle?: string | null
           link_url?: string | null
-          order_index?: number
+          sort_order?: number
           is_active?: boolean | null
           created_at?: string
           updated_at?: string | null

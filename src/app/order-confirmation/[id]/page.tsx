@@ -37,11 +37,32 @@ export default function OrderConfirmationPage() {
         // Fetch order items
         const { data: itemsData } = await supabase
           .from('order_items')
-          .select('*')
+          .select(
+            `
+            id,
+            order_id,
+            product_id,
+            quantity,
+            unit_price,
+            products ( name, slug )
+          `
+          )
           .eq('order_id', orderId)
 
         setOrder(orderData)
-        setOrderItems(itemsData || [])
+        const rows = itemsData || []
+        setOrderItems(
+          rows.map((row: any) => ({
+            id: row.id,
+            order_id: row.order_id,
+            product_id: row.product_id,
+            quantity: row.quantity,
+            unit_price: row.unit_price,
+            product_name: row.products?.name ?? 'Product',
+            product_sku: row.products?.slug,
+            total_price: row.unit_price * row.quantity,
+          }))
+        )
       } catch (error) {
         console.error('Error fetching order:', error)
       } finally {

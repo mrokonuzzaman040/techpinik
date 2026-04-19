@@ -86,17 +86,18 @@ export default function AdminDashboard() {
         // Fetch top products (by order items count)
         const { data: topProductsData } = await supabase.from('order_items').select(`
             product_id,
-            product_name,
-            quantity
+            quantity,
+            products ( name )
           `)
 
-        // Group by product and sum quantities
+        // Group by product and sum quantities (product name comes from join — no product_name column on order_items)
         const productSales =
-          topProductsData?.reduce((acc: any, item) => {
+          topProductsData?.reduce((acc: any, item: any) => {
+            const name = item.products?.name ?? 'Product'
             if (!acc[item.product_id]) {
               acc[item.product_id] = {
                 product_id: item.product_id,
-                product_name: item.product_name,
+                product_name: name,
                 total_sold: 0,
               }
             }

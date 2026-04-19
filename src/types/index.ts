@@ -207,33 +207,25 @@ export interface UpdateDistrictData extends Partial<CreateDistrictData> {
   updated_at?: string
 }
 
-// Slider Item Types
+// Slider Item Types (matches public.slider_items — link_url, sort_order)
 export interface SliderItem {
   id: string
   image_url: string
-  title?: string
-  subtitle?: string
-  description?: string
-  button_text?: string
-  button_link?: string
-  link_url?: string
-  order_index: number
-  sort_order?: number
+  title?: string | null
+  subtitle?: string | null
+  link_url?: string | null
+  sort_order: number
   is_active: boolean
   created_at: string
-  updated_at: string
+  updated_at: string | null
 }
 
 export interface CreateSliderItemData {
   image_url: string
   title?: string
   subtitle?: string
-  description?: string
-  button_text?: string
-  button_link?: string
-  link_url?: string
-  order_index: number
-  sort_order?: number
+  link_url?: string | null
+  sort_order: number
   is_active?: boolean
 }
 

@@ -5,16 +5,15 @@ import { ArrowLeft, Plus, Edit, Trash2, Eye, EyeOff, Upload, X } from 'lucide-re
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog'
 import {
   Table,
@@ -25,7 +24,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
-import { createClient } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { SliderItem } from '@/types'
 import Link from 'next/link'
 
@@ -41,9 +40,7 @@ export default function SliderManagementPage() {
   const [formData, setFormData] = useState({
     title: '',
     subtitle: '',
-    description: '',
-    button_text: '',
-    button_link: '',
+    link_url: '',
     is_active: true,
     sort_order: 1,
   })
@@ -53,8 +50,6 @@ export default function SliderManagementPage() {
   }, [])
 
   const fetchSliders = async () => {
-    const supabase = createClient()
-
     try {
       const { data, error } = await supabase.from('slider_items').select('*').order('sort_order')
 
@@ -72,9 +67,7 @@ export default function SliderManagementPage() {
     setFormData({
       title: '',
       subtitle: '',
-      description: '',
-      button_text: '',
-      button_link: '',
+      link_url: '',
       is_active: true,
       sort_order: 1,
     })
@@ -94,11 +87,9 @@ export default function SliderManagementPage() {
     setFormData({
       title: slider.title || '',
       subtitle: slider.subtitle || '',
-      description: slider.description || '',
-      button_text: slider.button_text || '',
-      button_link: slider.button_link || '',
+      link_url: slider.link_url || '',
       is_active: slider.is_active ?? true,
-      sort_order: slider.sort_order || 1,
+      sort_order: slider.sort_order ?? 1,
     })
     setImagePreview(slider.image_url || '')
     setImageFile(null)
@@ -129,21 +120,16 @@ export default function SliderManagementPage() {
     setImagePreview('')
   }
 
+  /** Upload via API route — avoids browser Storage + GoTrue auth lock contention (StorageUnknownError). */
   const uploadImage = async (file: File): Promise<string> => {
-    const supabase = createClient()
-    const fileExt = file.name.split('.').pop()
-    const fileName = `${Date.now()}.${fileExt}`
-    const filePath = `sliders/${fileName}`
-
-    const { error: uploadError } = await supabase.storage.from('images').upload(filePath, file)
-
-    if (uploadError) {
-      throw uploadError
-    }
-
-    const { data } = supabase.storage.from('images').getPublicUrl(filePath)
-
-    return data.publicUrl
+    const form = new FormData()
+    form.append('file', file)
+    form.append('folder', 'sliders')
+    const res = await fetch('/api/upload', { method: 'POST', body: form })
+    const data = (await res.json()) as { url?: string; error?: string }
+    if (!res.ok) throw new Error(data.error || 'Upload failed')
+    if (!data.url) throw new Error('Upload did not return a URL')
+    return data.url
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -151,8 +137,6 @@ export default function SliderManagementPage() {
     setSaving(true)
 
     try {
-      const supabase = createClient()
-
       let imageUrl = editingSlider?.image_url || ''
 
       // Upload new image if selected
@@ -167,9 +151,7 @@ export default function SliderManagementPage() {
       const sliderData = {
         title: formData.title,
         subtitle: formData.subtitle,
-        description: formData.description,
-        button_text: formData.button_text,
-        button_link: formData.button_link,
+        link_url: formData.link_url || null,
         image_url: imageUrl,
         is_active: formData.is_active,
         sort_order: formData.sort_order,
@@ -194,17 +176,17 @@ export default function SliderManagementPage() {
       setIsDialogOpen(false)
       resetForm()
       alert(editingSlider ? 'Slider updated successfully!' : 'Slider created successfully!')
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error saving slider:', error)
-      alert('Error saving slider. Please try again.')
+      const e = error as { message?: string; details?: string; hint?: string }
+      const msg = [e.message, e.details, e.hint].filter(Boolean).join(' — ') || 'Please try again.'
+      alert(`Error saving slider: ${msg}`)
     } finally {
       setSaving(false)
     }
   }
 
   const toggleSliderStatus = async (slider: SliderItem) => {
-    const supabase = createClient()
-
     try {
       const { error } = await supabase
         .from('slider_items')
@@ -227,8 +209,6 @@ export default function SliderManagementPage() {
     if (!confirm('Are you sure you want to delete this slider? This action cannot be undone.')) {
       return
     }
-
-    const supabase = createClient()
 
     try {
       const { error } = await supabase.from('slider_items').delete().eq('id', slider.id)
@@ -317,8 +297,8 @@ export default function SliderManagementPage() {
                     <TableCell>
                       <div>
                         <p className="font-medium">{slider.title}</p>
-                        {slider.button_text && (
-                          <p className="text-sm text-gray-500">Button: {slider.button_text}</p>
+                        {slider.link_url && (
+                          <p className="text-sm text-gray-500 truncate max-w-[200px]">{slider.link_url}</p>
                         )}
                       </div>
                     </TableCell>
@@ -374,6 +354,9 @@ export default function SliderManagementPage() {
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingSlider ? 'Edit Slider' : 'Add New Slider'}</DialogTitle>
+            <DialogDescription>
+              Upload a hero image and set the title, optional subtitle, and link for the homepage carousel.
+            </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -440,46 +423,27 @@ export default function SliderManagementPage() {
             </div>
 
             <div>
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                onChange={(e) => handleInputChange('description', e.target.value)}
-                placeholder="Brief description"
-                rows={3}
+              <Label htmlFor="link_url">Slide link</Label>
+              <Input
+                id="link_url"
+                value={formData.link_url}
+                onChange={(e) => handleInputChange('link_url', e.target.value)}
+                placeholder="e.g., /products or https://…"
               />
+              <p className="text-xs text-muted-foreground mt-1">
+                Shown as the hero &quot;Shop Now&quot; button on the homepage.
+              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="button_text">Button Text</Label>
-                <Input
-                  id="button_text"
-                  value={formData.button_text}
-                  onChange={(e) => handleInputChange('button_text', e.target.value)}
-                  placeholder="e.g., Shop Now"
-                />
-              </div>
-              <div>
-                <Label htmlFor="button_link">Button Link</Label>
-                <Input
-                  id="button_link"
-                  value={formData.button_link}
-                  onChange={(e) => handleInputChange('button_link', e.target.value)}
-                  placeholder="e.g., /products"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="sort_order">Sort Order</Label>
+                <Label htmlFor="sort_order">Display order</Label>
                 <Input
                   id="sort_order"
                   type="number"
                   value={formData.sort_order}
-                  onChange={(e) => handleInputChange('sort_order', parseInt(e.target.value) || 1)}
-                  min="1"
+                  onChange={(e) => handleInputChange('sort_order', parseInt(e.target.value) || 0)}
+                  min="0"
                 />
               </div>
               <div className="flex items-center space-x-2 pt-6">

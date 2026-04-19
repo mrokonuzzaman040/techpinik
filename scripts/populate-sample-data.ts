@@ -159,9 +159,7 @@ const sliderData = [
   {
     title: 'Welcome to TechPinik',
     subtitle: 'Your One-Stop Tech Shop',
-    description: 'Discover the latest gadgets and electronics at unbeatable prices',
-    button_text: 'Shop Now',
-    button_link: '/products',
+    link_url: '/products',
     image_url:
       'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20tech%20store%20banner%20electronics%20gadgets%20blue%20gradient&image_size=landscape_16_9',
     sort_order: 1,
@@ -170,9 +168,7 @@ const sliderData = [
   {
     title: 'Latest Fashion Trends',
     subtitle: 'Style Meets Comfort',
-    description: 'Explore our curated collection of trendy clothing and accessories',
-    button_text: 'Explore Fashion',
-    button_link: '/categories/fashion',
+    link_url: '/categories/fashion',
     image_url:
       'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=fashion%20banner%20trendy%20clothing%20stylish%20models%20elegant&image_size=landscape_16_9',
     sort_order: 2,
@@ -181,9 +177,7 @@ const sliderData = [
   {
     title: 'Home & Garden Sale',
     subtitle: 'Transform Your Space',
-    description: 'Up to 50% off on home decor and garden essentials',
-    button_text: 'Shop Sale',
-    button_link: '/categories/home-garden',
+    link_url: '/categories/home-garden',
     image_url:
       'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=home%20garden%20sale%20banner%20furniture%20plants%20cozy%20interior&image_size=landscape_16_9',
     sort_order: 3,

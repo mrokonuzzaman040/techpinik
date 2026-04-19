@@ -76,11 +76,16 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       )
     }
 
-    // Prepare update data
-    const updateData: any = {
-      ...body,
+    // Only persist columns that exist on slider_items
+    const updateData: Record<string, unknown> = {
       updated_at: new Date().toISOString(),
     }
+    if (body.title !== undefined) updateData.title = body.title
+    if (body.subtitle !== undefined) updateData.subtitle = body.subtitle
+    if (body.image_url !== undefined) updateData.image_url = body.image_url
+    if (body.link_url !== undefined) updateData.link_url = body.link_url
+    if (body.sort_order !== undefined) updateData.sort_order = body.sort_order
+    if (body.is_active !== undefined) updateData.is_active = body.is_active
 
     // Update the slider item
     const { data: sliderItem, error } = await supabase
