@@ -138,9 +138,7 @@ export default function ProductDetailPage() {
     }
 
     try {
-      console.log('Adding to cart:', { productId: product.id, productName: product.name, quantity })
       addToCart(product, quantity)
-      console.log('Successfully added to cart')
     } catch (error) {
       console.error('Error adding to cart:', error)
       alert('Failed to add product to cart. Please try again.')

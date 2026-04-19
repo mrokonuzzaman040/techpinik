@@ -132,8 +132,6 @@ export default function CheckoutPage() {
         status: 'pending' as const,
       }
 
-      console.log('Submitting order data:', orderData)
-
       const { data: order, error: orderError } = await supabase
         .from('orders')
         .insert(orderData)
@@ -145,8 +143,6 @@ export default function CheckoutPage() {
         throw orderError
       }
 
-      console.log('Order created successfully:', order)
-
       // Create order items - map to actual database schema
       const orderItems = items.map((item) => ({
         order_id: order.id,
@@ -155,16 +151,12 @@ export default function CheckoutPage() {
         unit_price: item.product.sale_price || item.product.price,
       }))
 
-      console.log('Submitting order items:', orderItems)
-
       const { error: itemsError } = await supabase.from('order_items').insert(orderItems)
 
       if (itemsError) {
         console.error('Order items creation error:', itemsError)
         throw itemsError
       }
-
-      console.log('Order items created successfully')
 
       clearCart()
       setOrderSuccess(true)

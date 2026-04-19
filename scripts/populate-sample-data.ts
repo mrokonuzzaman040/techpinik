@@ -276,13 +276,10 @@ const productsData = [
 ]
 
 async function populateDistricts() {
-  console.log('Populating districts...')
-
   // Check if districts already exist
   const { data: existingDistricts } = await supabase.from('districts').select('name')
 
   if (existingDistricts && existingDistricts.length > 0) {
-    console.log(`Districts already exist (${existingDistricts.length} found). Skipping...`)
     return existingDistricts
   }
 
@@ -293,12 +290,10 @@ async function populateDistricts() {
     throw error
   }
 
-  console.log(`Successfully populated ${data.length} districts`)
   return data
 }
 
 async function populateCategories() {
-  console.log('Populating categories...')
 
   // Check if categories already exist
   const { data: existingCategories } = await supabase.from('categories').select('*')
@@ -387,7 +382,6 @@ async function populateProducts(categories: any[]) {
     throw error
   }
 
-  console.log(`Successfully populated ${data.length} products`)
   return data
 }
 
@@ -408,7 +402,6 @@ async function main() {
     // Populate products
     await populateProducts(categories)
 
-    console.log('Database population completed successfully!')
   } catch (error) {
     console.error('Error during database population:', error)
   }

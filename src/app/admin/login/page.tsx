@@ -23,30 +23,19 @@ export default function AdminLogin() {
     setError('')
 
     try {
-      console.log('Attempting login for:', email)
-
-      // Use the auth manager for sign in
-      const authData = await authManager.signIn(email, password)
-
-      console.log('Login successful, redirecting to admin dashboard')
-
       // Wait for auth state to be updated
       await new Promise((resolve) => setTimeout(resolve, 200))
 
       // Check if we're now authenticated
       const currentState = authManager.getState()
-      console.log('Current auth state after login:', currentState)
 
       if (currentState.user && currentState.isAdmin) {
-        console.log('User is authenticated and is admin, redirecting to dashboard')
         router.push('/admin')
         router.refresh()
       } else {
-        console.log('User not properly authenticated, staying on login page')
         setError('Authentication failed. Please try again.')
       }
     } catch (err: any) {
-      console.error('Login error:', err)
       setError(err.message || 'Login failed')
     } finally {
       setLoading(false)

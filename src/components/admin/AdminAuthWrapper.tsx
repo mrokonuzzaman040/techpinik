@@ -18,24 +18,16 @@ export default function AdminAuthWrapper({ children }: AdminAuthWrapperProps) {
     // Check initial state and redirect if needed
     const initialState = authManager.getState()
     if (!initialState.loading && (!initialState.user || !initialState.isAdmin)) {
-      console.log('No user in session, redirecting to login')
       router.replace('/admin/login?error=unauthorized')
       return
     }
 
     // Subscribe to auth state changes
     const unsubscribe = authManager.subscribe((state) => {
-      console.log('Auth state updated:', state)
       setAuthState(state)
 
       if (!state.loading) {
         if (!state.user || !state.isAdmin) {
-          console.log('User not authenticated or not admin, redirecting to login')
-          console.log('Auth state details:', {
-            user: state.user,
-            isAdmin: state.isAdmin,
-            loading: state.loading,
-          })
           router.replace('/admin/login?error=unauthorized')
         } else {
           console.log('User authenticated and is admin, allowing access')
