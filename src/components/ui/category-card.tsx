@@ -21,15 +21,20 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Package: Package,
 }
 
+/** Icon names like "Smartphone" are not URLs; only pass real paths/URLs to next/image. */
+function isUsableImageSrc(src: string): boolean {
+  const s = src.trim()
+  if (!s) return false
+  if (s.startsWith('/')) return true
+  return /^https?:\/\//i.test(s)
+}
+
 export default function CategoryCard({ category, className }: CategoryCardProps) {
   // Get the appropriate icon component
   const IconComponent = category.icon && iconMap[category.icon] ? iconMap[category.icon] : Package
 
-  // Check if category has an image
-  const hasImage =
-    category.image_url || category.icon_url || category.banner_image_url || category.banner_url
-  const imageUrl =
-    category.image_url || category.icon_url || category.banner_image_url || category.banner_url
+  const rawUrl = (category.image_url || category.banner_image_url || '').trim()
+  const imageUrl = isUsableImageSrc(rawUrl) ? rawUrl : undefined
 
   return (
     <Link href={`/products?category=${category.id}`}>
@@ -39,7 +44,7 @@ export default function CategoryCard({ category, className }: CategoryCardProps)
         <div className="p-2 sm:p-3 text-center flex flex-col items-center justify-center flex-1">
           {/* Category Image or Icon */}
           <div className="relative w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 mx-auto mb-1.5 sm:mb-2 overflow-hidden rounded-lg bg-linear-to-br from-yellow-50 to-yellow-100 flex items-center justify-center group-hover:from-yellow-100 group-hover:to-yellow-200 transition-all duration-300 shrink-0">
-            {hasImage && imageUrl ? (
+            {imageUrl ? (
               <Image
                 src={imageUrl}
                 alt={category.name}

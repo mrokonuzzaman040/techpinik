@@ -48,10 +48,13 @@ export default function AdminAuthWrapper({ children }: AdminAuthWrapperProps) {
 
   if (authState.loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Verifying authentication...</p>
+      <div className="flex min-h-screen items-center justify-center bg-slate-100 px-6">
+        <div className="rounded-lg border border-slate-200 bg-white px-10 py-12 text-center shadow-sm">
+          <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-md bg-slate-100 text-slate-700">
+            <Loader2 className="h-7 w-7 animate-spin" />
+          </div>
+          <p className="text-sm font-semibold text-slate-700">Checking Access</p>
+          <p className="mt-3 text-sm text-slate-600">Verifying authentication...</p>
         </div>
       </div>
     )

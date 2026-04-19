@@ -3,13 +3,13 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { ArrowLeft, Upload, X } from 'lucide-react'
+import AdminPageHeader from '@/components/admin/AdminPageHeader'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import AdminSidebar from '@/components/layout/AdminSidebar'
 import { createClient } from '@/lib/supabase'
 import { Category } from '@/types'
 
@@ -49,8 +49,8 @@ export default function EditCategoryPage() {
       if (error) throw error
 
       setCategory(data)
-      setIconPreview(data.icon_url || '')
-      setBannerPreview(data.banner_url || '')
+      setIconPreview(data.icon || '')
+      setBannerPreview(data.banner_image_url || '')
 
       setFormData({
         name: data.name || '',
@@ -130,8 +130,8 @@ export default function EditCategoryPage() {
     try {
       const supabase = createClient()
 
-      let iconUrl = category?.icon_url || ''
-      let bannerUrl = category?.banner_url || ''
+      let iconUrl = category?.icon || ''
+      let bannerUrl = category?.banner_image_url || ''
 
       // Upload new icon if selected
       if (iconFile) {
@@ -150,8 +150,8 @@ export default function EditCategoryPage() {
       const updateData = {
         name: formData.name,
         description: formData.description,
-        icon_url: iconUrl,
-        banner_url: bannerUrl,
+        icon: iconUrl,
+        banner_image_url: bannerUrl,
         is_active: formData.is_active,
       }
 
@@ -173,7 +173,8 @@ export default function EditCategoryPage() {
       router.push('/admin/categories')
     } catch (error) {
       console.error('Error updating category:', error)
-      const message = error instanceof Error ? error.message : 'Error updating category. Please try again.'
+      const message =
+        error instanceof Error ? error.message : 'Error updating category. Please try again.'
       alert(message)
     } finally {
       setSaving(false)
@@ -182,201 +183,190 @@ export default function EditCategoryPage() {
 
   if (loading) {
     return (
-      <div className="flex h-screen bg-gray-50">
-        <AdminSidebar />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
-        </div>
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
       </div>
     )
   }
 
   if (!category) {
     return (
-      <div className="flex h-screen bg-gray-50">
-        <AdminSidebar />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Category Not Found</h2>
-            <p className="text-gray-600 mb-4">The category you're looking for doesn't exist.</p>
-            <Button onClick={() => router.push('/admin/categories')}>Back to Categories</Button>
-          </div>
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Category Not Found</h2>
+          <p className="text-gray-600 mb-4">
+            The category you&rsquo;re looking for doesn&rsquo;t exist.
+          </p>
+          <Button onClick={() => router.push('/admin/categories')}>Back to Categories</Button>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      <AdminSidebar />
+    <div>
+      <AdminPageHeader
+        title="Edit Category"
+        description="Update category information."
+        leading={
+          <Button variant="outline" onClick={() => router.back()}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
+        }
+      />
 
-      <div className="flex-1 overflow-auto">
-        <div className="p-6">
-          {/* Header */}
-          <div className="flex items-center gap-4 mb-6">
-            <Button variant="ghost" onClick={() => router.back()}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
-            </Button>
+      <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
+        {/* Basic Information */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Basic Information</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Edit Category</h1>
-              <p className="text-gray-600">Update category information</p>
+              <Label htmlFor="name">Category Name *</Label>
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) => handleInputChange('name', e.target.value)}
+                required
+              />
             </div>
-          </div>
 
-          <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
-            {/* Basic Information */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Basic Information</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="name">Category Name *</Label>
+            <div>
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) => handleInputChange('description', e.target.value)}
+                rows={4}
+                placeholder="Brief description of the category"
+              />
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="is_active"
+                checked={formData.is_active}
+                onCheckedChange={(checked) => handleInputChange('is_active', checked)}
+              />
+              <Label htmlFor="is_active">Active (visible to customers)</Label>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Category Icon */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Category Icon</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {iconPreview && (
+                <div className="relative inline-block">
+                  <img
+                    src={iconPreview}
+                    alt="Icon preview"
+                    className="w-24 h-24 object-cover rounded-lg border"
+                  />
+                  <button
+                    type="button"
+                    onClick={removeIcon}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
+
+              <div>
+                <Label htmlFor="icon">Upload New Icon</Label>
+                <div className="mt-1 flex items-center gap-4">
                   <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => handleInputChange('name', e.target.value)}
-                    required
+                    id="icon"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleIconChange}
+                    className="hidden"
                   />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => document.getElementById('icon')?.click()}
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Choose Icon
+                  </Button>
+                  <span className="text-sm text-gray-500">
+                    Square image recommended (e.g., 200x200px)
+                  </span>
                 </div>
-
-                <div>
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => handleInputChange('description', e.target.value)}
-                    rows={4}
-                    placeholder="Brief description of the category"
-                  />
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="is_active"
-                    checked={formData.is_active}
-                    onCheckedChange={(checked) => handleInputChange('is_active', checked)}
-                  />
-                  <Label htmlFor="is_active">Active (visible to customers)</Label>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Category Icon */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Category Icon</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {iconPreview && (
-                    <div className="relative inline-block">
-                      <img
-                        src={iconPreview}
-                        alt="Icon preview"
-                        className="w-24 h-24 object-cover rounded-lg border"
-                      />
-                      <button
-                        type="button"
-                        onClick={removeIcon}
-                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  )}
-
-                  <div>
-                    <Label htmlFor="icon">Upload New Icon</Label>
-                    <div className="mt-1 flex items-center gap-4">
-                      <Input
-                        id="icon"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleIconChange}
-                        className="hidden"
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => document.getElementById('icon')?.click()}
-                      >
-                        <Upload className="h-4 w-4 mr-2" />
-                        Choose Icon
-                      </Button>
-                      <span className="text-sm text-gray-500">
-                        Square image recommended (e.g., 200x200px)
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Category Banner */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Category Banner</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {bannerPreview && (
-                    <div className="relative inline-block">
-                      <img
-                        src={bannerPreview}
-                        alt="Banner preview"
-                        className="w-64 h-32 object-cover rounded-lg border"
-                      />
-                      <button
-                        type="button"
-                        onClick={removeBanner}
-                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  )}
-
-                  <div>
-                    <Label htmlFor="banner">Upload New Banner</Label>
-                    <div className="mt-1 flex items-center gap-4">
-                      <Input
-                        id="banner"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleBannerChange}
-                        className="hidden"
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => document.getElementById('banner')?.click()}
-                      >
-                        <Upload className="h-4 w-4 mr-2" />
-                        Choose Banner
-                      </Button>
-                      <span className="text-sm text-gray-500">
-                        Wide image recommended (e.g., 1200x400px)
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Submit Button */}
-            <div className="flex gap-4">
-              <Button type="submit" disabled={saving}>
-                {saving ? 'Updating...' : 'Update Category'}
-              </Button>
-              <Button type="button" variant="outline" onClick={() => router.back()}>
-                Cancel
-              </Button>
+              </div>
             </div>
-          </form>
+          </CardContent>
+        </Card>
+
+        {/* Category Banner */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Category Banner</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {bannerPreview && (
+                <div className="relative inline-block">
+                  <img
+                    src={bannerPreview}
+                    alt="Banner preview"
+                    className="w-64 h-32 object-cover rounded-lg border"
+                  />
+                  <button
+                    type="button"
+                    onClick={removeBanner}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
+
+              <div>
+                <Label htmlFor="banner">Upload New Banner</Label>
+                <div className="mt-1 flex items-center gap-4">
+                  <Input
+                    id="banner"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleBannerChange}
+                    className="hidden"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => document.getElementById('banner')?.click()}
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Choose Banner
+                  </Button>
+                  <span className="text-sm text-gray-500">
+                    Wide image recommended (e.g., 1200x400px)
+                  </span>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Submit Button */}
+        <div className="flex gap-4">
+          <Button type="submit" disabled={saving}>
+            {saving ? 'Updating...' : 'Update Category'}
+          </Button>
+          <Button type="button" variant="outline" onClick={() => router.back()}>
+            Cancel
+          </Button>
         </div>
-      </div>
+      </form>
     </div>
   )
 }

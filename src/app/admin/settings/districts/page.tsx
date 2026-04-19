@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { ArrowLeft, Plus, Edit, Trash2, Search } from 'lucide-react'
+import AdminPageHeader from '@/components/admin/AdminPageHeader'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -15,7 +16,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import AdminSidebar from '@/components/layout/AdminSidebar'
 import { createClient } from '@/lib/supabase'
 import { District } from '@/types'
 import Link from 'next/link'
@@ -274,205 +274,191 @@ export default function DistrictsManagementPage() {
 
   if (loading) {
     return (
-      <div className="flex h-screen bg-gray-50">
-        <AdminSidebar />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
-        </div>
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
       </div>
     )
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      <AdminSidebar />
+    <div>
+      <AdminPageHeader
+        title="Districts Management"
+        description="Manage delivery districts and shipping charges."
+        leading={
+          <Link href="/admin/settings">
+            <Button variant="outline">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Settings
+            </Button>
+          </Link>
+        }
+        actions={
+          <>
+            <Button variant="outline" onClick={populateBangladeshDistricts} disabled={saving}>
+              Add Bangladesh Districts
+            </Button>
+            <Button onClick={openAddDialog}>
+              <Plus className="h-4 w-4 mr-2" />
+              Add District
+            </Button>
+          </>
+        }
+      />
 
-      <div className="flex-1 overflow-auto">
-        <div className="p-6">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <Link href="/admin/settings">
-                <Button variant="ghost">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Settings
-                </Button>
-              </Link>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Districts Management</h1>
-                <p className="text-gray-600">Manage delivery districts and shipping charges</p>
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={populateBangladeshDistricts} disabled={saving}>
-                Add Bangladesh Districts
-              </Button>
-              <Button onClick={openAddDialog}>
-                <Plus className="h-4 w-4 mr-2" />
-                Add District
-              </Button>
-            </div>
+      {/* Search and Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="md:col-span-2">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Input
+              placeholder="Search districts..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
           </div>
-
-          {/* Search and Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div className="md:col-span-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input
-                  placeholder="Search districts..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-            <Card>
-              <CardContent className="p-4">
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-gray-900">{districts.length}</p>
-                  <p className="text-sm text-gray-600">Total Districts</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4">
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-gray-900">
-                    {districts.length > 0
-                      ? formatCurrency(
-                          districts.reduce((sum, d) => sum + Number(d.delivery_charge), 0) /
-                            districts.length
-                        )
-                      : '৳0'}
-                  </p>
-                  <p className="text-sm text-gray-600">Avg. Shipping</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Districts Table */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Districts ({filteredDistricts.length})</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {filteredDistricts.length === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-gray-500 mb-4">
-                    {searchTerm ? 'No districts found matching your search' : 'No districts found'}
-                  </p>
-                  {!searchTerm && (
-                    <div className="space-y-2">
-                      <Button onClick={openAddDialog}>
-                        <Plus className="h-4 w-4 mr-2" />
-                        Add First District
-                      </Button>
-                      <p className="text-sm text-gray-500">or</p>
-                      <Button variant="outline" onClick={populateBangladeshDistricts}>
-                        Add All Bangladesh Districts
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>District Name</TableHead>
-                      <TableHead>Shipping Cost</TableHead>
-                      <TableHead>Created</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredDistricts.map((district) => (
-                      <TableRow key={district.id}>
-                        <TableCell>
-                          <p className="font-medium">{district.name}</p>
-                        </TableCell>
-                        <TableCell>
-                          <p className="font-medium">{formatCurrency(district.delivery_charge)}</p>
-                        </TableCell>
-                        <TableCell>
-                          <p className="text-sm text-gray-600">
-                            {new Date(district.created_at).toLocaleDateString('en-BD')}
-                          </p>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => openEditDialog(district)}
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => deleteDistrict(district)}
-                              className="text-red-600 hover:text-red-700"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Add/Edit Dialog */}
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{editingDistrict ? 'Edit District' : 'Add New District'}</DialogTitle>
-              </DialogHeader>
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <Label htmlFor="name">District Name *</Label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => handleInputChange('name', e.target.value)}
-                    placeholder="e.g., Dhaka"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="delivery_charge">Delivery Charge (৳) *</Label>
-                  <Input
-                    id="delivery_charge"
-                    type="number"
-                    step="0.01"
-                    value={formData.delivery_charge}
-                    onChange={(e) => handleInputChange('delivery_charge', e.target.value)}
-                    placeholder="e.g., 60"
-                    required
-                  />
-                  <p className="text-sm text-gray-500 mt-1">Delivery charge for this district</p>
-                </div>
-
-                <div className="flex gap-4 pt-4">
-                  <Button type="submit" disabled={saving}>
-                    {saving ? 'Saving...' : editingDistrict ? 'Update District' : 'Add District'}
-                  </Button>
-                  <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
-                    Cancel
-                  </Button>
-                </div>
-              </form>
-            </DialogContent>
-          </Dialog>
         </div>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-gray-900">{districts.length}</p>
+              <p className="text-sm text-gray-600">Total Districts</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-gray-900">
+                {districts.length > 0
+                  ? formatCurrency(
+                      districts.reduce((sum, d) => sum + Number(d.delivery_charge), 0) /
+                        districts.length
+                    )
+                  : '৳0'}
+              </p>
+              <p className="text-sm text-gray-600">Avg. Shipping</p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
+
+      {/* Districts Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Districts ({filteredDistricts.length})</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {filteredDistricts.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-gray-500 mb-4">
+                {searchTerm ? 'No districts found matching your search' : 'No districts found'}
+              </p>
+              {!searchTerm && (
+                <div className="space-y-2">
+                  <Button onClick={openAddDialog}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add First District
+                  </Button>
+                  <p className="text-sm text-gray-500">or</p>
+                  <Button variant="outline" onClick={populateBangladeshDistricts}>
+                    Add All Bangladesh Districts
+                  </Button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>District Name</TableHead>
+                  <TableHead>Shipping Cost</TableHead>
+                  <TableHead>Created</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredDistricts.map((district) => (
+                  <TableRow key={district.id}>
+                    <TableCell>
+                      <p className="font-medium">{district.name}</p>
+                    </TableCell>
+                    <TableCell>
+                      <p className="font-medium">{formatCurrency(district.delivery_charge)}</p>
+                    </TableCell>
+                    <TableCell>
+                      <p className="text-sm text-gray-600">
+                        {new Date(district.created_at).toLocaleDateString('en-BD')}
+                      </p>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="sm" onClick={() => openEditDialog(district)}>
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => deleteDistrict(district)}
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Add/Edit Dialog */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{editingDistrict ? 'Edit District' : 'Add New District'}</DialogTitle>
+          </DialogHeader>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <Label htmlFor="name">District Name *</Label>
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) => handleInputChange('name', e.target.value)}
+                placeholder="e.g., Dhaka"
+                required
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="delivery_charge">Delivery Charge (৳) *</Label>
+              <Input
+                id="delivery_charge"
+                type="number"
+                step="0.01"
+                value={formData.delivery_charge}
+                onChange={(e) => handleInputChange('delivery_charge', e.target.value)}
+                placeholder="e.g., 60"
+                required
+              />
+              <p className="text-sm text-gray-500 mt-1">Delivery charge for this district</p>
+            </div>
+
+            <div className="flex gap-4 pt-4">
+              <Button type="submit" disabled={saving}>
+                {saving ? 'Saving...' : editingDistrict ? 'Update District' : 'Add District'}
+              </Button>
+              <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

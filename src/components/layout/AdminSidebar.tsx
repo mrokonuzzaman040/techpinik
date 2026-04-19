@@ -22,6 +22,7 @@ import {
   Menu,
   X,
   LogOut,
+  Store,
 } from 'lucide-react'
 
 interface SidebarItem {
@@ -93,6 +94,17 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
 
+  const visibleExpandedItems = Array.from(
+    new Set([
+      ...expandedItems,
+      ...sidebarItems
+        .filter((item) =>
+          item.children?.some((child) => child.href && pathname.startsWith(child.href))
+        )
+        .map((item) => item.title),
+    ])
+  )
+
   const toggleExpanded = (title: string) => {
     setExpandedItems((prev) =>
       prev.includes(title) ? prev.filter((item) => item !== title) : [...prev, title]
@@ -116,26 +128,24 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
   }
 
   const sidebarContent = (
-    <div className="flex flex-col h-full bg-white">
-      {/* Logo */}
-      <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-yellow-50 to-white">
-        <Link href="/admin" className="flex items-center space-x-3 group">
+    <div className="flex h-full flex-col overflow-hidden bg-slate-900 text-slate-100">
+      <div className="border-b border-slate-800 px-5 py-5">
+        <Link href="/admin" className="block" onClick={() => setIsMobileOpen(false)}>
           <Image
             src="/logo.png"
             alt="TechPinik Logo"
-            width={120}
-            height={43}
-            className="h-10 w-auto object-contain"
+            width={112}
+            height={40}
+            className="h-9 w-auto object-contain"
             priority
           />
-          <span className="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded">
-            Admin
-          </span>
+          <p className="mt-3 text-xs font-medium uppercase tracking-[0.18em] text-slate-400">
+            Admin Panel
+          </p>
         </Link>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-1 overflow-y-auto scrollbar-hide">
+      <nav className="scrollbar-hide flex-1 space-y-1 overflow-y-auto px-3 py-4">
         {sidebarItems.map((item) => (
           <div key={item.title}>
             {item.children ? (
@@ -143,35 +153,35 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
                 <button
                   onClick={() => toggleExpanded(item.title)}
                   className={cn(
-                    'w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200',
-                    'text-gray-700 hover:bg-yellow-50 hover:text-yellow-700',
-                    expandedItems.includes(item.title) && 'bg-yellow-50 text-yellow-700'
+                    'flex w-full items-center justify-between rounded-md px-3 py-2.5 text-sm font-medium transition-colors',
+                    'text-slate-300 hover:bg-slate-800 hover:text-white',
+                    visibleExpandedItems.includes(item.title) && 'bg-slate-800 text-white'
                   )}
                 >
-                  <div className="flex items-center space-x-3">
-                    <item.icon className="h-5 w-5" />
+                  <div className="flex items-center gap-3">
+                    <item.icon className="h-4 w-4" />
                     <span>{item.title}</span>
                   </div>
-                  {expandedItems.includes(item.title) ? (
+                  {visibleExpandedItems.includes(item.title) ? (
                     <ChevronDown className="h-4 w-4 transition-transform" />
                   ) : (
                     <ChevronRight className="h-4 w-4 transition-transform" />
                   )}
                 </button>
 
-                {expandedItems.includes(item.title) && (
-                  <div className="ml-4 mt-1 space-y-1 border-l-2 border-yellow-100 pl-4">
+                {visibleExpandedItems.includes(item.title) && (
+                  <div className="ml-4 mt-1 space-y-1 border-l border-slate-800 pl-4">
                     {item.children.map((child) => (
                       <Link
                         key={child.href}
                         href={child.href!}
-                        className={cn(
-                          'flex items-center space-x-3 px-4 py-2.5 text-sm rounded-lg transition-all duration-200',
-                          isActive(child.href!)
-                            ? 'bg-yellow-100 text-yellow-700 font-semibold shadow-sm'
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                        )}
                         onClick={() => setIsMobileOpen(false)}
+                        className={cn(
+                          'flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors',
+                          isActive(child.href!)
+                            ? 'bg-slate-800 text-white'
+                            : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                        )}
                       >
                         <child.icon className="h-4 w-4" />
                         <span>{child.title}</span>
@@ -183,15 +193,15 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
             ) : (
               <Link
                 href={item.href!}
-                className={cn(
-                  'flex items-center space-x-3 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200',
-                  isActive(item.href!)
-                    ? 'bg-yellow-100 text-yellow-700 shadow-sm'
-                    : 'text-gray-700 hover:bg-yellow-50 hover:text-yellow-700'
-                )}
                 onClick={() => setIsMobileOpen(false)}
+                className={cn(
+                  'flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors',
+                  isActive(item.href!)
+                    ? 'bg-slate-800 text-white'
+                    : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                )}
               >
-                <item.icon className="h-5 w-5" />
+                <item.icon className="h-4 w-4" />
                 <span>{item.title}</span>
               </Link>
             )}
@@ -199,19 +209,19 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
         ))}
       </nav>
 
-      {/* Footer */}
-      <div className="p-4 border-t border-gray-200 bg-gray-50 space-y-2">
+      <div className="space-y-2 border-t border-slate-800 p-3">
         <Link
           href="/"
-          className="flex items-center space-x-2 text-sm text-gray-600 hover:text-yellow-600 hover:bg-white px-3 py-2 rounded-lg transition-colors"
+          onClick={() => setIsMobileOpen(false)}
+          className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm text-slate-300 transition-colors hover:bg-slate-800 hover:text-white"
         >
-          <span>←</span>
+          <Store className="h-4 w-4" />
           <span>Back to Store</span>
         </Link>
         <Button
           onClick={handleLogout}
           variant="ghost"
-          className="w-full justify-start text-sm text-red-600 hover:text-red-700 hover:bg-red-50 px-3 py-2"
+          className="w-full justify-start rounded-md px-3 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-white"
         >
           <LogOut className="h-4 w-4 mr-2" />
           Logout
@@ -222,37 +232,31 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
 
   return (
     <>
-      {/* Mobile Menu Button */}
       <Button
         variant="ghost"
         size="icon"
-        className="fixed top-4 left-4 z-50 lg:hidden bg-white shadow-md"
+        className="fixed left-4 top-4 z-50 border border-slate-300 bg-white text-slate-900 shadow-sm lg:hidden"
         onClick={() => setIsMobileOpen(!isMobileOpen)}
       >
         {isMobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </Button>
 
-      {/* Mobile Overlay */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={cn(
-          'fixed top-0 left-0 z-40 h-full w-64 bg-white border-r border-gray-200 shadow-lg lg:shadow-none transition-transform duration-300 ease-in-out lg:translate-x-0',
+          'fixed left-0 top-0 z-40 h-full w-64 border-r border-slate-800 shadow-lg transition-transform duration-300 ease-in-out lg:translate-x-0',
           isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
           className
         )}
       >
         {sidebarContent}
       </aside>
-
-      {/* Desktop Sidebar Spacer */}
-      <div className="hidden lg:block w-64 shrink-0" />
     </>
   )
 }

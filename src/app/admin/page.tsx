@@ -14,8 +14,7 @@ import {
   Calendar,
   ArrowUpRight,
 } from 'lucide-react'
-import AdminSidebar from '@/components/layout/AdminSidebar'
-import AdminAuthWrapper from '@/components/admin/AdminAuthWrapper'
+import AdminPageHeader from '@/components/admin/AdminPageHeader'
 import { createClient } from '@/lib/supabase'
 import Link from 'next/link'
 
@@ -164,243 +163,227 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="flex h-screen bg-gray-50">
-        <AdminSidebar />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
-        </div>
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
       </div>
     )
   }
 
   return (
-    <AdminAuthWrapper>
-      <div className="flex h-screen bg-gray-50">
-        <AdminSidebar />
+    <div>
+      <AdminPageHeader
+        title="Dashboard"
+        description="Overview of your store activity, recent orders, and quick actions."
+      />
 
-        <div className="flex-1 overflow-auto">
-          <div className="p-6">
-            {/* Header */}
-            <div className="mb-8">
-              <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-              <p className="text-gray-600">
-                Welcome back! Here's what's happening with your store.
-              </p>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total Orders</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.totalOrders}</p>
+              </div>
+              <div className="h-12 w-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                <ShoppingCart className="h-6 w-6 text-blue-600" />
+              </div>
             </div>
+          </CardContent>
+        </Card>
 
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Total Orders</p>
-                      <p className="text-2xl font-bold text-gray-900">{stats.totalOrders}</p>
-                    </div>
-                    <div className="h-12 w-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <ShoppingCart className="h-6 w-6 text-blue-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Total Products</p>
-                      <p className="text-2xl font-bold text-gray-900">{stats.totalProducts}</p>
-                    </div>
-                    <div className="h-12 w-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                      <Package className="h-6 w-6 text-yellow-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Total Customers</p>
-                      <p className="text-2xl font-bold text-gray-900">{stats.totalCustomers}</p>
-                    </div>
-                    <div className="h-12 w-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                      <Users className="h-6 w-6 text-purple-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {formatCurrency(stats.totalRevenue)}
-                      </p>
-                    </div>
-                    <div className="h-12 w-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                      <DollarSign className="h-6 w-6 text-yellow-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total Products</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.totalProducts}</p>
+              </div>
+              <div className="h-12 w-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                <Package className="h-6 w-6 text-yellow-600" />
+              </div>
             </div>
+          </CardContent>
+        </Card>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Recent Orders */}
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle>Recent Orders</CardTitle>
-                  <Link href="/admin/orders">
-                    <Button variant="ghost" size="sm">
-                      View All
-                      <ArrowUpRight className="h-4 w-4 ml-1" />
-                    </Button>
-                  </Link>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {stats.recentOrders.length === 0 ? (
-                      <p className="text-gray-500 text-center py-4">No orders yet</p>
-                    ) : (
-                      stats.recentOrders.map((order) => (
-                        <div
-                          key={order.id}
-                          className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
-                        >
-                          <div>
-                            <p className="font-medium">#{order.order_number}</p>
-                            <p className="text-sm text-gray-600">{order.customer_name}</p>
-                            <p className="text-xs text-gray-500">{formatDate(order.created_at)}</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="font-medium">{formatCurrency(order.total_amount)}</p>
-                            {getStatusBadge(order.status)}
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Low Stock Products */}
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle>Low Stock Alert</CardTitle>
-                  <Link href="/admin/products">
-                    <Button variant="ghost" size="sm">
-                      View All
-                      <ArrowUpRight className="h-4 w-4 ml-1" />
-                    </Button>
-                  </Link>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {stats.lowStockProducts.length === 0 ? (
-                      <p className="text-gray-500 text-center py-4">
-                        All products are well stocked
-                      </p>
-                    ) : (
-                      stats.lowStockProducts.map((product) => (
-                        <div
-                          key={product.id}
-                          className="flex items-center justify-between p-3 bg-red-50 rounded-lg"
-                        >
-                          <div>
-                            <p className="font-medium">{product.name}</p>
-                            <p className="text-sm text-gray-600">SKU: {product.sku}</p>
-                          </div>
-                          <div className="text-right">
-                            <Badge variant="destructive">{product.stock_quantity} left</Badge>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Top Products */}
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle>Top Selling Products</CardTitle>
-                  <Link href="/admin/products">
-                    <Button variant="ghost" size="sm">
-                      View All
-                      <ArrowUpRight className="h-4 w-4 ml-1" />
-                    </Button>
-                  </Link>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {stats.topProducts.length === 0 ? (
-                      <p className="text-gray-500 text-center py-4">No sales data yet</p>
-                    ) : (
-                      stats.topProducts.map((product, index) => (
-                        <div
-                          key={product.product_id}
-                          className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="h-8 w-8 bg-yellow-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                              {index + 1}
-                            </div>
-                            <div>
-                              <p className="font-medium">{product.product_name}</p>
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <Badge variant="secondary">{product.total_sold} sold</Badge>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Quick Actions */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Quick Actions</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 gap-3">
-                    <Link href="/admin/products/new">
-                      <Button className="w-full" variant="outline">
-                        <Package className="h-4 w-4 mr-2" />
-                        Add Product
-                      </Button>
-                    </Link>
-                    <Link href="/admin/categories/new">
-                      <Button className="w-full" variant="outline">
-                        <TrendingUp className="h-4 w-4 mr-2" />
-                        Add Category
-                      </Button>
-                    </Link>
-                    <Link href="/admin/orders">
-                      <Button className="w-full" variant="outline">
-                        <Eye className="h-4 w-4 mr-2" />
-                        View Orders
-                      </Button>
-                    </Link>
-                    <Link href="/admin/settings">
-                      <Button className="w-full" variant="outline">
-                        <Calendar className="h-4 w-4 mr-2" />
-                        Settings
-                      </Button>
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total Customers</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.totalCustomers}</p>
+              </div>
+              <div className="h-12 w-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                <Users className="h-6 w-6 text-purple-600" />
+              </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total Revenue</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {formatCurrency(stats.totalRevenue)}
+                </p>
+              </div>
+              <div className="h-12 w-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                <DollarSign className="h-6 w-6 text-yellow-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    </AdminAuthWrapper>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Orders */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Recent Orders</CardTitle>
+            <Link href="/admin/orders">
+              <Button variant="ghost" size="sm">
+                View All
+                <ArrowUpRight className="h-4 w-4 ml-1" />
+              </Button>
+            </Link>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {stats.recentOrders.length === 0 ? (
+                <p className="text-gray-500 text-center py-4">No orders yet</p>
+              ) : (
+                stats.recentOrders.map((order) => (
+                  <div
+                    key={order.id}
+                    className="flex items-center justify-between rounded-md border border-slate-200 bg-slate-50 p-3"
+                  >
+                    <div>
+                      <p className="font-medium">#{order.order_number}</p>
+                      <p className="text-sm text-gray-600">{order.customer_name}</p>
+                      <p className="text-xs text-gray-500">{formatDate(order.created_at)}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium">{formatCurrency(order.total_amount)}</p>
+                      {getStatusBadge(order.status)}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Low Stock Products */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Low Stock Alert</CardTitle>
+            <Link href="/admin/products">
+              <Button variant="ghost" size="sm">
+                View All
+                <ArrowUpRight className="h-4 w-4 ml-1" />
+              </Button>
+            </Link>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {stats.lowStockProducts.length === 0 ? (
+                <p className="text-gray-500 text-center py-4">All products are well stocked</p>
+              ) : (
+                stats.lowStockProducts.map((product) => (
+                  <div
+                    key={product.id}
+                    className="flex items-center justify-between rounded-md border border-slate-200 bg-slate-50 p-3"
+                  >
+                    <div>
+                      <p className="font-medium">{product.name}</p>
+                      <p className="text-sm text-gray-600">SKU: {product.sku}</p>
+                    </div>
+                    <div className="text-right">
+                      <Badge variant="destructive">{product.stock_quantity} left</Badge>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Top Products */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Top Selling Products</CardTitle>
+            <Link href="/admin/products">
+              <Button variant="ghost" size="sm">
+                View All
+                <ArrowUpRight className="h-4 w-4 ml-1" />
+              </Button>
+            </Link>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {stats.topProducts.length === 0 ? (
+                <p className="text-gray-500 text-center py-4">No sales data yet</p>
+              ) : (
+                stats.topProducts.map((product, index) => (
+                  <div
+                    key={product.product_id}
+                    className="flex items-center justify-between rounded-md border border-slate-200 bg-slate-50 p-3"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-sm font-bold text-white">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <p className="font-medium">{product.product_name}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <Badge variant="secondary">{product.total_sold} sold</Badge>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Quick Actions */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick Actions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-3">
+              <Link href="/admin/products/new">
+                <Button className="w-full" variant="outline">
+                  <Package className="h-4 w-4 mr-2" />
+                  Add Product
+                </Button>
+              </Link>
+              <Link href="/admin/categories/new">
+                <Button className="w-full" variant="outline">
+                  <TrendingUp className="h-4 w-4 mr-2" />
+                  Add Category
+                </Button>
+              </Link>
+              <Link href="/admin/orders">
+                <Button className="w-full" variant="outline">
+                  <Eye className="h-4 w-4 mr-2" />
+                  View Orders
+                </Button>
+              </Link>
+              <Link href="/admin/settings">
+                <Button className="w-full" variant="outline">
+                  <Calendar className="h-4 w-4 mr-2" />
+                  Settings
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   )
 }

@@ -394,11 +394,11 @@ export default function HomePage() {
           <section key={categoryId} className="py-8 md:py-12">
             <div className="container mx-auto px-4">
               {/* Category Banner Image */}
-              {(category.banner_url || category.banner_image_url) && (
+              {(category.banner_image_url || category.banner_image_url) && (
                 <Link href={`/categories/${categoryId}`} className="block mb-6 md:mb-8">
                   <div className="relative w-full h-32 sm:h-40 md:h-48 lg:h-56 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity">
                     <Image
-                      src={category.banner_url || category.banner_image_url || ''}
+                      src={category.banner_image_url || category.banner_image_url || ''}
                       alt={category.name}
                       fill
                       className="object-cover"

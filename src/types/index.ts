@@ -53,8 +53,8 @@ export interface Category {
   name: string
   description?: string
   icon?: string
-  icon_url?: string
-  banner_url?: string
+  icon?: string
+  banner_image_url?: string
   banner_image_url?: string
   image_url?: string
   slug: string
@@ -72,8 +72,8 @@ export interface CreateCategoryData {
   name: string
   description?: string
   icon?: string
-  icon_url?: string
-  banner_url?: string
+  icon?: string
+  banner_image_url?: string
   banner_image_url?: string
   image_url?: string
   slug: string

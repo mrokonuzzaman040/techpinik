@@ -36,7 +36,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import AdminSidebar from '@/components/layout/AdminSidebar'
+import AdminPageHeader from '@/components/admin/AdminPageHeader'
 import { createClient } from '@/lib/supabase'
 import { Order, OrderStatus } from '@/types'
 
@@ -601,208 +601,197 @@ export default function AdminOrdersPage() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      <AdminSidebar />
+    <div>
+      <AdminPageHeader
+        title="Orders"
+        description="Manage customer orders and fulfillment."
+        actions={
+          <Button variant="outline">
+            <Download className="h-4 w-4 mr-2" />
+            Export Orders
+          </Button>
+        }
+      />
 
-      <div className="flex-1 overflow-auto">
-        <div className="p-6">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
-              <p className="text-gray-600">Manage customer orders and fulfillment</p>
-            </div>
-            <Button variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Export Orders
-            </Button>
-          </div>
-
-          {/* Filters */}
-          <Card className="mb-6">
-            <CardContent className="p-6">
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex-1">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                    <Input
-                      placeholder="Search by order number, customer name, or email..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10"
-                    />
-                  </div>
-                </div>
-                <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                  <SelectTrigger className="w-full md:w-40">
-                    <SelectValue placeholder="Order Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="processing">Processing</SelectItem>
-                    <SelectItem value="shipped">Shipped</SelectItem>
-                    <SelectItem value="delivered">Delivered</SelectItem>
-                    <SelectItem value="cancelled">Cancelled</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Select value={selectedPaymentStatus} onValueChange={setSelectedPaymentStatus}>
-                  <SelectTrigger className="w-full md:w-40">
-                    <SelectValue placeholder="Payment Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Payments</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="paid">Paid</SelectItem>
-                    <SelectItem value="failed">Failed</SelectItem>
-                    <SelectItem value="refunded">Refunded</SelectItem>
-                  </SelectContent>
-                </Select>
+      {/* Filters */}
+      <Card className="mb-6">
+        <CardContent className="p-6">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Input
+                  placeholder="Search by order number, customer name, or email..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
               </div>
-            </CardContent>
-          </Card>
+            </div>
+            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+              <SelectTrigger className="w-full md:w-40">
+                <SelectValue placeholder="Order Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="processing">Processing</SelectItem>
+                <SelectItem value="shipped">Shipped</SelectItem>
+                <SelectItem value="delivered">Delivered</SelectItem>
+                <SelectItem value="cancelled">Cancelled</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={selectedPaymentStatus} onValueChange={setSelectedPaymentStatus}>
+              <SelectTrigger className="w-full md:w-40">
+                <SelectValue placeholder="Payment Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Payments</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="paid">Paid</SelectItem>
+                <SelectItem value="failed">Failed</SelectItem>
+                <SelectItem value="refunded">Refunded</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
 
-          {/* Orders Table */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <ShoppingCart className="h-5 w-5" />
-                Orders ({orders.length})
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {loading ? (
-                <div className="flex items-center justify-center py-12">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600"></div>
-                </div>
-              ) : orders.length === 0 ? (
-                <div className="text-center py-12">
-                  <ShoppingCart className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No orders found</h3>
-                  <p className="text-gray-600">
-                    Orders will appear here when customers place them.
-                  </p>
-                </div>
-              ) : (
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Order</TableHead>
-                        <TableHead>Customer</TableHead>
-                        <TableHead>Items</TableHead>
-                        <TableHead>Total</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Payment</TableHead>
-                        <TableHead>Date</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {orders.map((order) => (
-                        <TableRow key={order.id}>
-                          <TableCell>
-                            <div>
-                              <p className="font-medium">#{order.order_number}</p>
-                              <p className="text-sm text-gray-600">{order.payment_method}</p>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div>
-                              <p className="font-medium">{order.customer_name}</p>
-                              <p className="text-sm text-gray-600">{order.customer_email}</p>
-                              <p className="text-sm text-gray-600">{order.customer_phone}</p>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <span className="text-sm font-medium">
-                              {getTotalItems((order as any).order_items || [])} items
-                            </span>
-                          </TableCell>
-                          <TableCell>
-                            <div>
-                              <p className="font-medium">{formatCurrency(order.total_amount)}</p>
-                              <p className="text-sm text-gray-600">
-                                Shipping: {formatCurrency(order.delivery_charge)}
-                              </p>
-                            </div>
-                          </TableCell>
-                          <TableCell>{getStatusBadge(order.status)}</TableCell>
-                          <TableCell>{getPaymentStatusBadge(order.payment_status)}</TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-1">
-                              <Calendar className="h-4 w-4 text-gray-400" />
-                              <span className="text-sm">{formatDate(order.created_at)}</span>
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                  <MoreHorizontal className="h-4 w-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem asChild>
-                                  <Link href={`/admin/orders/${order.id}`}>
-                                    <Eye className="h-4 w-4 mr-2" />
-                                    View Details
-                                  </Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => generateInvoice(order).catch(console.error)}
-                                >
-                                  <FileText className="h-4 w-4 mr-2" />
-                                  Generate Invoice
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => updateOrderStatus(order.id, 'processing')}
-                                  disabled={order.status === 'processing'}
-                                >
-                                  Mark as Processing
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => updateOrderStatus(order.id, 'shipped')}
-                                  disabled={
-                                    order.status === 'shipped' || order.status === 'delivered'
-                                  }
-                                >
-                                  Mark as Shipped
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => updateOrderStatus(order.id, 'delivered')}
-                                  disabled={order.status === 'delivered'}
-                                >
-                                  Mark as Delivered
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => updatePaymentStatus(order.id, 'paid')}
-                                  disabled={order.payment_status === 'paid'}
-                                >
-                                  Mark as Paid
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => updateOrderStatus(order.id, 'cancelled')}
-                                  disabled={
-                                    order.status === 'cancelled' || order.status === 'delivered'
-                                  }
-                                  className="text-red-600"
-                                >
-                                  Cancel Order
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+      {/* Orders Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <ShoppingCart className="h-5 w-5" />
+            Orders ({orders.length})
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600"></div>
+            </div>
+          ) : orders.length === 0 ? (
+            <div className="text-center py-12">
+              <ShoppingCart className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No orders found</h3>
+              <p className="text-gray-600">Orders will appear here when customers place them.</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Order</TableHead>
+                    <TableHead>Customer</TableHead>
+                    <TableHead>Items</TableHead>
+                    <TableHead>Total</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Payment</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {orders.map((order) => (
+                    <TableRow key={order.id}>
+                      <TableCell>
+                        <div>
+                          <p className="font-medium">#{order.order_number}</p>
+                          <p className="text-sm text-gray-600">{order.payment_method}</p>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div>
+                          <p className="font-medium">{order.customer_name}</p>
+                          <p className="text-sm text-gray-600">{order.customer_email}</p>
+                          <p className="text-sm text-gray-600">{order.customer_phone}</p>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <span className="text-sm font-medium">
+                          {getTotalItems((order as any).order_items || [])} items
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <div>
+                          <p className="font-medium">{formatCurrency(order.total_amount)}</p>
+                          <p className="text-sm text-gray-600">
+                            Shipping: {formatCurrency(order.delivery_charge)}
+                          </p>
+                        </div>
+                      </TableCell>
+                      <TableCell>{getStatusBadge(order.status)}</TableCell>
+                      <TableCell>{getPaymentStatusBadge(order.payment_status)}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1">
+                          <Calendar className="h-4 w-4 text-gray-400" />
+                          <span className="text-sm">{formatDate(order.created_at)}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem asChild>
+                              <Link href={`/admin/orders/${order.id}`}>
+                                <Eye className="h-4 w-4 mr-2" />
+                                View Details
+                              </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => generateInvoice(order).catch(console.error)}
+                            >
+                              <FileText className="h-4 w-4 mr-2" />
+                              Generate Invoice
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => updateOrderStatus(order.id, 'processing')}
+                              disabled={order.status === 'processing'}
+                            >
+                              Mark as Processing
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => updateOrderStatus(order.id, 'shipped')}
+                              disabled={order.status === 'shipped' || order.status === 'delivered'}
+                            >
+                              Mark as Shipped
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => updateOrderStatus(order.id, 'delivered')}
+                              disabled={order.status === 'delivered'}
+                            >
+                              Mark as Delivered
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => updatePaymentStatus(order.id, 'paid')}
+                              disabled={order.payment_status === 'paid'}
+                            >
+                              Mark as Paid
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => updateOrderStatus(order.id, 'cancelled')}
+                              disabled={
+                                order.status === 'cancelled' || order.status === 'delivered'
+                              }
+                              className="text-red-600"
+                            >
+                              Cancel Order
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }
