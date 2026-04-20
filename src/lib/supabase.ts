@@ -42,9 +42,9 @@ export const createClient = (): SupabaseClient => {
 
 // For server-side operations that require elevated privileges
 export const createServerClient = () => {
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+  const supabaseServiceKey = process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY!
   if (!supabaseServiceKey) {
-    throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY environment variable')
+    throw new Error('Missing NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY environment variable')
   }
   return createSupabaseClient(supabaseUrl, supabaseServiceKey, {
     auth: {

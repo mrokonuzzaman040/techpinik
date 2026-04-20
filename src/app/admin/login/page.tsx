@@ -23,20 +23,18 @@ export default function AdminLogin() {
     setError('')
 
     try {
-      // Wait for auth state to be updated
-      await new Promise((resolve) => setTimeout(resolve, 200))
-
-      // Check if we're now authenticated
-      const currentState = authManager.getState()
-
-      if (currentState.user && currentState.isAdmin) {
+      await authManager.signIn(email, password)
+      const { user, isAdmin } = authManager.getState()
+      if (user && isAdmin) {
         router.push('/admin')
         router.refresh()
       } else {
-        setError('Authentication failed. Please try again.')
+        await authManager.signOut()
+        setError('This account is not authorized for admin access.')
       }
-    } catch (err: any) {
-      setError(err.message || 'Login failed')
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Login failed'
+      setError(message)
     } finally {
       setLoading(false)
     }

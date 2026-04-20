@@ -74,45 +74,26 @@ export class AuthManager {
       let isAdmin = false
 
       try {
-        // Check profiles table
         const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('role')
           .eq('id', user.id)
           .single()
 
-        if (profileError) {
-          console.log('Profile not found, checking metadata and email')
-          // Check user metadata
-          isAdmin = user.user_metadata?.role === 'admin'
+        const profileSaysAdmin = !profileError && profile?.role === 'admin'
+        const jwtSaysAdmin = user.app_metadata?.role === 'admin'
+        isAdmin = profileSaysAdmin || jwtSaysAdmin
 
-          // Fallback: Check if this is the specific admin email
-          if (!isAdmin && user.email === 'admin@techpinik.com') {
-            isAdmin = true
-            console.log('Admin access granted via email fallback')
-
-            // Try to create the profile entry
-            try {
-              await supabase.from('profiles').upsert({
-                id: user.id,
-                email: user.email,
-                role: 'admin',
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-              })
-              console.log('Admin profile created')
-            } catch (upsertError) {
-              console.warn('Failed to create admin profile:', upsertError)
-            }
-          }
-        } else {
-          isAdmin = profile.role === 'admin'
-          console.log('Admin role from profile:', isAdmin)
+        if (profileError && jwtSaysAdmin && user.email) {
+          await supabase.from('profiles').upsert({
+            id: user.id,
+            email: user.email,
+            role: 'admin',
+            updated_at: new Date().toISOString(),
+          })
         }
       } catch (error) {
-        console.warn('Profiles table not accessible, using fallback authentication:', error)
-        isAdmin = user.email === 'admin@techpinik.com'
-        console.log('Fallback admin check result:', isAdmin)
+        console.warn('Profiles admin check failed:', error)
       }
 
       console.log('Final admin check result:', isAdmin)
