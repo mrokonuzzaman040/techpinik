@@ -396,7 +396,7 @@ export default function SliderManagementPage() {
                   <Upload className="h-4 w-4 mr-2" />
                   {imagePreview ? 'Change Image' : 'Upload Image'}
                 </Button>
-                <p className="text-sm text-gray-500 mt-1">Recommended size: 1920x800px</p>
+                <p className="text-sm text-gray-500 mt-1">Recommended size: 1920×400px (wide banner)</p>
               </div>
             </div>
 

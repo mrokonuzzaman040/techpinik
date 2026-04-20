@@ -34,7 +34,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
 
   if (slides.length === 0) {
     return (
-      <div className="relative flex aspect-[2.35/1] w-full items-center justify-center overflow-hidden rounded-lg bg-linear-to-r from-yellow-400 to-blue-500">
+      <div className="relative flex aspect-[4.7/1] w-full items-center justify-center overflow-hidden rounded-lg bg-linear-to-r from-yellow-400 to-blue-500">
         <div className="text-center text-white px-4">
           <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 md:mb-4">
             Welcome to TechPinik
@@ -58,7 +58,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
   const slidePct = 100 / slideCount
 
   return (
-    <div className="relative aspect-[2.35/1] w-full overflow-hidden rounded-lg">
+    <div className="relative aspect-[4.7/1] w-full overflow-hidden rounded-lg">
       {/* Track: width = N × viewport; translate by one viewport per slide */}
       <div
         className="flex h-full min-h-0 w-full transition-transform duration-500 ease-in-out"
