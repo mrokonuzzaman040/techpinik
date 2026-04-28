@@ -59,7 +59,7 @@ export default function GeneralSettingsPage() {
     meta_description:
       'Shop the latest electronics, mobile phones, laptops, and accessories at TechPinik. Fast delivery across Bangladesh with competitive prices.',
     google_analytics_id: '',
-    facebook_pixel_id: '',
+    facebook_pixel_id: '991044120129679',
 
     // Maintenance
     maintenance_mode: false,

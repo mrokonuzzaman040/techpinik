@@ -49,7 +49,7 @@ async function transferToSteadfast(order: any) {
     throw new Error('Steadfast credentials are missing. Set STEADFAST_API_KEY and STEADFAST_SECRET_KEY.')
   }
 
-  const districtName = await getDistrictName(order.district_id)
+  const districtName = order.district_id ? await getDistrictName(order.district_id) : 'Dhaka'
 
   const payload = {
     invoice: order.order_number || order.id,
@@ -74,14 +74,17 @@ async function transferToSteadfast(order: any) {
   })
 
   const result = await response.json().catch(() => ({}))
-  if (!response.ok || result?.status === false) {
-    throw new Error(result?.message || 'Steadfast transfer failed')
+  console.log('Steadfast API Result:', JSON.stringify(result, null, 2))
+
+  if (!response.ok || result?.status === false || result?.status === 400) {
+    throw new Error(result?.message || result?.errors?.[0] || 'Steadfast transfer failed')
   }
 
   const consignmentId =
     result?.consignment?.consignment_id ||
     result?.consignment_id ||
     result?.data?.consignment_id ||
+    result?.consignment?.id ||
     null
   const trackingCode =
     result?.consignment?.tracking_code ||
@@ -147,7 +150,7 @@ async function transferToPathao(order: any) {
     throw new Error(tokenResult?.message || 'Failed to authenticate with Pathao')
   }
 
-  const districtName = await getDistrictName(order.district_id)
+  const districtName = order.district_id ? await getDistrictName(order.district_id) : 'Dhaka'
 
   const payload = {
     store_id: Number(storeId),
@@ -200,7 +203,11 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     if (!(await isAdmin())) return apiResponse.unauthorized()
 
     const { id } = await params
+    console.log('Transferring order ID:', id)
+    
     const body = await request.json()
+    console.log('Transfer payload:', JSON.stringify(body))
+    
     const providerInput = String(body?.provider || '').toLowerCase()
     const provider =
       providerInput === 'statefast' || providerInput === 'stead_fast'
@@ -208,6 +215,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
         : (providerInput as LogisticsProvider)
 
     if (!LOGISTICS_PROVIDERS.includes(provider)) {
+      console.error('Invalid provider:', providerInput)
       return apiResponse.badRequest('Invalid logistics provider. Use pathao or steadfast.')
     }
 
@@ -219,11 +227,16 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       .single()
 
     if (orderError || !order) {
+      console.error('Order fetch error:', orderError)
       return apiResponse.notFound('Order not found')
     }
 
+    console.log('Order data found. District ID:', order.district_id)
+
     const transferResult =
       provider === 'pathao' ? await transferToPathao(order) : await transferToSteadfast(order)
+    
+    console.log('Transfer Result from provider:', JSON.stringify(transferResult))
 
     const updateData = {
       logistics_provider: provider,
@@ -247,7 +260,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       return apiResponse.internalError('Order transferred but failed to save transfer details', updateError)
     }
 
-    return apiResponse.success(
+    const response = apiResponse.success(
       {
         order: updatedOrder,
         transfer: {
@@ -258,6 +271,13 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       },
       `Order transferred to ${provider === 'pathao' ? 'Pathao' : 'Steadfast'} successfully`
     )
+
+    // Set headers to prevent caching
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+    response.headers.set('Pragma', 'no-cache')
+    response.headers.set('Expires', '0')
+
+    return response
   } catch (error: any) {
     return apiResponse.badRequest(error?.message || 'Failed to transfer order to logistics provider')
   }

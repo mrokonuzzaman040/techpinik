@@ -227,8 +227,12 @@ export default function AdminOrderDetailPage() {
         await fetchOrderDetails()
       }
 
+      const trackingCode = transferResult.tracking_code || transferResult.consignment_id
+
       toast.success(
-        `Order transferred to ${transferProvider === 'pathao' ? 'Pathao' : 'SteadFast'} successfully`
+        `Order transferred to ${
+          transferProvider === 'pathao' ? 'Pathao' : 'SteadFast'
+        } successfully. Tracking: ${trackingCode}`
       )
     } catch (error: any) {
       toast.error(error?.message || 'Failed to transfer order to logistics')
@@ -527,22 +531,40 @@ export default function AdminOrderDetailPage() {
               {(order.logistics_provider ||
                 order.logistics_consignment_id ||
                 order.logistics_tracking_code) && (
-                <div className="rounded-md border p-3 space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Provider:</span>
-                    <span className="font-medium capitalize">{order.logistics_provider || 'N/A'}</span>
+                <div className="rounded-md border-2 border-primary/20 bg-primary/5 p-4 space-y-3">
+                  <div className="flex justify-between items-center border-b pb-2">
+                    <span className="text-sm font-semibold text-gray-700">Logistics Details</span>
+                    <Badge variant="outline" className="capitalize">
+                      {order.logistics_provider}
+                    </Badge>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Status:</span>
-                    <span className="font-medium">{order.logistics_status || 'N/A'}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Consignment ID:</span>
-                    <span className="font-medium">{order.logistics_consignment_id || 'N/A'}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Tracking:</span>
-                    <span className="font-medium">{order.logistics_tracking_code || 'N/A'}</span>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Status:</span>
+                      <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 border-none">
+                        {order.logistics_status || 'Transferred'}
+                      </Badge>
+                    </div>
+                    {order.logistics_tracking_code && (
+                      <div className="flex flex-col gap-1">
+                        <span className="text-xs text-gray-500">Tracking Number:</span>
+                        <span className="font-mono text-base font-bold text-primary break-all">
+                          {order.logistics_tracking_code}
+                        </span>
+                      </div>
+                    )}
+                    {order.logistics_consignment_id && (
+                      <div className="flex justify-between text-sm pt-1">
+                        <span className="text-gray-600">Consignment ID:</span>
+                        <span className="font-medium">{order.logistics_consignment_id}</span>
+                      </div>
+                    )}
+                    {order.logistics_transferred_at && (
+                      <div className="flex justify-between text-xs text-gray-400 pt-2 border-t">
+                        <span>Transferred On:</span>
+                        <span>{new Date(order.logistics_transferred_at).toLocaleString()}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
