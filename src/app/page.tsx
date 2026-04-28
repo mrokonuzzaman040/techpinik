@@ -44,7 +44,8 @@ export default function HomePage() {
           .from('categories')
           .select('*')
           .eq('is_active', true)
-          .order('name')
+          .order('sort_order', { ascending: true })
+          .order('name', { ascending: true })
           .limit(8)
 
         // Fetch featured products
@@ -272,7 +273,7 @@ export default function HomePage() {
 
   const HomePageSkeleton = () => (
     <MainLayout>
-      <section className="container mx-auto px-4 py-6">
+      <section className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
         <div className="h-[220px] sm:h-[300px] md:h-[360px] rounded-2xl bg-gray-200 animate-pulse" />
       </section>
 
@@ -325,7 +326,7 @@ export default function HomePage() {
   return (
     <MainLayout>
       {/* Hero Slider */}
-      <section className="container mx-auto px-4 py-6">
+      <section className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
         <HeroSlider slides={sliderItems} />
       </section>
 
@@ -353,12 +354,12 @@ export default function HomePage() {
         onMouseLeave={handleMouseLeaveCategory}
       >
         <div className="container mx-auto px-3 sm:px-4">
-          <div className="flex items-center justify-between mb-3 sm:mb-4 md:mb-5">
+          <div className="flex items-center justify-between mb-3 sm:mb-4 md:mb-5 gap-3">
             <div>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1">
+              <h2 className="text-lg sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1">
                 Shop by Category
               </h2>
-              <p className="text-sm sm:text-base text-gray-600">Discover products by category</p>
+              <p className="text-xs sm:text-base text-gray-600">Discover products by category</p>
             </div>
             <Link href="/categories">
               <Button
@@ -385,12 +386,12 @@ export default function HomePage() {
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           >
-            <div className="flex gap-2.5 md:gap-4 pb-2 px-3 sm:px-4">
+              <div className="flex gap-2 md:gap-4 pb-2 px-3 sm:px-4">
               {/* Render categories twice for seamless infinite scroll */}
               {[...categories, ...categories].map((category, index) => (
                 <div
                   key={`${category.id}-${index}`}
-                  className="shrink-0 flex-[0_0_calc(25%-7.5px)] md:flex-none md:w-[140px] h-[90px] sm:h-[100px] md:h-[110px]"
+                  className="shrink-0 flex-[0_0_calc(25%-6px)] md:flex-none md:w-[140px] h-[84px] sm:h-[100px] md:h-[110px]"
                 >
                   <CategoryCard category={category} />
                 </div>
@@ -401,10 +402,10 @@ export default function HomePage() {
       </section>
 
       {/* Featured Products */}
-      <section className="bg-gray-50 py-8 md:py-12">
+      <section className="bg-gray-50 py-6 sm:py-8 md:py-12">
         <div className="container mx-auto px-3 sm:px-4">
           <div className="flex items-center justify-between mb-4 sm:mb-6 md:mb-8">
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
+            <h2 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
               Featured Products
             </h2>
             <Link href="/products">
@@ -420,9 +421,9 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div className="text-center mt-6 md:hidden">
+          <div className="text-center mt-5 sm:mt-6 md:hidden">
             <Link href="/products">
-              <Button variant="outline">
+              <Button variant="outline" className="h-9 text-sm">
                 View All Products <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
@@ -436,16 +437,16 @@ export default function HomePage() {
         if (!category || products.length === 0) return null
 
         return (
-          <section key={categoryId} className="py-8 md:py-12">
-            <div className="container mx-auto px-4">
+          <section key={categoryId} className="py-6 sm:py-8 md:py-12">
+            <div className="container mx-auto px-3 sm:px-4">
               {/* Category Header */}
-              <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-6 md:mb-8">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-4 mb-5 sm:mb-6 md:mb-8">
                 <div className="flex items-center gap-2 md:gap-4">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full bg-linear-to-br from-yellow-50 to-yellow-100 flex items-center justify-center shrink-0">
-                    <Package className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-yellow-500" />
+                  <div className="w-9 h-9 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full bg-linear-to-br from-yellow-50 to-yellow-100 flex items-center justify-center shrink-0">
+                    <Package className="w-4.5 h-4.5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-yellow-500" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">
+                    <h2 className="text-base sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">
                       {category.name}
                     </h2>
                     {category.description && (
@@ -473,9 +474,9 @@ export default function HomePage() {
                 ))}
               </div>
 
-              <div className="text-center mt-6 md:hidden">
+              <div className="text-center mt-5 sm:mt-6 md:hidden">
                 <Link href={`/products?category=${categoryId}`}>
-                  <Button variant="outline">
+                  <Button variant="outline" className="h-9 text-sm">
                     View All {category.name} <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>

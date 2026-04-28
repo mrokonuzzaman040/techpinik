@@ -26,7 +26,8 @@ export default function Navbar() {
         .from('categories')
         .select('*')
         .eq('is_active', true)
-        .order('name')
+        .order('sort_order', { ascending: true })
+        .order('name', { ascending: true })
 
       if (error) throw error
       setCategories(data || [])

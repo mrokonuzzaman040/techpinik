@@ -153,10 +153,10 @@ export default function CategoryDetailPage() {
   }
 
   const FilterContent = () => (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
       {/* Search */}
       <div>
-        <Label htmlFor="search" className="text-sm font-medium">
+        <Label htmlFor="search" className="text-xs sm:text-sm font-medium">
           Search Products
         </Label>
         <Input
@@ -164,14 +164,14 @@ export default function CategoryDetailPage() {
           placeholder="Search by name..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="mt-2"
+          className="mt-2 h-9 sm:h-10 text-sm"
         />
       </div>
 
       {/* Brands */}
       {brands.length > 0 && (
         <div>
-          <Label className="text-sm font-medium">Brands</Label>
+          <Label className="text-xs sm:text-sm font-medium">Brands</Label>
           <div className="mt-2 space-y-2 max-h-48 overflow-y-auto">
             {brands.map((brand) => (
               <div key={brand} className="flex items-center space-x-2">
@@ -180,7 +180,7 @@ export default function CategoryDetailPage() {
                   checked={selectedBrands.includes(brand)}
                   onCheckedChange={(checked) => handleBrandChange(brand, checked as boolean)}
                 />
-                <Label htmlFor={`brand-${brand}`} className="text-sm">
+                <Label htmlFor={`brand-${brand}`} className="text-xs sm:text-sm">
                   {brand}
                 </Label>
               </div>
@@ -191,38 +191,64 @@ export default function CategoryDetailPage() {
 
       {/* Price Range */}
       <div>
-        <Label className="text-sm font-medium">Price Range (৳)</Label>
+        <Label className="text-xs sm:text-sm font-medium">Price Range (৳)</Label>
         <div className="mt-2 flex space-x-2">
           <Input
             placeholder="Min"
             type="number"
             value={priceRange.min}
             onChange={(e) => setPriceRange((prev) => ({ ...prev, min: e.target.value }))}
+            className="h-9 sm:h-10 text-sm"
           />
           <Input
             placeholder="Max"
             type="number"
             value={priceRange.max}
             onChange={(e) => setPriceRange((prev) => ({ ...prev, max: e.target.value }))}
+            className="h-9 sm:h-10 text-sm"
           />
         </div>
       </div>
 
       {/* Clear Filters */}
-      <Button variant="outline" onClick={clearFilters} className="w-full">
+      <Button variant="outline" onClick={clearFilters} className="w-full h-9 sm:h-10 text-sm">
         Clear All Filters
       </Button>
+    </div>
+  )
+
+  const ProductsGridSkeleton = () => (
+    <div
+      className={`grid gap-4 md:gap-6 ${
+        viewMode === 'grid' ? 'grid-cols-2 md:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'
+      }`}
+    >
+      {Array.from({ length: viewMode === 'grid' ? 8 : 4 }).map((_, index) => (
+        <div
+          key={`category-product-skeleton-${index}`}
+          className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm animate-pulse"
+        >
+          <div className="aspect-square w-full bg-gray-200" />
+          <div className="space-y-3 p-4">
+            <div className="h-4 w-2/3 rounded bg-gray-200" />
+            <div className="h-3 w-1/2 rounded bg-gray-200" />
+            <div className="h-4 w-1/3 rounded bg-gray-200" />
+          </div>
+        </div>
+      ))}
     </div>
   )
 
   if (!category && !loading) {
     return (
       <MainLayout>
-        <div className="container mx-auto px-4 py-12 text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Category Not Found</h1>
-          <p className="text-gray-600 mb-6">The category you're looking for doesn't exist.</p>
+        <div className="container mx-auto px-3 sm:px-4 py-8 sm:py-12 text-center">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">Category Not Found</h1>
+          <p className="text-sm sm:text-base text-gray-600 mb-5 sm:mb-6">
+            The category you're looking for doesn't exist.
+          </p>
           <Link href="/categories">
-            <Button>Browse Categories</Button>
+            <Button className="text-sm sm:text-base">Browse Categories</Button>
           </Link>
         </div>
       </MainLayout>
@@ -231,9 +257,9 @@ export default function CategoryDetailPage() {
 
   return (
     <MainLayout>
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
         {/* Breadcrumb */}
-        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+        <nav className="flex items-center space-x-1.5 sm:space-x-2 text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6 flex-wrap">
           <Link href="/" className="hover:text-yellow-600">
             Home
           </Link>
@@ -242,28 +268,34 @@ export default function CategoryDetailPage() {
             Categories
           </Link>
           <span>/</span>
-          <span className="text-gray-900">{category?.name}</span>
+          <span className="text-gray-900 truncate max-w-[140px] sm:max-w-none">{category?.name}</span>
         </nav>
 
         {/* Back Button */}
-        <Button variant="ghost" className="mb-6" onClick={() => window.history.back()}>
+        <Button
+          variant="ghost"
+          className="mb-4 sm:mb-6 h-8 px-2.5 text-xs sm:h-10 sm:px-4 sm:text-sm"
+          onClick={() => window.history.back()}
+        >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
         </Button>
 
         {/* Category Header */}
         {category && (
-          <div className="mb-8">
-            <div className="text-center mb-6">
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{category.name}</h1>
-              {category.description && <p className="text-gray-600">{category.description}</p>}
+          <div className="mb-6 sm:mb-8">
+            <div className="text-center mb-4 sm:mb-6">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2">{category.name}</h1>
+              {category.description && (
+                <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto">{category.description}</p>
+              )}
             </div>
           </div>
         )}
 
-        <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
           {/* Desktop Filters */}
-          <aside className="hidden lg:block w-64 flex-shrink-0">
+          <aside className="hidden lg:block w-64 shrink-0">
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center gap-2 mb-4">
@@ -278,17 +310,17 @@ export default function CategoryDetailPage() {
           {/* Main Content */}
           <div className="flex-1">
             {/* Controls */}
-            <div className="flex items-center justify-between mb-6 gap-4">
-              <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3">
+              <div className="flex items-center justify-between sm:justify-start gap-2">
                 {/* Mobile Filter */}
                 <Sheet>
                   <SheetTrigger asChild>
-                    <Button variant="outline" size="sm" className="lg:hidden">
+                    <Button variant="outline" size="sm" className="lg:hidden h-8 px-2.5 text-xs">
                       <SlidersHorizontal className="h-4 w-4 mr-2" />
                       Filters
                     </Button>
                   </SheetTrigger>
-                  <SheetContent side="left" className="w-80">
+                  <SheetContent side="left" className="w-[88vw] max-w-80 px-4">
                     <SheetHeader>
                       <SheetTitle>Filters</SheetTitle>
                     </SheetHeader>
@@ -298,13 +330,13 @@ export default function CategoryDetailPage() {
                   </SheetContent>
                 </Sheet>
 
-                <span className="text-sm text-gray-600">{products.length} products found</span>
+                <span className="text-xs sm:text-sm text-gray-600">{products.length} products found</span>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 w-full sm:w-auto">
                 {/* Sort */}
                 <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="w-40">
+                  <SelectTrigger className="w-full sm:w-40 h-8 sm:h-10 text-xs sm:text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -339,9 +371,7 @@ export default function CategoryDetailPage() {
 
             {/* Products Grid */}
             {loading ? (
-              <div className="flex items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
-              </div>
+              <ProductsGridSkeleton />
             ) : products.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-gray-500 text-lg">No products found in this category</p>
@@ -351,7 +381,7 @@ export default function CategoryDetailPage() {
               </div>
             ) : (
               <div
-                className={`grid gap-4 md:gap-6 ${
+                className={`grid gap-3 sm:gap-4 md:gap-6 ${
                   viewMode === 'grid' ? 'grid-cols-2 md:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'
                 }`}
               >

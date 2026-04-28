@@ -203,8 +203,12 @@ export default function AdminOrderDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
+      <div className="space-y-6 animate-pulse">
+        <div className="h-8 w-64 rounded bg-gray-200" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 h-[520px] rounded-xl border border-gray-200 bg-white" />
+          <div className="h-[520px] rounded-xl border border-gray-200 bg-white" />
+        </div>
       </div>
     )
   }

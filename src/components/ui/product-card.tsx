@@ -85,9 +85,9 @@ export default function ProductCard({ product, className, layout = 'grid' }: Pro
   }
 
   return (
-    <Card className={`group hover:shadow-lg transition-shadow duration-300 ${className}`}>
-      <Link href={`/products/${product.id}`}>
-        <CardContent className="p-0">
+    <Card className={`group h-full hover:shadow-lg transition-shadow duration-300 ${className}`}>
+      <Link href={`/products/${product.id}`} className="block h-full">
+        <CardContent className="p-0 h-full flex flex-col">
           {/* Image Container */}
           <div className="relative aspect-square overflow-hidden rounded-t-lg">
             <Image
@@ -114,14 +114,14 @@ export default function ProductCard({ product, className, layout = 'grid' }: Pro
           </div>
 
           {/* Product Info */}
-          <div className="p-3 sm:p-4">
+          <div className="p-3 sm:p-4 flex flex-1 flex-col">
             {/* Product Name */}
-            <h3 className="font-medium text-sm sm:text-base line-clamp-2 mb-2 sm:mb-3 group-hover:text-yellow-600 transition-colors">
+            <h3 className="font-medium text-sm sm:text-base line-clamp-2 min-h-11 sm:min-h-12 mb-2 sm:mb-3 group-hover:text-yellow-600 transition-colors">
               {product.name}
             </h3>
 
             {/* Price */}
-            <div className="flex items-center gap-2 mb-2 sm:mb-3">
+            <div className="flex items-center gap-2 min-h-6 sm:min-h-7 mb-2 sm:mb-3">
               <span className="font-bold text-yellow-600 text-sm sm:text-base">
                 ৳{(product.sale_price || product.price).toLocaleString()}
               </span>
@@ -136,7 +136,7 @@ export default function ProductCard({ product, className, layout = 'grid' }: Pro
             <Button
               onClick={handleAddToCart}
               disabled={product.stock_quantity === 0}
-              className="w-full h-9 sm:h-10 text-xs sm:text-sm"
+              className="w-full h-9 sm:h-10 text-xs sm:text-sm mt-auto"
               variant={product.stock_quantity === 0 ? 'secondary' : 'default'}
             >
               <ShoppingCart className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />

@@ -23,7 +23,8 @@ export default function CategoriesPage() {
           .from('categories')
           .select('*')
           .eq('is_active', true)
-          .order('name')
+          .order('sort_order', { ascending: true })
+          .order('name', { ascending: true })
 
         setCategories(data || [])
       } catch (error) {
@@ -36,14 +37,28 @@ export default function CategoriesPage() {
     fetchCategories()
   }, [])
 
-  if (loading) {
-    return (
-      <MainLayout>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-yellow-600"></div>
+  const CategoriesPageSkeleton = () => (
+    <MainLayout>
+      <div className="container mx-auto px-4 py-6">
+        <div className="mb-6 space-y-2 animate-pulse">
+          <div className="h-8 w-52 rounded bg-gray-200" />
+          <div className="h-4 w-72 rounded bg-gray-200" />
         </div>
-      </MainLayout>
-    )
+        <div className="mb-6 flex items-center justify-between animate-pulse">
+          <div className="h-4 w-36 rounded bg-gray-200" />
+          <div className="h-9 w-24 rounded bg-gray-200" />
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 md:gap-6">
+          {Array.from({ length: 12 }).map((_, index) => (
+            <div key={index} className="h-[130px] rounded-xl border border-gray-200 bg-white animate-pulse" />
+          ))}
+        </div>
+      </div>
+    </MainLayout>
+  )
+
+  if (loading) {
+    return <CategoriesPageSkeleton />
   }
 
   return (

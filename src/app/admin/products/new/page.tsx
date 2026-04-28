@@ -62,7 +62,8 @@ export default function AddProductPage() {
       const { data } = await supabase
         .from('categories')
         .select('*')
-        .eq('is_active', true)
+        // Include categories where is_active is true or null (legacy rows).
+        .neq('is_active', false)
         .order('name')
 
       setCategories(data || [])

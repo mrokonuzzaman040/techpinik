@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import Script from 'next/script'
 import { extractMetaPixelId, getPublicSiteSettings } from '@/lib/site-settings'
@@ -13,6 +13,11 @@ const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
 })
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getPublicSiteSettings()
@@ -58,8 +63,9 @@ export async function generateMetadata(): Promise<Metadata> {
       },
     },
     icons: {
-      icon: '/favicon.ico',
-      shortcut: '/favicon.ico',
+      icon: '/icon.svg',
+      apple: '/apple-icon.svg',
+      shortcut: '/icon.svg',
     },
   }
 }

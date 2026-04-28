@@ -73,14 +73,24 @@ export default function OrderConfirmationPage() {
     fetchOrder()
   }, [orderId])
 
-  if (loading) {
-    return (
-      <MainLayout>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-yellow-600"></div>
+  const OrderConfirmationSkeleton = () => (
+    <MainLayout>
+      <div className="container mx-auto px-4 py-6 animate-pulse">
+        <div className="mb-8 h-44 rounded-xl bg-gray-200" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-6">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <div key={index} className="h-44 rounded-xl border border-gray-200 bg-white" />
+            ))}
+          </div>
+          <div className="h-80 rounded-xl border border-gray-200 bg-white" />
         </div>
-      </MainLayout>
-    )
+      </div>
+    </MainLayout>
+  )
+
+  if (loading) {
+    return <OrderConfirmationSkeleton />
   }
 
   if (!order) {

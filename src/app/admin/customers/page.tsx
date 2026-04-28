@@ -139,8 +139,10 @@ export default function AdminCustomersPage() {
         </CardHeader>
         <CardContent>
           {loading ? (
-            <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600"></div>
+            <div className="space-y-3 animate-pulse py-2">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div key={index} className="h-16 rounded-lg border border-gray-200 bg-gray-100" />
+              ))}
             </div>
           ) : customers.length === 0 ? (
             <div className="text-center py-8">

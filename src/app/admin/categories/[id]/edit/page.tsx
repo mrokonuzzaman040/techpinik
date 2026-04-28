@@ -158,8 +158,10 @@ export default function EditCategoryPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
+      <div className="space-y-6 animate-pulse">
+        <div className="h-8 w-44 rounded bg-gray-200" />
+        <div className="h-48 rounded-xl border border-gray-200 bg-white" />
+        <div className="h-48 rounded-xl border border-gray-200 bg-white" />
       </div>
     )
   }

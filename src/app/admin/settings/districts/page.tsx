@@ -35,6 +35,26 @@ export default function DistrictsManagementPage() {
     delivery_charge: '',
   })
 
+  const getErrorMessage = (error: unknown, fallback: string) => {
+    if (error instanceof Error && error.message) return error.message
+
+    if (typeof error === 'object' && error !== null) {
+      const possibleError = error as Record<string, unknown>
+      const directMessage =
+        typeof possibleError.message === 'string' && possibleError.message.trim()
+          ? possibleError.message
+          : typeof possibleError.details === 'string' && possibleError.details.trim()
+            ? possibleError.details
+            : typeof possibleError.hint === 'string' && possibleError.hint.trim()
+              ? possibleError.hint
+              : null
+
+      if (directMessage) return directMessage
+    }
+
+    return fallback
+  }
+
   useEffect(() => {
     fetchDistricts()
   }, [])
@@ -140,6 +160,21 @@ export default function DistrictsManagementPage() {
     const supabase = createClient()
 
     try {
+      // Prevent FK delete failures and provide a clear, actionable message.
+      const { count, error: ordersError } = await supabase
+        .from('orders')
+        .select('id', { count: 'exact', head: true })
+        .eq('district_id', district.id)
+
+      if (ordersError) throw ordersError
+
+      if ((count || 0) > 0) {
+        toast.error(
+          `Cannot delete "${district.name}" because it is used in ${count} order${count === 1 ? '' : 's'}.`
+        )
+        return
+      }
+
       const { error } = await supabase.from('districts').delete().eq('id', district.id)
 
       if (error) throw error
@@ -147,8 +182,9 @@ export default function DistrictsManagementPage() {
       await fetchDistricts()
       toast.success('District deleted successfully!')
     } catch (error) {
-      console.error('Error deleting district:', error)
-      toast.error('Error deleting district. Please try again.')
+      const message = getErrorMessage(error, 'Error deleting district. Please try again.')
+      console.error('Error deleting district:', message, error)
+      toast.error(message)
     }
   }
 
@@ -275,8 +311,14 @@ export default function DistrictsManagementPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
+      <div className="space-y-6 animate-pulse">
+        <div className="h-8 w-56 rounded bg-gray-200" />
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="md:col-span-2 h-10 rounded bg-gray-200" />
+          <div className="h-24 rounded-xl border border-gray-200 bg-white" />
+          <div className="h-24 rounded-xl border border-gray-200 bg-white" />
+        </div>
+        <div className="h-[420px] rounded-xl border border-gray-200 bg-white" />
       </div>
     )
   }

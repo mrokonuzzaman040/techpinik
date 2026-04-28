@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <defs>
+    <linearGradient id="appleBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#111827" />
+      <stop offset="100%" stop-color="#2563eb" />
+    </linearGradient>
+  </defs>
+  <rect width="180" height="180" rx="38" fill="url(#appleBg)" />
+  <path
+    d="M54 54h72v18h-27v54H81V72H54z"
+    fill="#ffffff"
+  />
+</svg>

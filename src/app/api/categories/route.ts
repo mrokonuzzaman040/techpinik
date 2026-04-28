@@ -21,7 +21,8 @@ export async function GET(request: NextRequest) {
       `
           : '*'
       )
-      .order('name')
+      .order('sort_order', { ascending: true })
+      .order('name', { ascending: true })
 
     // Filter by parent_id if provided
     if (parent_id) {

@@ -14,6 +14,7 @@ export interface Database {
           icon: string | null
           slug: string
           parent_id: string | null
+          sort_order: number
           created_at: string
           updated_at: string | null
         }
@@ -24,6 +25,7 @@ export interface Database {
           icon?: string | null
           slug: string
           parent_id?: string | null
+          sort_order?: number
           created_at?: string
           updated_at?: string | null
         }
@@ -34,6 +36,7 @@ export interface Database {
           icon?: string | null
           slug?: string
           parent_id?: string | null
+          sort_order?: number
           created_at?: string
           updated_at?: string | null
         }

@@ -166,14 +166,34 @@ export default function ProductDetailPage() {
           'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=product%20placeholder%20image&image_size=square',
         ]
 
-  if (loading) {
-    return (
-      <MainLayout>
-        <div className="min-h-screen flex items-center justify-center px-4">
-          <div className="animate-spin rounded-full h-24 w-24 sm:h-32 sm:w-32 border-b-2 border-yellow-600"></div>
+  const ProductDetailSkeleton = () => (
+    <MainLayout>
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 animate-pulse">
+        <div className="mb-6 h-4 w-64 rounded bg-gray-200" />
+        <div className="mb-6 h-9 w-24 rounded bg-gray-200" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-12">
+          <div className="space-y-3 sm:space-y-4">
+            <div className="aspect-square rounded-lg bg-gray-200" />
+            <div className="flex gap-2">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <div key={index} className="h-16 w-16 sm:h-20 sm:w-20 rounded-lg bg-gray-200" />
+              ))}
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="h-4 w-24 rounded bg-gray-200" />
+            <div className="h-8 w-3/4 rounded bg-gray-200" />
+            <div className="h-6 w-1/2 rounded bg-gray-200" />
+            <div className="h-20 w-full rounded bg-gray-200" />
+            <div className="h-12 w-full rounded bg-gray-200" />
+          </div>
         </div>
-      </MainLayout>
-    )
+      </div>
+    </MainLayout>
+  )
+
+  if (loading) {
+    return <ProductDetailSkeleton />
   }
 
   if (!product) {
@@ -196,7 +216,7 @@ export default function ProductDetailPage() {
 
   return (
     <MainLayout>
-      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
+      <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-6">
         {/* Breadcrumb */}
         <nav className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6 flex-wrap">
           <Link href="/" className="hover:text-yellow-600">
@@ -224,7 +244,7 @@ export default function ProductDetailPage() {
         {/* Back Button */}
         <Button
           variant="ghost"
-          className="mb-4 sm:mb-6 text-sm"
+          className="mb-3 sm:mb-6 h-8 px-2.5 text-xs sm:h-10 sm:px-4 sm:text-sm"
           onClick={() => window.history.back()}
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
@@ -278,12 +298,12 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Product Info */}
-          <div className="space-y-4 sm:space-y-6">
+          <div className="space-y-3 sm:space-y-6">
             {/* Brand */}
             {product.brand && <p className="text-sm sm:text-base text-gray-600">{product.brand}</p>}
 
             {/* Title */}
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
+            <h1 className="text-lg sm:text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
               {product.name}
             </h1>
 
@@ -299,23 +319,23 @@ export default function ProductDetailPage() {
                   />
                 ))}
               </div>
-              <span className="text-xs sm:text-sm text-gray-600">(4.0) • 24 reviews</span>
+              <span className="text-[11px] sm:text-sm text-gray-600">(4.0) • 24 reviews</span>
             </div>
 
             {/* Price */}
             <div className="space-y-2">
               <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-                <span className="text-2xl sm:text-3xl font-bold text-yellow-600">
+                <span className="text-xl sm:text-3xl font-bold text-yellow-600">
                   ৳{(product.sale_price || product.price).toLocaleString()}
                 </span>
                 {product.sale_price && (
-                  <span className="text-lg sm:text-xl text-gray-500 line-through">
+                  <span className="text-base sm:text-xl text-gray-500 line-through">
                     ৳{product.price.toLocaleString()}
                   </span>
                 )}
               </div>
               {discountPercentage > 0 && (
-                <p className="text-xs sm:text-sm text-yellow-600">
+                <p className="text-[11px] sm:text-sm text-yellow-600">
                   You save ৳
                   {(product.price - (product.sale_price || product.price)).toLocaleString()} (
                   {discountPercentage}%)
@@ -325,7 +345,7 @@ export default function ProductDetailPage() {
 
             {/* Availability */}
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm sm:text-base font-medium">Availability:</span>
+                <span className="text-xs sm:text-base font-medium">Availability:</span>
               <Badge
                 variant={product.stock_quantity > 0 ? 'default' : 'secondary'}
                 className={`text-xs sm:text-sm ${product.stock_quantity > 0 ? 'bg-yellow-100 text-yellow-800' : ''}`}
@@ -336,24 +356,24 @@ export default function ProductDetailPage() {
             </div>
 
             {/* SKU */}
-            {product.sku && <p className="text-xs sm:text-sm text-gray-600">SKU: {product.sku}</p>}
+            {product.sku && <p className="text-[11px] sm:text-sm text-gray-600">SKU: {product.sku}</p>}
 
             {/* Quantity & Add to Cart */}
             {product.stock_quantity > 0 && (
               <div className="space-y-4 sm:space-y-5">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
-                  <span className="text-sm sm:text-base font-medium">Quantity:</span>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2.5 sm:gap-4">
+                  <span className="text-xs sm:text-base font-medium">Quantity:</span>
                   <div className="flex items-center border rounded-lg">
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
                       disabled={quantity <= 1}
-                      className="h-9 w-9"
+                      className="h-8 w-8 sm:h-9 sm:w-9"
                     >
                       <Minus className="h-4 w-4" />
                     </Button>
-                    <span className="px-4 py-2 min-w-[60px] text-center text-sm sm:text-base">
+                    <span className="px-3 py-1.5 min-w-[52px] text-center text-xs sm:px-4 sm:py-2 sm:min-w-[60px] sm:text-base">
                       {quantity}
                     </span>
                     <Button
@@ -361,12 +381,12 @@ export default function ProductDetailPage() {
                       size="sm"
                       onClick={() => setQuantity(Math.min(product.stock_quantity, quantity + 1))}
                       disabled={quantity >= product.stock_quantity}
-                      className="h-9 w-9"
+                      className="h-8 w-8 sm:h-9 sm:w-9"
                     >
                       <Plus className="h-4 w-4" />
                     </Button>
                   </div>
-                  <span className="text-xs sm:text-sm text-gray-500">
+                  <span className="text-[11px] sm:text-sm text-gray-500">
                     {product.stock_quantity} available
                   </span>
                 </div>
@@ -380,7 +400,7 @@ export default function ProductDetailPage() {
                         handleAddToCart()
                       }}
                       variant="outline"
-                      className="flex-1 h-11 sm:h-10 text-sm sm:text-base"
+                      className="flex-1 h-10 sm:h-10 text-xs sm:text-base"
                     >
                       <ShoppingCart className="h-4 w-4 mr-2" />
                       Add to Cart
@@ -391,17 +411,17 @@ export default function ProductDetailPage() {
                         e.stopPropagation()
                         handleOrderNow()
                       }}
-                      className="flex-1 h-11 sm:h-10 bg-yellow-600 hover:bg-yellow-700 text-sm sm:text-base"
+                      className="flex-1 h-10 sm:h-10 bg-yellow-600 hover:bg-yellow-700 text-xs sm:text-base"
                     >
                       <Zap className="h-4 w-4 mr-2" />
                       Order Now
                     </Button>
                   </div>
-                  <div className="flex gap-3 justify-center">
-                    <Button variant="outline" size="icon" className="h-10 w-10 sm:h-9 sm:w-9">
+                  <div className="flex gap-2.5 sm:gap-3 justify-center">
+                    <Button variant="outline" size="icon" className="h-9 w-9 sm:h-9 sm:w-9">
                       <Heart className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="icon" className="h-10 w-10 sm:h-9 sm:w-9">
+                    <Button variant="outline" size="icon" className="h-9 w-9 sm:h-9 sm:w-9">
                       <Share2 className="h-4 w-4" />
                     </Button>
                   </div>
@@ -432,13 +452,13 @@ export default function ProductDetailPage() {
           <CardContent className="p-4 sm:p-6">
             <Tabs defaultValue="description" className="w-full">
               <TabsList className="grid w-full grid-cols-3 h-auto">
-                <TabsTrigger value="description" className="text-xs sm:text-sm py-2 sm:py-2.5">
+                <TabsTrigger value="description" className="text-[11px] sm:text-sm py-2 sm:py-2.5 px-2 sm:px-3">
                   Description
                 </TabsTrigger>
-                <TabsTrigger value="specifications" className="text-xs sm:text-sm py-2 sm:py-2.5">
+                <TabsTrigger value="specifications" className="text-[11px] sm:text-sm py-2 sm:py-2.5 px-2 sm:px-3">
                   Specifications
                 </TabsTrigger>
-                <TabsTrigger value="reviews" className="text-xs sm:text-sm py-2 sm:py-2.5">
+                <TabsTrigger value="reviews" className="text-[11px] sm:text-sm py-2 sm:py-2.5 px-2 sm:px-3">
                   Reviews
                 </TabsTrigger>
               </TabsList>

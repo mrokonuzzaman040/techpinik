@@ -51,7 +51,8 @@ function ProductsPageContent() {
           .from('categories')
           .select('*')
           .eq('is_active', true)
-          .order('name')
+          .order('sort_order', { ascending: true })
+          .order('name', { ascending: true })
 
         setCategories(categoriesData || [])
 

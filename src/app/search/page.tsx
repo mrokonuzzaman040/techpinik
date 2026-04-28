@@ -70,9 +70,23 @@ function SearchPageContent() {
 
       {/* Loading State */}
       {loading && (
-        <div className="flex flex-col justify-center items-center py-12 md:py-16">
-          <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-yellow-600"></div>
-          <span className="mt-4 text-sm sm:text-base text-gray-600">Searching products...</span>
+        <div className="py-6 md:py-8 animate-pulse">
+          <div className="mb-4 h-4 w-40 rounded bg-gray-200" />
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+            {Array.from({ length: 12 }).map((_, index) => (
+              <div
+                key={`search-skeleton-${index}`}
+                className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm"
+              >
+                <div className="aspect-square w-full bg-gray-200" />
+                <div className="space-y-3 p-3">
+                  <div className="h-4 w-2/3 rounded bg-gray-200" />
+                  <div className="h-3 w-1/2 rounded bg-gray-200" />
+                  <div className="h-4 w-1/3 rounded bg-gray-200" />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Plus, Search, Edit, Trash2, Eye, MoreHorizontal, Tag } from 'lucide-react'
+import { Plus, Search, Edit, Trash2, Eye, MoreHorizontal, Tag, ArrowUp, ArrowDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -73,7 +73,7 @@ export default function AdminCategoriesPage() {
         query = query.eq('is_active', selectedStatus === 'active')
       }
 
-      query = query.order('created_at', { ascending: false })
+      query = query.order('sort_order', { ascending: true }).order('created_at', { ascending: false })
 
       const { data, error } = await query
 
@@ -134,6 +134,39 @@ export default function AdminCategoriesPage() {
     } catch (error) {
       console.error('Error updating category status:', error)
     }
+  }
+
+  const moveCategory = async (categoryId: string, direction: 'up' | 'down') => {
+    const currentIndex = categories.findIndex((category) => category.id === categoryId)
+    if (currentIndex === -1) return
+
+    const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
+    if (targetIndex < 0 || targetIndex >= categories.length) return
+
+    const updatedCategories = [...categories]
+    ;[updatedCategories[currentIndex], updatedCategories[targetIndex]] = [
+      updatedCategories[targetIndex],
+      updatedCategories[currentIndex],
+    ]
+
+    setCategories(updatedCategories)
+
+    const updates = updatedCategories.map((category, index) => ({
+      id: category.id,
+      sort_order: index,
+      updated_at: new Date().toISOString(),
+    }))
+
+    const supabase = createClient()
+    const { error } = await supabase.from('categories').upsert(updates, { onConflict: 'id' })
+
+    if (error) {
+      toast.error('Failed to update category order. Please try again.')
+      await fetchCategories()
+      return
+    }
+
+    toast.success('Category order updated.')
   }
 
   const getStatusBadge = (isActive: boolean) => {
@@ -210,8 +243,10 @@ export default function AdminCategoriesPage() {
         </CardHeader>
         <CardContent>
           {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600"></div>
+            <div className="space-y-3 animate-pulse py-2">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div key={index} className="h-16 rounded-lg border border-gray-200 bg-gray-100" />
+              ))}
             </div>
           ) : categories.length === 0 ? (
             <div className="text-center py-12">
@@ -234,11 +269,12 @@ export default function AdminCategoriesPage() {
                     <TableHead>Description</TableHead>
                     <TableHead>Products</TableHead>
                     <TableHead>Status</TableHead>
+                    <TableHead className="text-center">Move</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {categories.map((category) => (
+                  {categories.map((category, index) => (
                     <TableRow key={category.id}>
                       <TableCell>
                         <div className="flex items-center gap-3">
@@ -274,6 +310,30 @@ export default function AdminCategoriesPage() {
                         </span>
                       </TableCell>
                       <TableCell>{getStatusBadge(category.is_active ?? true)}</TableCell>
+                      <TableCell className="text-center">
+                        <div className="flex items-center justify-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            disabled={index === 0}
+                            onClick={() => moveCategory(category.id, 'up')}
+                            aria-label={`Move ${category.name} up`}
+                          >
+                            <ArrowUp className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            disabled={index === categories.length - 1}
+                            onClick={() => moveCategory(category.id, 'down')}
+                            aria-label={`Move ${category.name} down`}
+                          >
+                            <ArrowDown className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
                       <TableCell className="text-right">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>

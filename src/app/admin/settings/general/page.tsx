@@ -141,8 +141,11 @@ export default function GeneralSettingsPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
+      <div className="space-y-6 animate-pulse">
+        <div className="h-8 w-52 rounded bg-gray-200" />
+        {Array.from({ length: 6 }).map((_, index) => (
+          <div key={index} className="h-48 rounded-xl border border-gray-200 bg-white" />
+        ))}
       </div>
     )
   }

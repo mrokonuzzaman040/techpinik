@@ -191,8 +191,17 @@ export default function AdminAnalyticsPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
+      <div className="space-y-6 animate-pulse">
+        <div className="h-8 w-48 rounded bg-gray-200" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div key={index} className="h-28 rounded-xl border border-gray-200 bg-white" />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="h-80 rounded-xl border border-gray-200 bg-white" />
+          <div className="h-80 rounded-xl border border-gray-200 bg-white" />
+        </div>
       </div>
     )
   }
