@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, Upload, X } from 'lucide-react'
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
 import { createClient } from '@/lib/supabase'
 import { CategoryForm } from '@/types'
+import { toast } from 'sonner'
 
 export default function AddCategoryPage() {
   const router = useRouter()
@@ -26,6 +27,8 @@ export default function AddCategoryPage() {
     banner_image_url: '',
     is_active: true,
   })
+  const bannerInputRef = useRef<HTMLInputElement>(null)
+  const iconInputRef = useRef<HTMLInputElement>(null)
 
   const handleInputChange = (field: keyof CategoryForm, value: any) => {
     setFormData((prev) => ({
@@ -76,7 +79,7 @@ export default function AddCategoryPage() {
       router.push('/admin/categories')
     } catch (error) {
       console.error('Error creating category:', error)
-      alert('Error creating category. Please try again.')
+      toast.error('Error creating category. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -155,7 +158,7 @@ export default function AddCategoryPage() {
                       </Button>
                     </div>
                   ) : (
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-5 sm:p-6 text-center">
                       <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
                       <p className="text-sm text-gray-600 mb-2">Upload banner image</p>
                       <Input
@@ -164,12 +167,16 @@ export default function AddCategoryPage() {
                         onChange={(e) => handleImageUpload(e, 'banner')}
                         className="hidden"
                         id="banner-upload"
+                        ref={bannerInputRef}
                       />
-                      <Label htmlFor="banner-upload" className="cursor-pointer">
-                        <Button type="button" variant="outline" size="sm">
-                          Choose File
-                        </Button>
-                      </Label>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => bannerInputRef.current?.click()}
+                      >
+                        Choose File
+                      </Button>
                     </div>
                   )}
                 </div>
@@ -206,7 +213,7 @@ export default function AddCategoryPage() {
                       </Button>
                     </div>
                   ) : (
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-5 sm:p-6 text-center">
                       <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                       <p className="text-sm text-gray-600 mb-2">Upload category icon</p>
                       <Input
@@ -215,12 +222,16 @@ export default function AddCategoryPage() {
                         onChange={(e) => handleImageUpload(e, 'image')}
                         className="hidden"
                         id="image-upload"
+                        ref={iconInputRef}
                       />
-                      <Label htmlFor="image-upload" className="cursor-pointer">
-                        <Button type="button" variant="outline" size="sm">
-                          Choose File
-                        </Button>
-                      </Label>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => iconInputRef.current?.click()}
+                      >
+                        Choose File
+                      </Button>
                     </div>
                   )}
                 </div>
@@ -246,11 +257,16 @@ export default function AddCategoryPage() {
               </CardContent>
             </Card>
 
-            <div className="flex gap-2">
-              <Button type="submit" className="flex-1" disabled={loading}>
+            <div className="flex flex-col-reverse gap-2 sm:flex-row">
+              <Button type="submit" className="w-full sm:flex-1" disabled={loading}>
                 {loading ? 'Creating...' : 'Create Category'}
               </Button>
-              <Button type="button" variant="outline" onClick={() => router.back()}>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full sm:w-auto"
+                onClick={() => router.back()}
+              >
                 Cancel
               </Button>
             </div>

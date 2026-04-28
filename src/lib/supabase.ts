@@ -1,48 +1,42 @@
+import { createBrowserClient, createServerClient as createSSRClient } from '@supabase/ssr'
 import { createClient as createSupabaseClient, type SupabaseClient } from '@supabase/supabase-js'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const supabaseServiceKey = process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY!
 
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables')
 }
 
-const browserAuthOptions = {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true,
-  },
-} as const
-
-const serverAuthOptions = {
-  auth: {
-    persistSession: false,
-    autoRefreshToken: false,
-  },
-} as const
-
-// One client for the browser — avoids multiple GoTrueClient instances (same storage key).
-export const supabase: SupabaseClient = createSupabaseClient(
-  supabaseUrl,
-  supabaseAnonKey,
-  browserAuthOptions
-)
+// Client for the browser
+export const supabase = typeof window !== 'undefined' 
+  ? createBrowserClient(supabaseUrl, supabaseAnonKey)
+  : null as unknown as SupabaseClient // Should not be used on server, use createClient() instead
 
 /**
- * Browser: returns the shared `supabase` instance.
- * Server (API routes, RSC): returns a new client with no session persistence (safe per request).
+ * Server (API routes, RSC): returns a new client.
+ * For Client Components: returns the browser client.
  */
-export const createClient = (): SupabaseClient => {
+export const createClient = () => {
   if (typeof window === 'undefined') {
-    return createSupabaseClient(supabaseUrl, supabaseAnonKey, serverAuthOptions)
+    // This is a minimal server client without cookie handling.
+    // For cookie handling, use createSSRServerClient from supabase-server.ts
+    return createSupabaseClient(supabaseUrl, supabaseAnonKey, {
+        auth: {
+            persistSession: false,
+            autoRefreshToken: false,
+        }
+    })
   }
   return supabase
 }
 
-// For server-side operations that require elevated privileges
+/**
+ * For server-side operations that require elevated privileges.
+ * WARNING: This client bypasses RLS. Use ONLY in server-side contexts after proper auth checks.
+ */
 export const createServerClient = () => {
-  const supabaseServiceKey = process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY!
   if (!supabaseServiceKey) {
     throw new Error('Missing NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY environment variable')
   }

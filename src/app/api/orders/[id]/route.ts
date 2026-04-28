@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase'
 import { UpdateOrderData, OrderStatus } from '@/types'
 
 interface RouteParams {
@@ -10,6 +10,7 @@ interface RouteParams {
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params
+    const supabase = createServerClient()
 
     const { data: order, error } = await supabase
       .from('orders')
@@ -51,11 +52,12 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params
     const body: UpdateOrderData = await request.json()
+    const supabase = createServerClient()
 
     // Check if order exists
     const { data: existingOrder, error: fetchError } = await supabase
       .from('orders')
-      .select('id, status, district_id')
+      .select('id, status, district_id, total_amount, delivery_charge')
       .eq('id', id)
       .single()
 
@@ -69,7 +71,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
     // Validate status transition if status is being updated
     if (body.status && body.status !== existingOrder.status) {
-      const validTransitions: Record<OrderStatus, OrderStatus[]> = {
+      const validTransitions: Record<string, string[]> = {
         pending: ['confirmed', 'cancelled'],
         confirmed: ['processing', 'cancelled'],
         processing: ['shipped', 'cancelled'],
@@ -78,8 +80,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         cancelled: [],
       }
 
-      const allowedStatuses = validTransitions[existingOrder.status as OrderStatus]
-      if (!allowedStatuses.includes(body.status as OrderStatus)) {
+      const allowedStatuses = validTransitions[existingOrder.status] || []
+      if (!allowedStatuses.includes(body.status)) {
         return NextResponse.json(
           {
             success: false,
@@ -105,16 +107,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       }
 
       // Recalculate total amount with new delivery charge
-      const { data: currentOrder } = await supabase
-        .from('orders')
-        .select('subtotal')
-        .eq('id', id)
-        .single()
-
-      if (currentOrder) {
-        updateData.delivery_charge = district.delivery_charge
-        updateData.total_amount = currentOrder.subtotal + district.delivery_charge
-      }
+      const subtotal = existingOrder.total_amount - (existingOrder.delivery_charge || 0)
+      updateData.delivery_charge = district.delivery_charge
+      updateData.total_amount = subtotal + district.delivery_charge
     }
 
     updateData.updated_at = new Date().toISOString()
@@ -158,6 +153,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params
+    const supabase = createServerClient()
 
     // Check if order exists and get its status
     const { data: existingOrder, error: fetchError } = await supabase
@@ -191,34 +187,16 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
       if (!itemsError && orderItems) {
         for (const item of orderItems) {
-          await supabase
-            .from('products')
-            .update({
-              stock_quantity: supabase.rpc('increment_stock', {
-                product_id: item.product_id,
-                quantity: item.quantity,
-              }),
-            })
-            .eq('id', item.product_id)
+          await supabase.rpc('increment_stock', {
+            product_id: item.product_id,
+            quantity: item.quantity,
+          })
         }
       }
     }
 
-    // Delete order items first (due to foreign key constraint)
-    const { error: itemsDeleteError } = await supabase
-      .from('order_items')
-      .delete()
-      .eq('order_id', id)
-
-    if (itemsDeleteError) {
-      console.error('Error deleting order items:', itemsDeleteError)
-      return NextResponse.json(
-        { success: false, error: 'Failed to delete order items' },
-        { status: 500 }
-      )
-    }
-
-    // Delete the order
+    // Delete the order (cascade will handle order_items if configured, but let's be explicit if needed)
+    // The initial schema has ON DELETE CASCADE for order_items.order_id
     const { error } = await supabase.from('orders').delete().eq('id', id)
 
     if (error) {

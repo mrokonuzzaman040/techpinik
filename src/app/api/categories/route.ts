@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
-import { CreateCategoryData } from '@/types'
+import { NextRequest } from 'next/server'
+import { createServerClient } from '@/lib/supabase'; import { isAdmin } from '@/lib/supabase-server'
+import { apiResponse } from '@/lib/utils'
+import { categorySchema } from '@/lib/validations'
 
 // GET /api/categories - Get all categories
 export async function GET(request: NextRequest) {
@@ -9,6 +10,7 @@ export async function GET(request: NextRequest) {
     const include_products = searchParams.get('include_products') === 'true'
     const parent_id = searchParams.get('parent_id')
 
+    const supabase = createServerClient()
     let query = supabase
       .from('categories')
       .select(
@@ -33,63 +35,55 @@ export async function GET(request: NextRequest) {
     const { data: categories, error } = await query
 
     if (error) {
-      console.error('Error fetching categories:', error)
-      return NextResponse.json(
-        { success: false, error: 'Failed to fetch categories' },
-        { status: 500 }
-      )
+      return apiResponse.internalError('Failed to fetch categories', error)
     }
 
-    return NextResponse.json({
-      success: true,
-      data: categories,
-    })
+    return apiResponse.success(categories)
   } catch (error) {
-    console.error('Error in GET /api/categories:', error)
-    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 })
+    return apiResponse.internalError('Internal server error', error)
   }
 }
 
-// POST /api/categories - Create a new category
+// POST /api/categories - Create a new category (Admin only)
 export async function POST(request: NextRequest) {
   try {
-    const body: CreateCategoryData = await request.json()
-
-    // Validate required fields
-    if (!body.name || !body.slug) {
-      return NextResponse.json(
-        { success: false, error: 'Missing required fields: name, slug' },
-        { status: 400 }
-      )
+    // Security check: Only admins can create categories
+    if (!(await isAdmin())) {
+      return apiResponse.unauthorized()
     }
+
+    const body = await request.json()
+
+    // Validate input data
+    const validation = categorySchema.safeParse(body)
+    if (!validation.success) {
+      return apiResponse.badRequest(validation.error.errors[0].message)
+    }
+
+    const data = validation.data
+    const supabase = createServerClient()
 
     // Check if slug already exists
     const { data: existingCategory } = await supabase
       .from('categories')
       .select('id')
-      .eq('slug', body.slug)
+      .eq('slug', data.slug)
       .single()
 
     if (existingCategory) {
-      return NextResponse.json(
-        { success: false, error: 'Category with this slug already exists' },
-        { status: 409 }
-      )
+      return apiResponse.conflict('Category with this slug already exists')
     }
 
     // If parent_id is provided, check if parent category exists
-    if (body.parent_id) {
+    if (data.parent_id) {
       const { data: parentCategory, error: parentError } = await supabase
         .from('categories')
         .select('id')
-        .eq('id', body.parent_id)
+        .eq('id', data.parent_id)
         .single()
 
       if (parentError || !parentCategory) {
-        return NextResponse.json(
-          { success: false, error: 'Parent category not found' },
-          { status: 400 }
-        )
+        return apiResponse.badRequest('Parent category not found')
       }
     }
 
@@ -98,34 +92,22 @@ export async function POST(request: NextRequest) {
       .from('categories')
       .insert([
         {
-          name: body.name,
-          description: body.description || null,
-          icon: body.icon || null,
-          slug: body.slug,
-          parent_id: body.parent_id || null,
+          name: data.name,
+          description: data.description || null,
+          icon: data.icon || null,
+          slug: data.slug,
+          parent_id: data.parent_id || null,
         },
       ])
       .select()
       .single()
 
     if (error) {
-      console.error('Error creating category:', error)
-      return NextResponse.json(
-        { success: false, error: 'Failed to create category' },
-        { status: 500 }
-      )
+      return apiResponse.internalError('Failed to create category', error)
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        data: category,
-        message: 'Category created successfully',
-      },
-      { status: 201 }
-    )
+    return apiResponse.success(category, 'Category created successfully', 201)
   } catch (error) {
-    console.error('Error in POST /api/categories:', error)
-    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 })
+    return apiResponse.internalError('Internal server error', error)
   }
 }

@@ -19,6 +19,7 @@ import {
 import { createClient } from '@/lib/supabase'
 import { District } from '@/types'
 import Link from 'next/link'
+import { toast } from 'sonner'
 
 export default function DistrictsManagementPage() {
   const [districts, setDistricts] = useState<District[]>([])
@@ -120,10 +121,10 @@ export default function DistrictsManagementPage() {
       await fetchDistricts()
       setIsDialogOpen(false)
       resetForm()
-      alert(editingDistrict ? 'District updated successfully!' : 'District created successfully!')
+      toast.success(editingDistrict ? 'District updated successfully!' : 'District created successfully!')
     } catch (error) {
       console.error('Error saving district:', error)
-      alert('Error saving district. Please try again.')
+      toast.error('Error saving district. Please try again.')
     } finally {
       setSaving(false)
     }
@@ -144,10 +145,10 @@ export default function DistrictsManagementPage() {
       if (error) throw error
 
       await fetchDistricts()
-      alert('District deleted successfully!')
+      toast.success('District deleted successfully!')
     } catch (error) {
       console.error('Error deleting district:', error)
-      alert('Error deleting district. Please try again.')
+      toast.error('Error deleting district. Please try again.')
     }
   }
 
@@ -244,7 +245,7 @@ export default function DistrictsManagementPage() {
         }))
 
       if (newDistricts.length === 0) {
-        alert('All Bangladesh districts are already added!')
+        toast.info('All Bangladesh districts are already added!')
         return
       }
 
@@ -253,10 +254,10 @@ export default function DistrictsManagementPage() {
       if (error) throw error
 
       await fetchDistricts()
-      alert(`Successfully added ${newDistricts.length} new districts!`)
+      toast.success(`Successfully added ${newDistricts.length} new districts!`)
     } catch (error) {
       console.error('Error populating districts:', error)
-      alert('Error adding districts. Please try again.')
+      toast.error('Error adding districts. Please try again.')
     } finally {
       setSaving(false)
     }
@@ -295,10 +296,15 @@ export default function DistrictsManagementPage() {
         }
         actions={
           <>
-            <Button variant="outline" onClick={populateBangladeshDistricts} disabled={saving}>
+            <Button
+              variant="outline"
+              className="w-full sm:w-auto"
+              onClick={populateBangladeshDistricts}
+              disabled={saving}
+            >
               Add Bangladesh Districts
             </Button>
-            <Button onClick={openAddDialog}>
+            <Button className="w-full sm:w-auto" onClick={openAddDialog}>
               <Plus className="h-4 w-4 mr-2" />
               Add District
             </Button>
@@ -369,7 +375,8 @@ export default function DistrictsManagementPage() {
               )}
             </div>
           ) : (
-            <Table>
+            <div className="overflow-x-auto">
+              <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>District Name</TableHead>
@@ -410,7 +417,8 @@ export default function DistrictsManagementPage() {
                   </TableRow>
                 ))}
               </TableBody>
-            </Table>
+              </Table>
+            </div>
           )}
         </CardContent>
       </Card>
@@ -448,11 +456,16 @@ export default function DistrictsManagementPage() {
               <p className="text-sm text-gray-500 mt-1">Delivery charge for this district</p>
             </div>
 
-            <div className="flex gap-4 pt-4">
-              <Button type="submit" disabled={saving}>
+            <div className="flex flex-col-reverse gap-2 pt-4 sm:flex-row sm:gap-4">
+              <Button type="submit" disabled={saving} className="w-full sm:w-auto">
                 {saving ? 'Saving...' : editingDistrict ? 'Update District' : 'Add District'}
               </Button>
-              <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full sm:w-auto"
+                onClick={() => setIsDialogOpen(false)}
+              >
                 Cancel
               </Button>
             </div>

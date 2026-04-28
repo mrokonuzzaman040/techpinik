@@ -11,6 +11,7 @@ import AdminPageHeader from '@/components/admin/AdminPageHeader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import Link from 'next/link'
+import { toast } from 'sonner'
 
 export default function GeneralSettingsPage() {
   const [saving, setSaving] = useState(false)
@@ -82,10 +83,10 @@ export default function GeneralSettingsPage() {
       // For now, we'll just simulate a save operation
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
-      alert('Settings saved successfully!')
+      toast.success('Settings saved successfully!')
     } catch (error) {
       console.error('Error saving settings:', error)
-      alert('Error saving settings. Please try again.')
+      toast.error('Error saving settings. Please try again.')
     } finally {
       setSaving(false)
     }
@@ -105,7 +106,7 @@ export default function GeneralSettingsPage() {
           </Link>
         }
         actions={
-          <Button onClick={handleSubmit} disabled={saving}>
+          <Button onClick={handleSubmit} disabled={saving} className="w-full sm:w-auto">
             <Save className="h-4 w-4 mr-2" />
             {saving ? 'Saving...' : 'Save Settings'}
           </Button>
@@ -457,12 +458,12 @@ export default function GeneralSettingsPage() {
         </Card>
 
         {/* Submit Button */}
-        <div className="flex gap-4">
-          <Button type="submit" disabled={saving}>
+        <div className="flex flex-col-reverse gap-2 sm:flex-row sm:gap-4">
+          <Button type="submit" disabled={saving} className="w-full sm:w-auto">
             <Save className="h-4 w-4 mr-2" />
             {saving ? 'Saving...' : 'Save Settings'}
           </Button>
-          <Button type="button" variant="outline">
+          <Button type="button" variant="outline" className="w-full sm:w-auto">
             Reset to Defaults
           </Button>
         </div>

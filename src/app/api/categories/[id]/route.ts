@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
-import { UpdateCategoryData } from '@/types'
+import { NextRequest } from 'next/server'
+import { createServerClient } from '@/lib/supabase'; import { isAdmin } from '@/lib/supabase-server'
+import { apiResponse } from '@/lib/utils'
+import { updateCategorySchema } from '@/lib/validations'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -12,6 +13,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const { id } = await params
     const { searchParams } = new URL(request.url)
     const include_products = searchParams.get('include_products') === 'true'
+    const supabase = createServerClient()
 
     const { data: category, error } = await supabase
       .from('categories')
@@ -27,31 +29,31 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       .single()
 
     if (error) {
-      if (error.code === 'PGRST116') {
-        return NextResponse.json({ success: false, error: 'Category not found' }, { status: 404 })
-      }
-      console.error('Error fetching category:', error)
-      return NextResponse.json(
-        { success: false, error: 'Failed to fetch category' },
-        { status: 500 }
-      )
+      if (error.code === 'PGRST116') return apiResponse.notFound('Category not found')
+      return apiResponse.internalError('Failed to fetch category', error)
     }
 
-    return NextResponse.json({
-      success: true,
-      data: category,
-    })
+    return apiResponse.success(category)
   } catch (error) {
-    console.error('Error in GET /api/categories/[id]:', error)
-    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 })
+    return apiResponse.internalError('Internal server error', error)
   }
 }
 
-// PUT /api/categories/[id] - Update a category
+// PUT /api/categories/[id] - Update a category (Admin only)
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
+    if (!(await isAdmin())) return apiResponse.unauthorized()
+
     const { id } = await params
-    const body: UpdateCategoryData = await request.json()
+    const body = await request.json()
+    
+    const validation = updateCategorySchema.safeParse(body)
+    if (!validation.success) {
+      return apiResponse.badRequest(validation.error.errors[0].message)
+    }
+
+    const data = validation.data
+    const supabase = createServerClient()
 
     // Check if category exists
     const { data: existingCategory, error: fetchError } = await supabase
@@ -61,94 +63,52 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       .single()
 
     if (fetchError) {
-      if (fetchError.code === 'PGRST116') {
-        return NextResponse.json({ success: false, error: 'Category not found' }, { status: 404 })
-      }
-      console.error('Error fetching category:', fetchError)
-      return NextResponse.json(
-        { success: false, error: 'Failed to fetch category' },
-        { status: 500 }
-      )
+      if (fetchError.code === 'PGRST116') return apiResponse.notFound('Category not found')
+      return apiResponse.internalError('Failed to fetch category', fetchError)
     }
 
-    // Check if slug is being updated and if it conflicts with another category
-    if (body.slug && body.slug !== existingCategory.slug) {
+    // Check if slug conflicts
+    if (data.slug && data.slug !== existingCategory.slug) {
       const { data: conflictingCategory } = await supabase
         .from('categories')
         .select('id')
-        .eq('slug', body.slug)
+        .eq('slug', data.slug)
         .neq('id', id)
         .single()
 
       if (conflictingCategory) {
-        return NextResponse.json(
-          { success: false, error: 'Category with this slug already exists' },
-          { status: 409 }
-        )
-      }
-    }
-
-    // If parent_id is being updated, validate it
-    if (body.parent_id !== undefined) {
-      if (body.parent_id === id) {
-        return NextResponse.json(
-          { success: false, error: 'Category cannot be its own parent' },
-          { status: 400 }
-        )
-      }
-
-      if (body.parent_id) {
-        const { data: parentCategory, error: parentError } = await supabase
-          .from('categories')
-          .select('id')
-          .eq('id', body.parent_id)
-          .single()
-
-        if (parentError || !parentCategory) {
-          return NextResponse.json(
-            { success: false, error: 'Parent category not found' },
-            { status: 400 }
-          )
-        }
+        return apiResponse.conflict('Category with this slug already exists')
       }
     }
 
     // Update the category
-    const updateData: any = {
-      ...body,
-      updated_at: new Date().toISOString(),
-    }
-
     const { data: category, error } = await supabase
       .from('categories')
-      .update(updateData)
+      .update({
+        ...data,
+        updated_at: new Date().toISOString(),
+      })
       .eq('id', id)
       .select()
       .single()
 
     if (error) {
-      console.error('Error updating category:', error)
-      return NextResponse.json(
-        { success: false, error: 'Failed to update category' },
-        { status: 500 }
-      )
+      return apiResponse.internalError('Failed to update category', error)
     }
 
-    return NextResponse.json({
-      success: true,
-      data: category,
-      message: 'Category updated successfully',
-    })
+    return apiResponse.success(category, 'Category updated successfully')
   } catch (error) {
-    console.error('Error in PUT /api/categories/[id]:', error)
-    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 })
+    return apiResponse.internalError('Internal server error', error)
   }
 }
 
-// DELETE /api/categories/[id] - Delete a category
+// DELETE /api/categories/[id] - Delete a category (Admin only)
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
+    if (!(await isAdmin())) return apiResponse.unauthorized()
+
     const { id } = await params
+    const supabase = createServerClient()
 
     // Check if category exists
     const { data: existingCategory, error: fetchError } = await supabase
@@ -158,77 +118,38 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       .single()
 
     if (fetchError) {
-      if (fetchError.code === 'PGRST116') {
-        return NextResponse.json({ success: false, error: 'Category not found' }, { status: 404 })
-      }
-      console.error('Error fetching category:', fetchError)
-      return NextResponse.json(
-        { success: false, error: 'Failed to fetch category' },
-        { status: 500 }
-      )
+      if (fetchError.code === 'PGRST116') return apiResponse.notFound('Category not found')
+      return apiResponse.internalError('Failed to fetch category', fetchError)
     }
 
-    // Check if category has child categories
-    const { data: childCategories, error: childError } = await supabase
+    // Check references
+    const { count: childCount } = await supabase
       .from('categories')
-      .select('id')
+      .select('id', { count: 'exact', head: true })
       .eq('parent_id', id)
-      .limit(1)
 
-    if (childError) {
-      console.error('Error checking child categories:', childError)
-      return NextResponse.json(
-        { success: false, error: 'Failed to check category references' },
-        { status: 500 }
-      )
+    if (childCount && childCount > 0) {
+      return apiResponse.conflict('Cannot delete category that has subcategories')
     }
 
-    if (childCategories && childCategories.length > 0) {
-      return NextResponse.json(
-        { success: false, error: 'Cannot delete category that has child categories' },
-        { status: 409 }
-      )
-    }
-
-    // Check if category has products
-    const { data: products, error: productsError } = await supabase
+    const { count: productCount } = await supabase
       .from('products')
-      .select('id')
+      .select('id', { count: 'exact', head: true })
       .eq('category_id', id)
-      .limit(1)
 
-    if (productsError) {
-      console.error('Error checking products:', productsError)
-      return NextResponse.json(
-        { success: false, error: 'Failed to check category references' },
-        { status: 500 }
-      )
-    }
-
-    if (products && products.length > 0) {
-      return NextResponse.json(
-        { success: false, error: 'Cannot delete category that has products' },
-        { status: 409 }
-      )
+    if (productCount && productCount > 0) {
+      return apiResponse.conflict('Cannot delete category that contains products')
     }
 
     // Delete the category
     const { error } = await supabase.from('categories').delete().eq('id', id)
 
     if (error) {
-      console.error('Error deleting category:', error)
-      return NextResponse.json(
-        { success: false, error: 'Failed to delete category' },
-        { status: 500 }
-      )
+      return apiResponse.internalError('Failed to delete category', error)
     }
 
-    return NextResponse.json({
-      success: true,
-      message: 'Category deleted successfully',
-    })
+    return apiResponse.success(null, 'Category deleted successfully')
   } catch (error) {
-    console.error('Error in DELETE /api/categories/[id]:', error)
-    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 })
+    return apiResponse.internalError('Internal server error', error)
   }
 }

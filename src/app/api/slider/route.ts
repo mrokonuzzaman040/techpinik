@@ -1,58 +1,30 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase'
+import { NextResponse } from 'next/server'
+import { createServerClient } from '@/lib/supabase'
 
-export async function GET(request: NextRequest) {
+// GET /api/slider - Get all active slider items
+export async function GET() {
   try {
-    const supabase = createClient()
-    const { searchParams } = new URL(request.url)
-
-    const active = searchParams.get('active')
-    const sortBy = searchParams.get('sortBy') || 'sort_order'
-    const sortOrder = searchParams.get('sortOrder') || 'asc'
-
-    let query = supabase.from('slider_items').select('*')
-
-    // Apply filters
-    if (active !== null && active !== undefined) {
-      query = query.eq('is_active', active === 'true')
-    }
-
-    // Apply sorting
-    query = query.order(sortBy, { ascending: sortOrder === 'asc' })
-
-    const { data: sliderItems, error } = await query
+    const supabase = createServerClient()
+    const { data: sliderItems, error } = await supabase
+      .from('slider_items')
+      .select('*')
+      .eq('is_active', true)
+      .order('order_index', { ascending: true })
 
     if (error) {
       console.error('Error fetching slider items:', error)
-      return NextResponse.json({ error: 'Failed to fetch slider items' }, { status: 500 })
+      return NextResponse.json(
+        { success: false, error: 'Failed to fetch slider items' },
+        { status: 500 }
+      )
     }
 
-    return NextResponse.json({ sliderItems })
+    return NextResponse.json({
+      success: true,
+      data: sliderItems,
+    })
   } catch (error) {
-    console.error('Error in slider API:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
-
-export async function POST(request: NextRequest) {
-  try {
-    const supabase = createClient()
-    const body = await request.json()
-
-    const { data: sliderItem, error } = await supabase
-      .from('slider_items')
-      .insert([body])
-      .select()
-      .single()
-
-    if (error) {
-      console.error('Error creating slider item:', error)
-      return NextResponse.json({ error: 'Failed to create slider item' }, { status: 500 })
-    }
-
-    return NextResponse.json({ sliderItem }, { status: 201 })
-  } catch (error) {
-    console.error('Error in slider POST API:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    console.error('Error in GET /api/slider:', error)
+    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 })
   }
 }

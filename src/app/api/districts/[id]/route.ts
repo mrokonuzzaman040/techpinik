@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
-import { UpdateDistrictData } from '@/types'
+import { createServerClient } from '@/lib/supabase'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -10,7 +9,7 @@ interface RouteParams {
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params
-
+    const supabase = createServerClient()
     const { data: district, error } = await supabase
       .from('districts')
       .select('*')
@@ -42,65 +41,16 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params
-    const body: UpdateDistrictData = await request.json()
+    const body = await request.json()
+    const supabase = createServerClient()
 
-    // Check if district exists
-    const { data: existingDistrict, error: fetchError } = await supabase
-      .from('districts')
-      .select('id, name')
-      .eq('id', id)
-      .single()
-
-    if (fetchError) {
-      if (fetchError.code === 'PGRST116') {
-        return NextResponse.json({ success: false, error: 'District not found' }, { status: 404 })
-      }
-      console.error('Error fetching district:', fetchError)
-      return NextResponse.json(
-        { success: false, error: 'Failed to fetch district' },
-        { status: 500 }
-      )
-    }
-
-    // Validate delivery charge if provided
-    if (body.delivery_charge !== undefined && body.delivery_charge < 0) {
-      return NextResponse.json(
-        { success: false, error: 'Delivery charge must be non-negative' },
-        { status: 400 }
-      )
-    }
-
-    // Check if name is being updated and if it conflicts with another district
-    if (body.name && body.name.trim() !== existingDistrict.name) {
-      const { data: conflictingDistrict } = await supabase
-        .from('districts')
-        .select('id')
-        .ilike('name', body.name.trim())
-        .neq('id', id)
-        .single()
-
-      if (conflictingDistrict) {
-        return NextResponse.json(
-          { success: false, error: 'District with this name already exists' },
-          { status: 409 }
-        )
-      }
-    }
-
-    // Prepare update data
-    const updateData: any = {}
-    if (body.name !== undefined) {
-      updateData.name = body.name.trim()
-    }
-    if (body.delivery_charge !== undefined) {
-      updateData.delivery_charge = body.delivery_charge
-    }
-    updateData.updated_at = new Date().toISOString()
-
-    // Update the district
     const { data: district, error } = await supabase
       .from('districts')
-      .update(updateData)
+      .update({
+        name: body.name,
+        delivery_charge: body.delivery_charge,
+        is_active: body.is_active,
+      })
       .eq('id', id)
       .select()
       .single()
@@ -128,26 +78,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params
+    const supabase = createServerClient()
 
-    // Check if district exists
-    const { data: existingDistrict, error: fetchError } = await supabase
-      .from('districts')
-      .select('id')
-      .eq('id', id)
-      .single()
-
-    if (fetchError) {
-      if (fetchError.code === 'PGRST116') {
-        return NextResponse.json({ success: false, error: 'District not found' }, { status: 404 })
-      }
-      console.error('Error fetching district:', fetchError)
-      return NextResponse.json(
-        { success: false, error: 'Failed to fetch district' },
-        { status: 500 }
-      )
-    }
-
-    // Check if district is referenced in any orders
+    // Check if district is being used by orders
     const { data: orders, error: ordersError } = await supabase
       .from('orders')
       .select('id')
@@ -155,21 +88,16 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       .limit(1)
 
     if (ordersError) {
-      console.error('Error checking orders:', ordersError)
-      return NextResponse.json(
-        { success: false, error: 'Failed to check district references' },
-        { status: 500 }
-      )
+      console.error('Error checking orders for district:', ordersError)
     }
 
     if (orders && orders.length > 0) {
       return NextResponse.json(
-        { success: false, error: 'Cannot delete district that is referenced in orders' },
-        { status: 409 }
+        { success: false, error: 'Cannot delete district that is associated with orders' },
+        { status: 400 }
       )
     }
 
-    // Delete the district
     const { error } = await supabase.from('districts').delete().eq('id', id)
 
     if (error) {

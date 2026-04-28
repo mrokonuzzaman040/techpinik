@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase'
 import { UpdateSliderItemData } from '@/types'
 
 interface RouteParams {
@@ -10,6 +10,7 @@ interface RouteParams {
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params
+    const supabase = createServerClient()
 
     const { data: sliderItem, error } = await supabase
       .from('slider_items')
@@ -46,6 +47,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params
     const body: UpdateSliderItemData = await request.json()
+    const supabase = createServerClient()
 
     // Check if slider item exists
     const { data: existingItem, error: fetchError } = await supabase
@@ -118,6 +120,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params
+    const supabase = createServerClient()
 
     // Check if slider item exists
     const { data: existingItem, error: fetchError } = await supabase

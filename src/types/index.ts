@@ -38,6 +38,7 @@ export interface CreateProductData {
   category_id: string
   images: string[]
   image_url?: string
+  sku: string
   stock_quantity: number
   is_featured: boolean
   slug: string

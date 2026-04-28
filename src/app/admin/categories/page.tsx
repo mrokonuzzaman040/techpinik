@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { Plus, Search, Edit, Trash2, Eye, MoreHorizontal, Tag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -42,6 +41,7 @@ import {
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
 import { createClient } from '@/lib/supabase'
 import { Category } from '@/types'
+import { toast } from 'sonner'
 
 export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([])
@@ -98,7 +98,7 @@ export default function AdminCategoriesPage() {
         .eq('category_id', categoryId)
 
       if (count && count > 0) {
-        alert(
+        toast.error(
           'Cannot delete category with existing products. Please move or delete the products first.'
         )
         setDeleteCategoryId(null)
@@ -113,7 +113,7 @@ export default function AdminCategoriesPage() {
       setDeleteCategoryId(null)
     } catch (error) {
       console.error('Error deleting category:', error)
-      alert('Error deleting category. Please try again.')
+      toast.error('Error deleting category. Please try again.')
     }
   }
 
@@ -142,6 +142,18 @@ export default function AdminCategoriesPage() {
     ) : (
       <Badge variant="secondary">Inactive</Badge>
     )
+  }
+
+  const getCategoryImageSrc = (category: Category) => {
+    const raw = ((category as any).image_url || (category as any).icon || '').trim()
+    if (!raw) return null
+
+    // Accept absolute URLs, root-relative paths, and data URLs.
+    if (raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('/') || raw.startsWith('data:image/')) {
+      return raw
+    }
+
+    return null
   }
 
   return (
@@ -231,12 +243,11 @@ export default function AdminCategoriesPage() {
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <div className="h-12 w-12 relative rounded-lg overflow-hidden bg-gray-100">
-                            {category.image_url ? (
-                              <Image
-                                src={category.image_url}
+                            {getCategoryImageSrc(category) ? (
+                              <img
+                                src={getCategoryImageSrc(category)!}
                                 alt={category.name}
-                                fill
-                                className="object-cover"
+                                className="h-full w-full object-cover"
                               />
                             ) : (
                               <div className="h-full w-full flex items-center justify-center">

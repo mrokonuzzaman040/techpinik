@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
-import { UpdateProductData } from '@/types'
+import { NextRequest } from 'next/server'
+import { createServerClient } from '@/lib/supabase'; import { isAdmin } from '@/lib/supabase-server'
+import { apiResponse } from '@/lib/utils'
+import { updateProductSchema } from '@/lib/validations'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -10,44 +11,43 @@ interface RouteParams {
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params
+    const supabase = createServerClient()
 
     const { data: product, error } = await supabase
       .from('products')
-      .select(
-        `
+      .select(`
         *,
         category:categories(id, name, slug)
-      `
-      )
+      `)
       .eq('id', id)
       .single()
 
     if (error) {
-      if (error.code === 'PGRST116') {
-        return NextResponse.json({ success: false, error: 'Product not found' }, { status: 404 })
-      }
-      console.error('Error fetching product:', error)
-      return NextResponse.json(
-        { success: false, error: 'Failed to fetch product' },
-        { status: 500 }
-      )
+      if (error.code === 'PGRST116') return apiResponse.notFound('Product not found')
+      return apiResponse.internalError('Failed to fetch product', error)
     }
 
-    return NextResponse.json({
-      success: true,
-      data: product,
-    })
+    return apiResponse.success(product)
   } catch (error) {
-    console.error('Error in GET /api/products/[id]:', error)
-    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 })
+    return apiResponse.internalError('Internal server error', error)
   }
 }
 
-// PUT /api/products/[id] - Update a product
+// PUT /api/products/[id] - Update a product (Admin only)
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
+    if (!(await isAdmin())) return apiResponse.unauthorized()
+
     const { id } = await params
-    const body: UpdateProductData = await request.json()
+    const body = await request.json()
+    
+    const validation = updateProductSchema.safeParse(body)
+    if (!validation.success) {
+      return apiResponse.badRequest(validation.error.errors[0].message)
+    }
+
+    const data = validation.data
+    const supabase = createServerClient()
 
     // Check if product exists
     const { data: existingProduct, error: fetchError } = await supabase
@@ -57,74 +57,55 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       .single()
 
     if (fetchError) {
-      if (fetchError.code === 'PGRST116') {
-        return NextResponse.json({ success: false, error: 'Product not found' }, { status: 404 })
-      }
-      console.error('Error fetching product:', fetchError)
-      return NextResponse.json(
-        { success: false, error: 'Failed to fetch product' },
-        { status: 500 }
-      )
+      if (fetchError.code === 'PGRST116') return apiResponse.notFound('Product not found')
+      return apiResponse.internalError('Failed to fetch product', fetchError)
     }
 
-    // Check if slug is being updated and if it conflicts with another product
-    if (body.slug && body.slug !== existingProduct.slug) {
+    // Check if slug conflicts
+    if (data.slug && data.slug !== existingProduct.slug) {
       const { data: conflictingProduct } = await supabase
         .from('products')
         .select('id')
-        .eq('slug', body.slug)
+        .eq('slug', data.slug)
         .neq('id', id)
         .single()
 
       if (conflictingProduct) {
-        return NextResponse.json(
-          { success: false, error: 'Product with this slug already exists' },
-          { status: 409 }
-        )
+        return apiResponse.conflict('Product with this slug already exists')
       }
     }
 
     // Update the product
-    const updateData: any = {
-      ...body,
-      updated_at: new Date().toISOString(),
-    }
-
     const { data: product, error } = await supabase
       .from('products')
-      .update(updateData)
+      .update({
+        ...data,
+        updated_at: new Date().toISOString(),
+      })
       .eq('id', id)
-      .select(
-        `
+      .select(`
         *,
         category:categories(id, name, slug)
-      `
-      )
+      `)
       .single()
 
     if (error) {
-      console.error('Error updating product:', error)
-      return NextResponse.json(
-        { success: false, error: 'Failed to update product' },
-        { status: 500 }
-      )
+      return apiResponse.internalError('Failed to update product', error)
     }
 
-    return NextResponse.json({
-      success: true,
-      data: product,
-      message: 'Product updated successfully',
-    })
+    return apiResponse.success(product, 'Product updated successfully')
   } catch (error) {
-    console.error('Error in PUT /api/products/[id]:', error)
-    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 })
+    return apiResponse.internalError('Internal server error', error)
   }
 }
 
-// DELETE /api/products/[id] - Delete a product
+// DELETE /api/products/[id] - Delete a product (Admin only)
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
+    if (!(await isAdmin())) return apiResponse.unauthorized()
+
     const { id } = await params
+    const supabase = createServerClient()
 
     // Check if product exists
     const { data: existingProduct, error: fetchError } = await supabase
@@ -134,55 +115,19 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       .single()
 
     if (fetchError) {
-      if (fetchError.code === 'PGRST116') {
-        return NextResponse.json({ success: false, error: 'Product not found' }, { status: 404 })
-      }
-      console.error('Error fetching product:', fetchError)
-      return NextResponse.json(
-        { success: false, error: 'Failed to fetch product' },
-        { status: 500 }
-      )
-    }
-
-    // Check if product is referenced in any orders
-    const { data: orderItems, error: orderItemsError } = await supabase
-      .from('order_items')
-      .select('id')
-      .eq('product_id', id)
-      .limit(1)
-
-    if (orderItemsError) {
-      console.error('Error checking order items:', orderItemsError)
-      return NextResponse.json(
-        { success: false, error: 'Failed to check product references' },
-        { status: 500 }
-      )
-    }
-
-    if (orderItems && orderItems.length > 0) {
-      return NextResponse.json(
-        { success: false, error: 'Cannot delete product that is referenced in orders' },
-        { status: 409 }
-      )
+      if (fetchError.code === 'PGRST116') return apiResponse.notFound('Product not found')
+      return apiResponse.internalError('Failed to fetch product', fetchError)
     }
 
     // Delete the product
     const { error } = await supabase.from('products').delete().eq('id', id)
 
     if (error) {
-      console.error('Error deleting product:', error)
-      return NextResponse.json(
-        { success: false, error: 'Failed to delete product' },
-        { status: 500 }
-      )
+      return apiResponse.internalError('Failed to delete product', error)
     }
 
-    return NextResponse.json({
-      success: true,
-      message: 'Product deleted successfully',
-    })
+    return apiResponse.success(null, 'Product deleted successfully')
   } catch (error) {
-    console.error('Error in DELETE /api/products/[id]:', error)
-    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 })
+    return apiResponse.internalError('Internal server error', error)
   }
 }

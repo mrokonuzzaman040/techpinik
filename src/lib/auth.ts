@@ -1,4 +1,4 @@
-import { supabase } from './supabase'
+import { createClient } from './supabase'
 import { User } from '@supabase/supabase-js'
 
 export interface AuthState {
@@ -27,9 +27,14 @@ export class AuthManager {
     return AuthManager.instance
   }
 
+  private getSupabaseClient() {
+    return createClient()
+  }
+
   private async initializeAuth() {
     try {
       console.log('Initializing authentication...')
+      const supabase = this.getSupabaseClient()
 
       // Get initial session
       const {
@@ -70,6 +75,7 @@ export class AuthManager {
   private async checkAdminStatus(user: User) {
     try {
       console.log('Checking admin status for user:', user.id)
+      const supabase = this.getSupabaseClient()
 
       let isAdmin = false
 
@@ -124,6 +130,7 @@ export class AuthManager {
   public async signIn(email: string, password: string) {
     try {
       console.log('Attempting sign in for:', email)
+      const supabase = this.getSupabaseClient()
 
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -153,6 +160,7 @@ export class AuthManager {
 
   public async signOut() {
     try {
+      const supabase = this.getSupabaseClient()
       await supabase.auth.signOut()
       this.updateState({ user: null, isAdmin: false, loading: false })
     } catch (error) {

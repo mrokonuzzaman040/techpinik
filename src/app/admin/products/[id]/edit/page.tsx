@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { ArrowLeft, Upload, X } from 'lucide-react'
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/select'
 import { createClient } from '@/lib/supabase'
 import { Product, Category } from '@/types'
+import { toast } from 'sonner'
 
 export default function EditProductPage() {
   const params = useParams()
@@ -31,6 +32,7 @@ export default function EditProductPage() {
   const [saving, setSaving] = useState(false)
   const [imagePreview, setImagePreview] = useState<string>('')
   const [imageFile, setImageFile] = useState<File | null>(null)
+  const imageInputRef = useRef<HTMLInputElement>(null)
 
   const [formData, setFormData] = useState({
     name: '',
@@ -114,7 +116,7 @@ export default function EditProductPage() {
       })
     } catch (error) {
       console.error('Error fetching data:', error)
-      alert('Error loading product data. Please try again.')
+      toast.error('Error loading product data. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -207,7 +209,7 @@ export default function EditProductPage() {
         throw new Error(error.message || 'Failed to update product')
       }
 
-      alert('Product updated successfully!')
+      toast.success('Product updated successfully!')
       router.push('/admin/products')
     } catch (error) {
       console.error('Error updating product:', error)
@@ -217,7 +219,7 @@ export default function EditProductPage() {
           : typeof error === 'object' && error !== null && 'message' in error
             ? String(error.message)
             : 'Unknown error occurred'
-      alert(`Error updating product: ${errorMessage}. Please try again.`)
+      toast.error(`Error updating product: ${errorMessage}. Please try again.`)
     } finally {
       setSaving(false)
     }
@@ -421,11 +423,11 @@ export default function EditProductPage() {
           <CardContent>
             <div className="space-y-4">
               {imagePreview && (
-                <div className="relative inline-block">
+                <div className="relative inline-block max-w-full">
                   <img
                     src={imagePreview}
                     alt="Product preview"
-                    className="w-32 h-32 object-cover rounded-lg border"
+                    className="h-32 w-32 max-w-full object-cover rounded-lg border"
                   />
                   <button
                     type="button"
@@ -439,18 +441,20 @@ export default function EditProductPage() {
 
               <div>
                 <Label htmlFor="image">Upload New Image</Label>
-                <div className="mt-1 flex items-center gap-4">
+                <div className="mt-1 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
                   <Input
                     id="image"
                     type="file"
                     accept="image/*"
                     onChange={handleImageChange}
                     className="hidden"
+                    ref={imageInputRef}
                   />
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => document.getElementById('image')?.click()}
+                    className="w-full sm:w-auto"
+                    onClick={() => imageInputRef.current?.click()}
                   >
                     <Upload className="h-4 w-4 mr-2" />
                     Choose Image
@@ -519,11 +523,16 @@ export default function EditProductPage() {
         </Card>
 
         {/* Submit Button */}
-        <div className="flex gap-4">
-          <Button type="submit" disabled={saving}>
+        <div className="flex flex-col-reverse gap-2 sm:flex-row sm:gap-4">
+          <Button type="submit" disabled={saving} className="w-full sm:w-auto">
             {saving ? 'Updating...' : 'Update Product'}
           </Button>
-          <Button type="button" variant="outline" onClick={() => router.back()}>
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full sm:w-auto"
+            onClick={() => router.back()}
+          >
             Cancel
           </Button>
         </div>

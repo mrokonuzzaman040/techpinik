@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { ArrowLeft, Upload, X } from 'lucide-react'
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
@@ -12,6 +12,7 @@ import { Switch } from '@/components/ui/switch'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { createClient } from '@/lib/supabase'
 import { Category } from '@/types'
+import { toast } from 'sonner'
 
 export default function EditCategoryPage() {
   const params = useParams()
@@ -25,6 +26,8 @@ export default function EditCategoryPage() {
   const [bannerPreview, setBannerPreview] = useState<string>('')
   const [iconFile, setIconFile] = useState<File | null>(null)
   const [bannerFile, setBannerFile] = useState<File | null>(null)
+  const iconInputRef = useRef<HTMLInputElement>(null)
+  const bannerInputRef = useRef<HTMLInputElement>(null)
 
   const [formData, setFormData] = useState({
     name: '',
@@ -49,7 +52,7 @@ export default function EditCategoryPage() {
       if (error) throw error
 
       setCategory(data)
-      setIconPreview(data.icon || '')
+      setIconPreview(data.image_url || data.icon || '')
       setBannerPreview(data.banner_image_url || '')
 
       setFormData({
@@ -59,7 +62,7 @@ export default function EditCategoryPage() {
       })
     } catch (error) {
       console.error('Error fetching category:', error)
-      alert('Error loading category data. Please try again.')
+      toast.error('Error loading category data. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -130,7 +133,7 @@ export default function EditCategoryPage() {
     try {
       const supabase = createClient()
 
-      let iconUrl = category?.icon || ''
+      let iconUrl = category?.image_url || category?.icon || ''
       let bannerUrl = category?.banner_image_url || ''
 
       // Upload new icon if selected
@@ -150,6 +153,8 @@ export default function EditCategoryPage() {
       const updateData = {
         name: formData.name,
         description: formData.description,
+        image_url: iconUrl,
+        // Keep legacy field in sync for older reads.
         icon: iconUrl,
         banner_image_url: bannerUrl,
         is_active: formData.is_active,
@@ -169,13 +174,13 @@ export default function EditCategoryPage() {
         throw new Error(result?.error || 'Failed to update category')
       }
 
-      alert('Category updated successfully!')
+      toast.success('Category updated successfully!')
       router.push('/admin/categories')
     } catch (error) {
       console.error('Error updating category:', error)
       const message =
         error instanceof Error ? error.message : 'Error updating category. Please try again.'
-      alert(message)
+      toast.error(message)
     } finally {
       setSaving(false)
     }
@@ -263,11 +268,11 @@ export default function EditCategoryPage() {
           <CardContent>
             <div className="space-y-4">
               {iconPreview && (
-                <div className="relative inline-block">
+                <div className="relative inline-block max-w-full">
                   <img
                     src={iconPreview}
                     alt="Icon preview"
-                    className="w-24 h-24 object-cover rounded-lg border"
+                    className="h-24 w-24 max-w-full object-cover rounded-lg border"
                   />
                   <button
                     type="button"
@@ -281,18 +286,20 @@ export default function EditCategoryPage() {
 
               <div>
                 <Label htmlFor="icon">Upload New Icon</Label>
-                <div className="mt-1 flex items-center gap-4">
+                <div className="mt-1 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
                   <Input
                     id="icon"
                     type="file"
                     accept="image/*"
                     onChange={handleIconChange}
                     className="hidden"
+                    ref={iconInputRef}
                   />
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => document.getElementById('icon')?.click()}
+                    className="w-full sm:w-auto"
+                    onClick={() => iconInputRef.current?.click()}
                   >
                     <Upload className="h-4 w-4 mr-2" />
                     Choose Icon
@@ -314,11 +321,11 @@ export default function EditCategoryPage() {
           <CardContent>
             <div className="space-y-4">
               {bannerPreview && (
-                <div className="relative inline-block">
+                <div className="relative inline-block max-w-full">
                   <img
                     src={bannerPreview}
                     alt="Banner preview"
-                    className="w-64 h-32 object-cover rounded-lg border"
+                    className="h-32 w-full max-w-md object-cover rounded-lg border"
                   />
                   <button
                     type="button"
@@ -332,18 +339,20 @@ export default function EditCategoryPage() {
 
               <div>
                 <Label htmlFor="banner">Upload New Banner</Label>
-                <div className="mt-1 flex items-center gap-4">
+                <div className="mt-1 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
                   <Input
                     id="banner"
                     type="file"
                     accept="image/*"
                     onChange={handleBannerChange}
                     className="hidden"
+                    ref={bannerInputRef}
                   />
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => document.getElementById('banner')?.click()}
+                    className="w-full sm:w-auto"
+                    onClick={() => bannerInputRef.current?.click()}
                   >
                     <Upload className="h-4 w-4 mr-2" />
                     Choose Banner
@@ -358,11 +367,16 @@ export default function EditCategoryPage() {
         </Card>
 
         {/* Submit Button */}
-        <div className="flex gap-4">
-          <Button type="submit" disabled={saving}>
+        <div className="flex flex-col-reverse gap-2 sm:flex-row sm:gap-4">
+          <Button type="submit" disabled={saving} className="w-full sm:w-auto">
             {saving ? 'Updating...' : 'Update Category'}
           </Button>
-          <Button type="button" variant="outline" onClick={() => router.back()}>
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full sm:w-auto"
+            onClick={() => router.back()}
+          >
             Cancel
           </Button>
         </div>

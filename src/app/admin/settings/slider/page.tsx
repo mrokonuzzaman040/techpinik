@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArrowLeft, Plus, Edit, Trash2, Eye, EyeOff, Upload, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -27,6 +27,7 @@ import { Badge } from '@/components/ui/badge'
 import { supabase } from '@/lib/supabase'
 import { SliderItem } from '@/types'
 import Link from 'next/link'
+import { toast } from 'sonner'
 
 export default function SliderManagementPage() {
   const [sliders, setSliders] = useState<SliderItem[]>([])
@@ -36,6 +37,7 @@ export default function SliderManagementPage() {
   const [editingSlider, setEditingSlider] = useState<SliderItem | null>(null)
   const [imagePreview, setImagePreview] = useState<string>('')
   const [imageFile, setImageFile] = useState<File | null>(null)
+  const sliderImageInputRef = useRef<HTMLInputElement>(null)
 
   const [formData, setFormData] = useState({
     title: '',
@@ -143,7 +145,7 @@ export default function SliderManagementPage() {
       if (imageFile) {
         imageUrl = await uploadImage(imageFile)
       } else if (!imagePreview && !editingSlider) {
-        alert('Please select an image for the slider')
+        toast.error('Please select an image for the slider')
         setSaving(false)
         return
       }
@@ -175,12 +177,12 @@ export default function SliderManagementPage() {
       await fetchSliders()
       setIsDialogOpen(false)
       resetForm()
-      alert(editingSlider ? 'Slider updated successfully!' : 'Slider created successfully!')
+      toast.success(editingSlider ? 'Slider updated successfully!' : 'Slider created successfully!')
     } catch (error: unknown) {
       console.error('Error saving slider:', error)
       const e = error as { message?: string; details?: string; hint?: string }
       const msg = [e.message, e.details, e.hint].filter(Boolean).join(' — ') || 'Please try again.'
-      alert(`Error saving slider: ${msg}`)
+      toast.error(`Error saving slider: ${msg}`)
     } finally {
       setSaving(false)
     }
@@ -201,7 +203,7 @@ export default function SliderManagementPage() {
       await fetchSliders()
     } catch (error) {
       console.error('Error updating slider status:', error)
-      alert('Error updating slider status. Please try again.')
+      toast.error('Error updating slider status. Please try again.')
     }
   }
 
@@ -216,10 +218,10 @@ export default function SliderManagementPage() {
       if (error) throw error
 
       await fetchSliders()
-      alert('Slider deleted successfully!')
+      toast.success('Slider deleted successfully!')
     } catch (error) {
       console.error('Error deleting slider:', error)
-      alert('Error deleting slider. Please try again.')
+      toast.error('Error deleting slider. Please try again.')
     }
   }
 
@@ -267,7 +269,8 @@ export default function SliderManagementPage() {
               </Button>
             </div>
           ) : (
-            <Table>
+            <div className="overflow-x-auto">
+              <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Image</TableHead>
@@ -344,7 +347,8 @@ export default function SliderManagementPage() {
                   </TableRow>
                 ))}
               </TableBody>
-            </Table>
+              </Table>
+            </div>
           )}
         </CardContent>
       </Card>
@@ -364,11 +368,11 @@ export default function SliderManagementPage() {
             <div>
               <Label>Slider Image *</Label>
               {imagePreview && (
-                <div className="relative inline-block mt-2">
+                <div className="relative mt-2 inline-block max-w-full">
                   <img
                     src={imagePreview}
                     alt="Preview"
-                    className="w-full h-48 object-cover rounded-lg border"
+                    className="h-48 w-full max-w-xl object-cover rounded-lg border"
                   />
                   <button
                     type="button"
@@ -387,11 +391,13 @@ export default function SliderManagementPage() {
                   accept="image/*"
                   onChange={handleImageChange}
                   className="hidden"
+                  ref={sliderImageInputRef}
                 />
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => document.getElementById('image')?.click()}
+                  className="w-full sm:w-auto"
+                  onClick={() => sliderImageInputRef.current?.click()}
                 >
                   <Upload className="h-4 w-4 mr-2" />
                   {imagePreview ? 'Change Image' : 'Upload Image'}
@@ -456,11 +462,16 @@ export default function SliderManagementPage() {
               </div>
             </div>
 
-            <div className="flex gap-4 pt-4">
-              <Button type="submit" disabled={saving}>
+            <div className="flex flex-col-reverse gap-2 pt-4 sm:flex-row sm:gap-4">
+              <Button type="submit" disabled={saving} className="w-full sm:w-auto">
                 {saving ? 'Saving...' : editingSlider ? 'Update Slider' : 'Add Slider'}
               </Button>
-              <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full sm:w-auto"
+                onClick={() => setIsDialogOpen(false)}
+              >
                 Cancel
               </Button>
             </div>

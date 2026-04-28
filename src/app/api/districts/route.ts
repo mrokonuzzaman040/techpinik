@@ -1,110 +1,63 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
-import { CreateDistrictData } from '@/types'
+import { NextRequest } from 'next/server'
+import { createServerClient } from '@/lib/supabase'; import { isAdmin } from '@/lib/supabase-server'
+import { apiResponse } from '@/lib/utils'
+import { districtSchema } from '@/lib/validations'
 
 // GET /api/districts - Get all districts
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(request.url)
-    const search = searchParams.get('search')
-    const sort_by = searchParams.get('sort_by') || 'name'
-    const sort_order = searchParams.get('sort_order') || 'asc'
-
-    let query = supabase.from('districts').select('*')
-
-    // Apply search filter
-    if (search) {
-      query = query.ilike('name', `%${search}%`)
-    }
-
-    // Apply sorting
-    query = query.order(sort_by, { ascending: sort_order === 'asc' })
-
-    const { data: districts, error } = await query
+    const supabase = createServerClient()
+    const { data: districts, error } = await supabase
+      .from('districts')
+      .select('*')
+      .order('name')
 
     if (error) {
-      console.error('Error fetching districts:', error)
-      return NextResponse.json(
-        { success: false, error: 'Failed to fetch districts' },
-        { status: 500 }
-      )
+      return apiResponse.internalError('Failed to fetch districts', error)
     }
 
-    return NextResponse.json({
-      success: true,
-      data: districts,
-    })
+    return apiResponse.success(districts)
   } catch (error) {
-    console.error('Error in GET /api/districts:', error)
-    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 })
+    return apiResponse.internalError('Internal server error', error)
   }
 }
 
-// POST /api/districts - Create a new district
+// POST /api/districts - Create a new district (Admin only)
 export async function POST(request: NextRequest) {
   try {
-    const body: CreateDistrictData = await request.json()
-
-    // Validate required fields
-    if (!body.name || body.delivery_charge === undefined) {
-      return NextResponse.json(
-        { success: false, error: 'Missing required fields: name, delivery_charge' },
-        { status: 400 }
-      )
+    // Security check
+    if (!(await isAdmin())) {
+      return apiResponse.unauthorized()
     }
 
-    // Validate delivery charge is non-negative
-    if (body.delivery_charge < 0) {
-      return NextResponse.json(
-        { success: false, error: 'Delivery charge must be non-negative' },
-        { status: 400 }
-      )
+    const body = await request.json()
+    const validation = districtSchema.safeParse(body)
+    
+    if (!validation.success) {
+      return apiResponse.badRequest(validation.error.errors[0].message)
     }
 
-    // Check if district with same name already exists
-    const { data: existingDistrict } = await supabase
-      .from('districts')
-      .select('id')
-      .ilike('name', body.name)
-      .single()
+    const data = validation.data
+    const supabase = createServerClient()
 
-    if (existingDistrict) {
-      return NextResponse.json(
-        { success: false, error: 'District with this name already exists' },
-        { status: 409 }
-      )
-    }
-
-    // Create the district
     const { data: district, error } = await supabase
       .from('districts')
       .insert([
         {
-          name: body.name.trim(),
-          delivery_charge: body.delivery_charge,
+          name: data.name,
+          delivery_charge: data.delivery_charge,
+          is_active: data.is_active,
         },
       ])
       .select()
       .single()
 
     if (error) {
-      console.error('Error creating district:', error)
-      return NextResponse.json(
-        { success: false, error: 'Failed to create district' },
-        { status: 500 }
-      )
+      return apiResponse.internalError('Failed to create district', error)
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        data: district,
-        message: 'District created successfully',
-      },
-      { status: 201 }
-    )
+    return apiResponse.success(district, 'District created successfully', 201)
   } catch (error) {
-    console.error('Error in POST /api/districts:', error)
-    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 })
+    return apiResponse.internalError('Internal server error', error)
   }
 }

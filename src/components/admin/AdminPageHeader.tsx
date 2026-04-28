@@ -25,7 +25,9 @@ export default function AdminPageHeader({
         </div>
 
         {actions ? (
-          <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div>
+          <div className="flex w-full shrink-0 flex-wrap items-stretch gap-2 md:w-auto md:items-center md:justify-end">
+            {actions}
+          </div>
         ) : null}
       </div>
     </div>

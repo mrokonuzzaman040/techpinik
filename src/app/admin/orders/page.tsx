@@ -39,6 +39,7 @@ import {
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
 import { createClient } from '@/lib/supabase'
 import { Order, OrderStatus } from '@/types'
+import { toast } from 'sonner'
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([])
@@ -113,7 +114,7 @@ export default function AdminOrdersPage() {
       )
     } catch (error) {
       console.error('Error updating order status:', error)
-      alert('Error updating order status. Please try again.')
+      toast.error('Error updating order status. Please try again.')
     }
   }
 
@@ -135,7 +136,7 @@ export default function AdminOrdersPage() {
       )
     } catch (error) {
       console.error('Error updating payment status:', error)
-      alert('Error updating payment status. Please try again.')
+      toast.error('Error updating payment status. Please try again.')
     }
   }
 
@@ -606,7 +607,7 @@ export default function AdminOrdersPage() {
         title="Orders"
         description="Manage customer orders and fulfillment."
         actions={
-          <Button variant="outline">
+          <Button variant="outline" className="w-full sm:w-auto">
             <Download className="h-4 w-4 mr-2" />
             Export Orders
           </Button>

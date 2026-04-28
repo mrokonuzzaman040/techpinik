@@ -6,6 +6,7 @@ import { CalendarDays, ChevronRight, Store } from 'lucide-react'
 import AdminAuthWrapper from '@/components/admin/AdminAuthWrapper'
 import AdminSidebar from '@/components/layout/AdminSidebar'
 import { Button } from '@/components/ui/button'
+import { Toaster } from 'sonner'
 
 interface AdminShellProps {
   children: React.ReactNode
@@ -89,6 +90,7 @@ export default function AdminShell({ children }: AdminShellProps) {
     <AdminAuthWrapper>
       <div className="min-h-screen bg-slate-100 text-slate-900">
         <AdminSidebar />
+        <Toaster richColors position="top-right" />
 
         <div className="min-h-screen lg:pl-64">
           <header className="sticky top-0 z-30 border-b border-slate-200 bg-white">

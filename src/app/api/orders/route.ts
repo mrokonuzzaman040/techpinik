@@ -1,10 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
-import { CreateOrderData, OrderStatus } from '@/types'
+import { NextRequest } from 'next/server'
+import { createServerClient } from '@/lib/supabase'; import { isAdmin } from '@/lib/supabase-server'
+import { apiResponse } from '@/lib/utils'
+import { orderSchema } from '@/lib/validations'
+import { OrderStatus } from '@/types'
 
-// GET /api/orders - Get all orders with filtering
+// GET /api/orders - Get all orders with filtering (Admin only)
 export async function GET(request: NextRequest) {
   try {
+    // Security check: Only admins can view the full order list
+    if (!(await isAdmin())) {
+      return apiResponse.unauthorized()
+    }
+
     const { searchParams } = new URL(request.url)
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '10')
@@ -15,6 +22,7 @@ export async function GET(request: NextRequest) {
     const sort_by = searchParams.get('sort_by') || 'created_at'
     const sort_order = searchParams.get('sort_order') || 'desc'
 
+    const supabase = createServerClient()
     const offset = (page - 1) * limit
 
     let query = supabase.from('orders').select(
@@ -32,21 +40,10 @@ export async function GET(request: NextRequest) {
     )
 
     // Apply filters
-    if (status) {
-      query = query.eq('status', status)
-    }
-
-    if (customer_phone) {
-      query = query.ilike('customer_phone', `%${customer_phone}%`)
-    }
-
-    if (date_from) {
-      query = query.gte('created_at', date_from)
-    }
-
-    if (date_to) {
-      query = query.lte('created_at', date_to)
-    }
+    if (status) query = query.eq('status', status)
+    if (customer_phone) query = query.ilike('customer_phone', `%${customer_phone}%`)
+    if (date_from) query = query.gte('created_at', date_from)
+    if (date_to) query = query.lte('created_at', date_to)
 
     // Apply sorting
     query = query.order(sort_by, { ascending: sort_order === 'asc' })
@@ -57,15 +54,13 @@ export async function GET(request: NextRequest) {
     const { data: orders, error, count } = await query
 
     if (error) {
-      console.error('Error fetching orders:', error)
-      return NextResponse.json({ success: false, error: 'Failed to fetch orders' }, { status: 500 })
+      return apiResponse.internalError('Failed to fetch orders', error)
     }
 
     const totalPages = Math.ceil((count || 0) / limit)
 
-    return NextResponse.json({
-      success: true,
-      data: orders,
+    return apiResponse.success({
+      orders,
       pagination: {
         page,
         limit,
@@ -76,47 +71,40 @@ export async function GET(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('Error in GET /api/orders:', error)
-    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 })
+    return apiResponse.internalError('Internal server error', error)
   }
 }
 
-// POST /api/orders - Create a new order
+// POST /api/orders - Create a new order (Public)
 export async function POST(request: NextRequest) {
   try {
-    const body: CreateOrderData = await request.json()
-
-    // Validate required fields
-    if (
-      !body.customer_name ||
-      !body.customer_phone ||
-      !body.customer_address ||
-      !body.district_id ||
-      !body.items ||
-      body.items.length === 0
-    ) {
-      return NextResponse.json(
-        { success: false, error: 'Missing required fields' },
-        { status: 400 }
-      )
+    const body = await request.json()
+    
+    // Validate order data
+    const validation = orderSchema.safeParse(body)
+    if (!validation.success) {
+      return apiResponse.badRequest(validation.error.errors[0].message)
     }
+
+    const data = validation.data
+    const supabase = createServerClient()
 
     // Validate district exists and get delivery charge
     const { data: district, error: districtError } = await supabase
       .from('districts')
       .select('id, name, delivery_charge')
-      .eq('id', body.district_id)
+      .eq('id', data.district_id)
       .single()
 
     if (districtError || !district) {
-      return NextResponse.json({ success: false, error: 'Invalid district' }, { status: 400 })
+      return apiResponse.badRequest('Invalid district')
     }
 
     // Validate products and calculate totals
     let subtotal = 0
     const validatedItems = []
 
-    for (const item of body.items) {
+    for (const item of data.items) {
       const { data: product, error: productError } = await supabase
         .from('products')
         .select('id, name, price, stock_quantity')
@@ -124,21 +112,14 @@ export async function POST(request: NextRequest) {
         .single()
 
       if (productError || !product) {
-        return NextResponse.json(
-          { success: false, error: `Product not found: ${item.product_id}` },
-          { status: 400 }
-        )
+        return apiResponse.badRequest(`Product not found: ${item.product_id}`)
       }
 
       if (product.stock_quantity < item.quantity) {
-        return NextResponse.json(
-          { success: false, error: `Insufficient stock for product: ${product.name}` },
-          { status: 400 }
-        )
+        return apiResponse.badRequest(`Insufficient stock for product: ${product.name}`)
       }
 
-      const itemTotal = product.price * item.quantity
-      subtotal += itemTotal
+      subtotal += product.price * item.quantity
 
       validatedItems.push({
         product_id: item.product_id,
@@ -155,15 +136,14 @@ export async function POST(request: NextRequest) {
       .from('orders')
       .insert([
         {
-          customer_name: body.customer_name,
-          customer_phone: body.customer_phone,
-          customer_email: body.customer_email || null,
-          customer_address: body.customer_address,
-          district_id: body.district_id,
-          subtotal,
-          delivery_charge,
+          customer_name: data.customer_name,
+          customer_phone: data.customer_phone,
+          customer_email: data.customer_email || null,
+          customer_address: data.customer_address,
+          district_id: data.district_id,
           total_amount,
-          notes: body.notes || null,
+          delivery_charge,
+          notes: data.notes || null,
           status: 'pending',
         },
       ])
@@ -171,8 +151,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (orderError) {
-      console.error('Error creating order:', orderError)
-      return NextResponse.json({ success: false, error: 'Failed to create order' }, { status: 500 })
+      return apiResponse.internalError('Failed to create order', orderError)
     }
 
     // Create order items
@@ -184,30 +163,20 @@ export async function POST(request: NextRequest) {
     const { error: itemsError } = await supabase.from('order_items').insert(orderItemsData)
 
     if (itemsError) {
-      console.error('Error creating order items:', itemsError)
-      // Rollback: delete the order
+      // Rollback: delete the order if items fail
       await supabase.from('orders').delete().eq('id', order.id)
-      return NextResponse.json(
-        { success: false, error: 'Failed to create order items' },
-        { status: 500 }
-      )
+      return apiResponse.internalError('Failed to create order items', itemsError)
     }
 
     // Update product stock quantities
     for (const item of validatedItems) {
-      const { error: stockError } = await supabase
-        .from('products')
-        .update({
-          stock_quantity: supabase.rpc('decrement_stock', {
-            product_id: item.product_id,
-            quantity: item.quantity,
-          }),
-        })
-        .eq('id', item.product_id)
+      const { error: stockError } = await supabase.rpc('decrement_stock', {
+        product_id: item.product_id,
+        quantity: item.quantity,
+      })
 
       if (stockError) {
-        console.error('Error updating stock:', stockError)
-        // Note: In a production app, you might want to implement proper transaction rollback
+        console.error('Error updating stock for product', item.product_id, ':', stockError)
       }
     }
 
@@ -229,28 +198,12 @@ export async function POST(request: NextRequest) {
       .eq('id', order.id)
       .single()
 
-    if (fetchError) {
-      console.error('Error fetching complete order:', fetchError)
-      return NextResponse.json(
-        {
-          success: true,
-          data: order,
-          message: 'Order created successfully',
-        },
-        { status: 201 }
-      )
-    }
-
-    return NextResponse.json(
-      {
-        success: true,
-        data: completeOrder,
-        message: 'Order created successfully',
-      },
-      { status: 201 }
+    return apiResponse.success(
+      fetchError ? order : completeOrder,
+      'Order created successfully',
+      201
     )
   } catch (error) {
-    console.error('Error in POST /api/orders:', error)
-    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 })
+    return apiResponse.internalError('Internal server error', error)
   }
 }

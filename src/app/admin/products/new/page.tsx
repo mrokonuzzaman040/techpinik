@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, Upload, X } from 'lucide-react'
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
@@ -19,6 +19,7 @@ import {
 import { Switch } from '@/components/ui/switch'
 import { createClient } from '@/lib/supabase'
 import { Category, ProductForm } from '@/types'
+import { toast } from 'sonner'
 
 export default function AddProductPage() {
   const router = useRouter()
@@ -48,6 +49,7 @@ export default function AddProductPage() {
     box_contents: [],
   })
   const [imageUploading, setImageUploading] = useState(false)
+  const productImageInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     fetchCategories()
@@ -95,7 +97,7 @@ export default function AddProductPage() {
       setFormData((prev) => ({ ...prev, images: [url], image_url: url }))
     } catch (err) {
       console.error('Image upload error:', err)
-      alert(err instanceof Error ? err.message : 'Failed to upload image')
+      toast.error(err instanceof Error ? err.message : 'Failed to upload image')
     } finally {
       setImageUploading(false)
       e.target.value = ''
@@ -157,7 +159,7 @@ export default function AddProductPage() {
         throw new Error('Product was not created successfully')
       }
 
-      alert('Product created successfully!')
+      toast.success('Product created successfully!')
       router.push('/admin/products')
     } catch (error) {
       console.error('Error creating product:', error)
@@ -167,7 +169,7 @@ export default function AddProductPage() {
           : typeof error === 'object' && error !== null && 'message' in error
             ? String(error.message)
             : 'Unknown error occurred'
-      alert(`Error creating product: ${errorMessage}. Please try again.`)
+      toast.error(`Error creating product: ${errorMessage}. Please try again.`)
     } finally {
       setLoading(false)
     }
@@ -383,7 +385,7 @@ export default function AddProductPage() {
                       </Button>
                     </div>
                   ) : (
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-5 sm:p-6 text-center">
                       <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                       <p className="text-sm text-gray-600 mb-2">
                         {imageUploading ? 'Uploading...' : 'Upload product image'}
@@ -395,12 +397,17 @@ export default function AddProductPage() {
                         className="hidden"
                         id="image-upload"
                         disabled={imageUploading}
+                        ref={productImageInputRef}
                       />
-                      <Label htmlFor="image-upload" className="cursor-pointer">
-                        <Button type="button" variant="outline" size="sm" disabled={imageUploading}>
-                          Choose File
-                        </Button>
-                      </Label>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        disabled={imageUploading}
+                        onClick={() => productImageInputRef.current?.click()}
+                      >
+                        Choose File
+                      </Button>
                     </div>
                   )}
                 </div>
@@ -460,11 +467,16 @@ export default function AddProductPage() {
               </CardContent>
             </Card>
 
-            <div className="flex gap-2">
-              <Button type="submit" className="flex-1" disabled={loading}>
+            <div className="flex flex-col-reverse gap-2 sm:flex-row">
+              <Button type="submit" className="w-full sm:flex-1" disabled={loading}>
                 {loading ? 'Creating...' : 'Create Product'}
               </Button>
-              <Button type="button" variant="outline" onClick={() => router.back()}>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full sm:w-auto"
+                onClick={() => router.back()}
+              >
                 Cancel
               </Button>
             </div>

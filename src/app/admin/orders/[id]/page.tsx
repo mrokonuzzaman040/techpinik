@@ -36,6 +36,7 @@ import {
 } from '@/components/ui/select'
 import { createClient } from '@/lib/supabase'
 import { Order, OrderItem, OrderStatus } from '@/types'
+import { toast } from 'sonner'
 
 export default function AdminOrderDetailPage() {
   const params = useParams()
@@ -119,7 +120,7 @@ export default function AdminOrderDetailPage() {
       setOrder({ ...order, status: newStatus as OrderStatus })
     } catch (error) {
       console.error('Error updating order status:', error)
-      alert('Error updating order status. Please try again.')
+      toast.error('Error updating order status. Please try again.')
     }
   }
 
@@ -139,7 +140,7 @@ export default function AdminOrderDetailPage() {
       setOrder({ ...order, payment_status: newStatus })
     } catch (error) {
       console.error('Error updating payment status:', error)
-      alert('Error updating payment status. Please try again.')
+      toast.error('Error updating payment status. Please try again.')
     }
   }
 
@@ -234,7 +235,7 @@ export default function AdminOrderDetailPage() {
           </Button>
         }
         actions={
-          <Button variant="outline" onClick={printOrder}>
+          <Button variant="outline" className="w-full sm:w-auto" onClick={printOrder}>
             <Printer className="h-4 w-4 mr-2" />
             Print
           </Button>
@@ -253,7 +254,8 @@ export default function AdminOrderDetailPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Table>
+              <div className="overflow-x-auto">
+                <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Product</TableHead>
@@ -282,7 +284,8 @@ export default function AdminOrderDetailPage() {
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table>
+                </Table>
+              </div>
 
               <Separator className="my-4" />
 

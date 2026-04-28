@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase'
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createClient()
+    const supabase = createServerClient()
     const formData = await request.formData()
     const file = formData.get('file') as File
     const bucket = (formData.get('bucket') as string) || 'images'
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const supabase = createClient()
+    const supabase = createServerClient()
     const { searchParams } = new URL(request.url)
     const path = searchParams.get('path')
     const bucket = searchParams.get('bucket') || 'images'

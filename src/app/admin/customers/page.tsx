@@ -96,7 +96,7 @@ export default function AdminCustomersPage() {
         title="Customers"
         description="Manage your customer records and contact information."
         actions={
-          <Button>
+          <Button className="w-full sm:w-auto">
             <Plus className="h-4 w-4 mr-2" />
             Add Customer
           </Button>
@@ -150,7 +150,7 @@ export default function AdminCustomersPage() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full min-w-[860px]">
                 <thead>
                   <tr className="border-b">
                     <th className="text-left py-3 px-4 font-medium text-gray-700">Customer</th>
@@ -208,7 +208,7 @@ export default function AdminCustomersPage() {
                         {formatDate(customer.created_at)}
                       </td>
                       <td className="py-4 px-4">
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-1 sm:space-x-2">
                           <Button variant="ghost" size="sm">
                             <Eye className="h-4 w-4" />
                           </Button>

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createClient()
+    const supabase = createServerClient()
 
     // Get total orders
     const { count: totalOrders } = await supabase
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     const { data: revenueData } = await supabase
       .from('orders')
       .select('total_amount')
-      .eq('payment_status', 'paid')
+      .eq('status', 'delivered') // Using status 'delivered' as proxy for revenue if payment_status doesn't exist
 
     const totalRevenue =
       revenueData?.reduce((sum, order) => sum + (order.total_amount || 0), 0) || 0
@@ -35,7 +35,6 @@ export async function GET(request: NextRequest) {
       .select(
         `
         id,
-        order_number,
         customer_name,
         total_amount,
         status,
@@ -69,13 +68,15 @@ export async function GET(request: NextRequest) {
 
     topSellingData?.forEach((item) => {
       const productId = item.product_id
-      if (!productSales[productId]) {
-        productSales[productId] = {
-          product: item.products,
-          totalSold: 0,
+      if (item.products) {
+        if (!productSales[productId]) {
+          productSales[productId] = {
+            product: item.products,
+            totalSold: 0,
+          }
         }
+        productSales[productId].totalSold += item.quantity
       }
-      productSales[productId].totalSold += item.quantity
     })
 
     const topSellingProducts = Object.values(productSales)
