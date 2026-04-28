@@ -33,7 +33,6 @@ export class AuthManager {
 
   private async initializeAuth() {
     try {
-      console.log('Initializing authentication...')
       const supabase = this.getSupabaseClient()
 
       // Get initial session
@@ -49,17 +48,13 @@ export class AuthManager {
       }
 
       if (session?.user) {
-        console.log('User found in session:', session.user.email)
         await this.checkAdminStatus(session.user)
       } else {
-        console.log('No user in session')
         this.updateState({ user: null, isAdmin: false, loading: false })
       }
 
       // Listen for auth changes
       supabase.auth.onAuthStateChange(async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.email)
-
         if (session?.user) {
           await this.checkAdminStatus(session.user)
         } else {
@@ -74,7 +69,6 @@ export class AuthManager {
 
   private async checkAdminStatus(user: User) {
     try {
-      console.log('Checking admin status for user:', user.id)
       const supabase = this.getSupabaseClient()
 
       let isAdmin = false
@@ -99,10 +93,9 @@ export class AuthManager {
           })
         }
       } catch (error) {
-        console.warn('Profiles admin check failed:', error)
+        // Silently fail profile check if JWT says admin
       }
 
-      console.log('Final admin check result:', isAdmin)
       this.updateState({ user, isAdmin, loading: false })
     } catch (error) {
       console.error('Admin status check error:', error)
@@ -129,7 +122,6 @@ export class AuthManager {
 
   public async signIn(email: string, password: string) {
     try {
-      console.log('Attempting sign in for:', email)
       const supabase = this.getSupabaseClient()
 
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -145,8 +137,6 @@ export class AuthManager {
       if (!data.user) {
         throw new Error('No user data returned')
       }
-
-      console.log('Sign in successful for:', data.user.email)
 
       // Immediately check admin status after successful sign in
       await this.checkAdminStatus(data.user)

@@ -7,7 +7,11 @@ export interface SiteSettings {
   site_keywords: string
   meta_title: string
   meta_description: string
+  site_logo: string
+  favicon: string
   facebook_pixel_id: string
+  maintenance_mode: boolean
+  maintenance_message: string
 }
 
 export const defaultSiteSettings: SiteSettings = {
@@ -17,7 +21,11 @@ export const defaultSiteSettings: SiteSettings = {
   meta_title: 'TechPinik - Electronics & Gadgets Store in Bangladesh',
   meta_description:
     'Shop the latest electronics, mobile phones, laptops, and accessories at TechPinik. Fast delivery across Bangladesh with competitive prices.',
+  site_logo: '',
+  favicon: '',
   facebook_pixel_id: '',
+  maintenance_mode: false,
+  maintenance_message: 'We are currently performing scheduled maintenance. Please check back soon.',
 }
 
 const normalizeSettings = (
@@ -28,7 +36,11 @@ const normalizeSettings = (
   site_keywords: row?.site_keywords || defaultSiteSettings.site_keywords,
   meta_title: row?.meta_title || defaultSiteSettings.meta_title,
   meta_description: row?.meta_description || defaultSiteSettings.meta_description,
+  site_logo: row?.site_logo || defaultSiteSettings.site_logo,
+  favicon: row?.favicon || defaultSiteSettings.favicon,
   facebook_pixel_id: row?.facebook_pixel_id || defaultSiteSettings.facebook_pixel_id,
+  maintenance_mode: row?.maintenance_mode ?? defaultSiteSettings.maintenance_mode,
+  maintenance_message: row?.maintenance_message || defaultSiteSettings.maintenance_message,
 })
 
 export const getPublicSiteSettings = cache(async (): Promise<SiteSettings> => {
@@ -37,7 +49,7 @@ export const getPublicSiteSettings = cache(async (): Promise<SiteSettings> => {
     const { data, error } = await supabase
       .from('site_settings')
       .select(
-        'site_name, site_description, site_keywords, meta_title, meta_description, facebook_pixel_id'
+        'site_name, site_description, site_keywords, meta_title, meta_description, site_logo, favicon, facebook_pixel_id, maintenance_mode, maintenance_message'
       )
       .eq('id', 1)
       .single()

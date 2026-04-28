@@ -53,8 +53,6 @@ export default function AdminAuthWrapper({ children }: AdminAuthWrapperProps) {
       if (!state.loading) {
         if (!state.user || !state.isAdmin) {
           router.replace('/admin/login?error=unauthorized')
-        } else {
-          console.log('User authenticated and is admin, allowing access')
         }
       }
     })

@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
     // Validate order data
     const validation = orderSchema.safeParse(body)
     if (!validation.success) {
-      return apiResponse.badRequest(validation.error.errors[0].message)
+      return apiResponse.badRequest(validation.error.issues[0]?.message ?? 'Invalid request payload')
     }
 
     const data = validation.data

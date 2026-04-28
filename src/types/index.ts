@@ -133,6 +133,12 @@ export interface Order {
   delivery_charge: number
   payment_method: string
   payment_status: string
+  logistics_provider?: 'pathao' | 'steadfast' | null
+  logistics_status?: string | null
+  logistics_consignment_id?: string | null
+  logistics_tracking_code?: string | null
+  logistics_payload?: Record<string, unknown> | null
+  logistics_transferred_at?: string | null
   status: OrderStatus
   order_status?: OrderStatus
   created_at: string

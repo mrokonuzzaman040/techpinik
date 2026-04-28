@@ -13,6 +13,7 @@ import {
   Mail,
   Edit,
   Printer,
+  Truck,
 } from 'lucide-react'
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
 import { Button } from '@/components/ui/button'
@@ -46,6 +47,8 @@ export default function AdminOrderDetailPage() {
   const [order, setOrder] = useState<Order | null>(null)
   const [orderItems, setOrderItems] = useState<OrderItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [transferProvider, setTransferProvider] = useState<'pathao' | 'steadfast'>('pathao')
+  const [transferring, setTransferring] = useState(false)
 
   useEffect(() => {
     if (orderId) {
@@ -199,6 +202,39 @@ export default function AdminOrderDetailPage() {
 
   const printOrder = () => {
     window.print()
+  }
+
+  const transferToLogistics = async () => {
+    if (!order || transferring) return
+
+    try {
+      setTransferring(true)
+      const response = await fetch(`/api/admin/orders/${order.id}/transfer-logistics`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ provider: transferProvider }),
+      })
+
+      const result = await response.json()
+      if (!response.ok || !result?.success) {
+        throw new Error(result?.error || 'Failed to transfer order')
+      }
+
+      const updatedOrder = result?.data?.order
+      if (updatedOrder) {
+        setOrder(updatedOrder as Order)
+      } else {
+        await fetchOrderDetails()
+      }
+
+      toast.success(
+        `Order transferred to ${transferProvider === 'pathao' ? 'Pathao' : 'SteadFast'} successfully`
+      )
+    } catch (error: any) {
+      toast.error(error?.message || 'Failed to transfer order to logistics')
+    } finally {
+      setTransferring(false)
+    }
   }
 
   if (loading) {
@@ -450,6 +486,66 @@ export default function AdminOrderDetailPage() {
                 <span className="text-sm text-gray-600">Total Amount:</span>
                 <span className="font-bold text-lg">{formatCurrency(order.total_amount)}</span>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Logistics Transfer */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Truck className="h-5 w-5" />
+                Logistics Transfer
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Select Provider
+                </label>
+                <Select
+                  value={transferProvider}
+                  onValueChange={(value) => setTransferProvider(value as 'pathao' | 'steadfast')}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pathao">Pathao</SelectItem>
+                    <SelectItem value="steadfast">SteadFast</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <Button
+                className="w-full"
+                onClick={transferToLogistics}
+                disabled={transferring || order.status === 'cancelled'}
+              >
+                {transferring ? 'Transferring...' : 'Transfer to Logistics'}
+              </Button>
+
+              {(order.logistics_provider ||
+                order.logistics_consignment_id ||
+                order.logistics_tracking_code) && (
+                <div className="rounded-md border p-3 space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Provider:</span>
+                    <span className="font-medium capitalize">{order.logistics_provider || 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Status:</span>
+                    <span className="font-medium">{order.logistics_status || 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Consignment ID:</span>
+                    <span className="font-medium">{order.logistics_consignment_id || 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Tracking:</span>
+                    <span className="font-medium">{order.logistics_tracking_code || 'N/A'}</span>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
 

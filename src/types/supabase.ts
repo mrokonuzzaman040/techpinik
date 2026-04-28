@@ -252,9 +252,46 @@ export interface Database {
           site_name: string
           site_description: string
           site_keywords: string
+          site_logo: string
+          favicon: string
+          contact_email: string
+          contact_phone: string
+          contact_address: string
+          support_email: string
+          currency: string
+          currency_symbol: string
+          timezone: string
+          date_format: string
+          min_order_amount: number
+          free_shipping_threshold: number
+          default_shipping_cost: number
+          order_prefix: string
+          facebook_url: string
+          instagram_url: string
+          twitter_url: string
+          youtube_url: string
+          enable_reviews: boolean
+          enable_wishlist: boolean
+          enable_compare: boolean
+          enable_newsletter: boolean
           meta_title: string
           meta_description: string
+          google_analytics_id: string
           facebook_pixel_id: string
+          maintenance_mode: boolean
+          maintenance_message: string
+          pathao_client_id: string
+          pathao_client_secret: string
+          pathao_username: string
+          pathao_password: string
+          pathao_store_id: string
+          pathao_base_url: string
+          pathao_city_id: string
+          pathao_zone_id: string
+          pathao_area_id: string
+          steadfast_api_key: string
+          steadfast_secret_key: string
+          steadfast_create_order_url: string
           updated_at: string
         }
         Insert: {
@@ -262,9 +299,46 @@ export interface Database {
           site_name?: string
           site_description?: string
           site_keywords?: string
+          site_logo?: string
+          favicon?: string
+          contact_email?: string
+          contact_phone?: string
+          contact_address?: string
+          support_email?: string
+          currency?: string
+          currency_symbol?: string
+          timezone?: string
+          date_format?: string
+          min_order_amount?: number
+          free_shipping_threshold?: number
+          default_shipping_cost?: number
+          order_prefix?: string
+          facebook_url?: string
+          instagram_url?: string
+          twitter_url?: string
+          youtube_url?: string
+          enable_reviews?: boolean
+          enable_wishlist?: boolean
+          enable_compare?: boolean
+          enable_newsletter?: boolean
           meta_title?: string
           meta_description?: string
+          google_analytics_id?: string
           facebook_pixel_id?: string
+          maintenance_mode?: boolean
+          maintenance_message?: string
+          pathao_client_id?: string
+          pathao_client_secret?: string
+          pathao_username?: string
+          pathao_password?: string
+          pathao_store_id?: string
+          pathao_base_url?: string
+          pathao_city_id?: string
+          pathao_zone_id?: string
+          pathao_area_id?: string
+          steadfast_api_key?: string
+          steadfast_secret_key?: string
+          steadfast_create_order_url?: string
           updated_at?: string
         }
         Update: {
@@ -272,9 +346,46 @@ export interface Database {
           site_name?: string
           site_description?: string
           site_keywords?: string
+          site_logo?: string
+          favicon?: string
+          contact_email?: string
+          contact_phone?: string
+          contact_address?: string
+          support_email?: string
+          currency?: string
+          currency_symbol?: string
+          timezone?: string
+          date_format?: string
+          min_order_amount?: number
+          free_shipping_threshold?: number
+          default_shipping_cost?: number
+          order_prefix?: string
+          facebook_url?: string
+          instagram_url?: string
+          twitter_url?: string
+          youtube_url?: string
+          enable_reviews?: boolean
+          enable_wishlist?: boolean
+          enable_compare?: boolean
+          enable_newsletter?: boolean
           meta_title?: string
           meta_description?: string
+          google_analytics_id?: string
           facebook_pixel_id?: string
+          maintenance_mode?: boolean
+          maintenance_message?: string
+          pathao_client_id?: string
+          pathao_client_secret?: string
+          pathao_username?: string
+          pathao_password?: string
+          pathao_store_id?: string
+          pathao_base_url?: string
+          pathao_city_id?: string
+          pathao_zone_id?: string
+          pathao_area_id?: string
+          steadfast_api_key?: string
+          steadfast_secret_key?: string
+          steadfast_create_order_url?: string
           updated_at?: string
         }
         Relationships: []

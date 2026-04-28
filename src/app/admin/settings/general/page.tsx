@@ -16,7 +16,7 @@ export default function GeneralSettingsPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
 
-  const [settings, setSettings] = useState({
+  const defaultSettings = {
     // Site Information
     site_name: 'TechPinik',
     site_description: 'Your trusted electronics and gadgets store in Bangladesh',
@@ -65,7 +65,23 @@ export default function GeneralSettingsPage() {
     maintenance_mode: false,
     maintenance_message:
       'We are currently performing scheduled maintenance. Please check back soon.',
-  })
+
+    // Logistics Integrations
+    pathao_client_id: '',
+    pathao_client_secret: '',
+    pathao_username: '',
+    pathao_password: '',
+    pathao_store_id: '',
+    pathao_base_url: 'https://api-hermes.pathao.com',
+    pathao_city_id: '',
+    pathao_zone_id: '',
+    pathao_area_id: '',
+    steadfast_api_key: '',
+    steadfast_secret_key: '',
+    steadfast_create_order_url: 'https://portal.packzy.com/api/v1/create_order',
+  }
+
+  const [settings, setSettings] = useState(defaultSettings)
 
   const handleInputChange = (field: string, value: string | number | boolean) => {
     setSettings((prev) => ({
@@ -90,9 +106,48 @@ export default function GeneralSettingsPage() {
           site_name: dbSettings.site_name ?? prev.site_name,
           site_description: dbSettings.site_description ?? prev.site_description,
           site_keywords: dbSettings.site_keywords ?? prev.site_keywords,
+          site_logo: dbSettings.site_logo ?? prev.site_logo,
+          favicon: dbSettings.favicon ?? prev.favicon,
+          contact_email: dbSettings.contact_email ?? prev.contact_email,
+          contact_phone: dbSettings.contact_phone ?? prev.contact_phone,
+          contact_address: dbSettings.contact_address ?? prev.contact_address,
+          support_email: dbSettings.support_email ?? prev.support_email,
+          currency: dbSettings.currency ?? prev.currency,
+          currency_symbol: dbSettings.currency_symbol ?? prev.currency_symbol,
+          timezone: dbSettings.timezone ?? prev.timezone,
+          date_format: dbSettings.date_format ?? prev.date_format,
+          min_order_amount: dbSettings.min_order_amount ?? prev.min_order_amount,
+          free_shipping_threshold:
+            dbSettings.free_shipping_threshold ?? prev.free_shipping_threshold,
+          default_shipping_cost: dbSettings.default_shipping_cost ?? prev.default_shipping_cost,
+          order_prefix: dbSettings.order_prefix ?? prev.order_prefix,
+          facebook_url: dbSettings.facebook_url ?? prev.facebook_url,
+          instagram_url: dbSettings.instagram_url ?? prev.instagram_url,
+          twitter_url: dbSettings.twitter_url ?? prev.twitter_url,
+          youtube_url: dbSettings.youtube_url ?? prev.youtube_url,
+          enable_reviews: dbSettings.enable_reviews ?? prev.enable_reviews,
+          enable_wishlist: dbSettings.enable_wishlist ?? prev.enable_wishlist,
+          enable_compare: dbSettings.enable_compare ?? prev.enable_compare,
+          enable_newsletter: dbSettings.enable_newsletter ?? prev.enable_newsletter,
           meta_title: dbSettings.meta_title ?? prev.meta_title,
           meta_description: dbSettings.meta_description ?? prev.meta_description,
+          google_analytics_id: dbSettings.google_analytics_id ?? prev.google_analytics_id,
           facebook_pixel_id: dbSettings.facebook_pixel_id ?? prev.facebook_pixel_id,
+          maintenance_mode: dbSettings.maintenance_mode ?? prev.maintenance_mode,
+          maintenance_message: dbSettings.maintenance_message ?? prev.maintenance_message,
+          pathao_client_id: dbSettings.pathao_client_id ?? prev.pathao_client_id,
+          pathao_client_secret: dbSettings.pathao_client_secret ?? prev.pathao_client_secret,
+          pathao_username: dbSettings.pathao_username ?? prev.pathao_username,
+          pathao_password: dbSettings.pathao_password ?? prev.pathao_password,
+          pathao_store_id: dbSettings.pathao_store_id ?? prev.pathao_store_id,
+          pathao_base_url: dbSettings.pathao_base_url ?? prev.pathao_base_url,
+          pathao_city_id: dbSettings.pathao_city_id ?? prev.pathao_city_id,
+          pathao_zone_id: dbSettings.pathao_zone_id ?? prev.pathao_zone_id,
+          pathao_area_id: dbSettings.pathao_area_id ?? prev.pathao_area_id,
+          steadfast_api_key: dbSettings.steadfast_api_key ?? prev.steadfast_api_key,
+          steadfast_secret_key: dbSettings.steadfast_secret_key ?? prev.steadfast_secret_key,
+          steadfast_create_order_url:
+            dbSettings.steadfast_create_order_url ?? prev.steadfast_create_order_url,
         }))
       } catch (error) {
         console.error('Error loading settings:', error)
@@ -115,14 +170,7 @@ export default function GeneralSettingsPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          site_name: settings.site_name,
-          site_description: settings.site_description,
-          site_keywords: settings.site_keywords,
-          meta_title: settings.meta_title,
-          meta_description: settings.meta_description,
-          facebook_pixel_id: settings.facebook_pixel_id,
-        }),
+        body: JSON.stringify(settings),
       })
 
       const payload = await res.json()
@@ -137,6 +185,11 @@ export default function GeneralSettingsPage() {
     } finally {
       setSaving(false)
     }
+  }
+
+  const handleResetDefaults = () => {
+    setSettings(defaultSettings)
+    toast.success('Form reset to defaults. Click Save to persist.')
   }
 
   if (loading) {
@@ -515,13 +568,139 @@ export default function GeneralSettingsPage() {
           </CardContent>
         </Card>
 
+        {/* Logistics API Settings */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Logistics API Settings</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <details className="rounded-lg border p-4" open>
+              <summary className="cursor-pointer text-sm font-semibold">Pathao Settings</summary>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <Label htmlFor="pathao_client_id">Client ID</Label>
+                  <Input
+                    id="pathao_client_id"
+                    value={settings.pathao_client_id}
+                    onChange={(e) => handleInputChange('pathao_client_id', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="pathao_client_secret">Client Secret</Label>
+                  <Input
+                    id="pathao_client_secret"
+                    type="password"
+                    value={settings.pathao_client_secret}
+                    onChange={(e) => handleInputChange('pathao_client_secret', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="pathao_username">Username</Label>
+                  <Input
+                    id="pathao_username"
+                    value={settings.pathao_username}
+                    onChange={(e) => handleInputChange('pathao_username', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="pathao_password">Password</Label>
+                  <Input
+                    id="pathao_password"
+                    type="password"
+                    value={settings.pathao_password}
+                    onChange={(e) => handleInputChange('pathao_password', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="pathao_store_id">Store ID</Label>
+                  <Input
+                    id="pathao_store_id"
+                    value={settings.pathao_store_id}
+                    onChange={(e) => handleInputChange('pathao_store_id', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="pathao_base_url">Base URL</Label>
+                  <Input
+                    id="pathao_base_url"
+                    value={settings.pathao_base_url}
+                    onChange={(e) => handleInputChange('pathao_base_url', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="pathao_city_id">City ID (optional)</Label>
+                  <Input
+                    id="pathao_city_id"
+                    value={settings.pathao_city_id}
+                    onChange={(e) => handleInputChange('pathao_city_id', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="pathao_zone_id">Zone ID (optional)</Label>
+                  <Input
+                    id="pathao_zone_id"
+                    value={settings.pathao_zone_id}
+                    onChange={(e) => handleInputChange('pathao_zone_id', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="pathao_area_id">Area ID (optional)</Label>
+                  <Input
+                    id="pathao_area_id"
+                    value={settings.pathao_area_id}
+                    onChange={(e) => handleInputChange('pathao_area_id', e.target.value)}
+                  />
+                </div>
+              </div>
+            </details>
+
+            <details className="rounded-lg border p-4">
+              <summary className="cursor-pointer text-sm font-semibold">SteadFast Settings</summary>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <Label htmlFor="steadfast_api_key">API Key</Label>
+                  <Input
+                    id="steadfast_api_key"
+                    value={settings.steadfast_api_key}
+                    onChange={(e) => handleInputChange('steadfast_api_key', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="steadfast_secret_key">Secret Key</Label>
+                  <Input
+                    id="steadfast_secret_key"
+                    type="password"
+                    value={settings.steadfast_secret_key}
+                    onChange={(e) => handleInputChange('steadfast_secret_key', e.target.value)}
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <Label htmlFor="steadfast_create_order_url">Create Order URL</Label>
+                  <Input
+                    id="steadfast_create_order_url"
+                    value={settings.steadfast_create_order_url}
+                    onChange={(e) =>
+                      handleInputChange('steadfast_create_order_url', e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+            </details>
+          </CardContent>
+        </Card>
+
         {/* Submit Button */}
         <div className="flex flex-col-reverse gap-2 sm:flex-row sm:gap-4">
           <Button type="submit" disabled={saving} className="w-full sm:w-auto">
             <Save className="h-4 w-4 mr-2" />
             {saving ? 'Saving...' : 'Save Settings'}
           </Button>
-          <Button type="button" variant="outline" className="w-full sm:w-auto">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full sm:w-auto"
+            onClick={handleResetDefaults}
+          >
             Reset to Defaults
           </Button>
         </div>

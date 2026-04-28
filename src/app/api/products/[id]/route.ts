@@ -43,7 +43,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     
     const validation = updateProductSchema.safeParse(body)
     if (!validation.success) {
-      return apiResponse.badRequest(validation.error.errors[0].message)
+      return apiResponse.badRequest(validation.error.issues[0]?.message ?? 'Invalid request payload')
     }
 
     const data = validation.data

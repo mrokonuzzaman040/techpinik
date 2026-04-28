@@ -43,7 +43,6 @@ export async function isAdmin() {
     const { data: { user }, error: userError } = await supabase.auth.getUser()
     
     if (userError || !user) {
-      console.log('No user or error getting user in isAdmin:', userError?.message)
       return false
     }
 
@@ -52,15 +51,11 @@ export async function isAdmin() {
 
     // Fallback: Check profiles table using service role (bypass RLS for the check)
     const adminClient = createServerClient()
-    const { data: profile, error: profileError } = await adminClient
+    const { data: profile } = await adminClient
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single()
-
-    if (profileError) {
-      console.log('Error fetching profile in isAdmin:', profileError.message)
-    }
 
     return profile?.role === 'admin'
   } catch (error) {

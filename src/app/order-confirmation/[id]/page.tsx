@@ -12,6 +12,12 @@ import MainLayout from '@/components/layout/MainLayout'
 import { createClient } from '@/lib/supabase'
 import { Order, OrderItem } from '@/types'
 
+declare global {
+  interface Window {
+    fbq?: (...args: unknown[]) => void
+  }
+}
+
 export default function OrderConfirmationPage() {
   const params = useParams()
   const orderId = params.id as string
@@ -72,6 +78,51 @@ export default function OrderConfirmationPage() {
 
     fetchOrder()
   }, [orderId])
+
+  useEffect(() => {
+    if (!order || !orderId || typeof window === 'undefined' || typeof window.fbq !== 'function') {
+      return
+    }
+
+    const normalizedStatus = String(order.order_status ?? order.status ?? 'pending').toLowerCase()
+    const totalAmount =
+      typeof order.total_amount === 'string' ? parseFloat(order.total_amount) : order.total_amount || 0
+
+    const eventPayload = {
+      content_ids: orderItems.map((item) => item.product_id),
+      content_name: `Order ${order.order_number}`,
+      content_type: 'product',
+      contents: orderItems.map((item) => ({
+        id: item.product_id,
+        quantity: item.quantity,
+        item_price: item.unit_price,
+      })),
+      currency: 'BDT',
+      value: totalAmount,
+      num_items: orderItems.reduce((sum, item) => sum + item.quantity, 0),
+      order_id: order.id,
+      order_number: order.order_number,
+    }
+
+    const confirmedEventKey = `meta:purchase:${order.id}`
+    const deliveredEventKey = `meta:delivered:${order.id}`
+
+    const isConfirmedStage = normalizedStatus === 'confirmed' || normalizedStatus === 'processing'
+
+    if (isConfirmedStage || normalizedStatus === 'delivered') {
+      if (!localStorage.getItem(confirmedEventKey)) {
+        window.fbq('track', 'Purchase', eventPayload)
+        localStorage.setItem(confirmedEventKey, '1')
+      }
+    }
+
+    if (normalizedStatus === 'delivered') {
+      if (!localStorage.getItem(deliveredEventKey)) {
+        window.fbq('trackCustom', 'OrderDelivered', eventPayload)
+        localStorage.setItem(deliveredEventKey, '1')
+      }
+    }
+  }, [order, orderId, orderItems])
 
   const OrderConfirmationSkeleton = () => (
     <MainLayout>

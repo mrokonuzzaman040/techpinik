@@ -22,6 +22,10 @@ export const viewport: Viewport = {
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getPublicSiteSettings()
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://techpinik.com'
+  const brandLogo = settings.site_logo?.trim()
+  const favicon = settings.favicon?.trim()
+  const logoImage = brandLogo || '/icon.svg'
+  const iconImage = favicon || '/icon.svg'
   const keywords = settings.site_keywords
     .split(',')
     .map((keyword) => keyword.trim())
@@ -45,11 +49,18 @@ export async function generateMetadata(): Promise<Metadata> {
       title: settings.meta_title || settings.site_name,
       description: settings.meta_description || settings.site_description,
       url: siteUrl,
+      images: [
+        {
+          url: logoImage,
+          alt: `${settings.site_name} logo`,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: settings.meta_title || settings.site_name,
       description: settings.meta_description || settings.site_description,
+      images: [logoImage],
     },
     robots: {
       index: true,
@@ -63,9 +74,9 @@ export async function generateMetadata(): Promise<Metadata> {
       },
     },
     icons: {
-      icon: '/icon.svg',
-      apple: '/apple-icon.svg',
-      shortcut: '/icon.svg',
+      icon: iconImage,
+      apple: iconImage,
+      shortcut: iconImage,
     },
   }
 }
@@ -77,10 +88,42 @@ export default async function RootLayout({
 }>) {
   const settings = await getPublicSiteSettings()
   const metaPixelId = extractMetaPixelId(settings.facebook_pixel_id)
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://techpinik.com'
+  const brandLogo = settings.site_logo?.trim()
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: settings.site_name,
+    url: siteUrl,
+    ...(brandLogo ? { logo: brandLogo } : {}),
+  }
 
   return (
     <html lang="en" className="overflow-x-hidden">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}>
+        <Script
+          id="organization-schema"
+          type="application/ld+json"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
+        {process.env.NODE_ENV === 'production' && (
+          <Script
+            id="disable-console-production"
+            strategy="beforeInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                if (typeof window !== 'undefined') {
+                  window.console.log = function() {};
+                  window.console.debug = function() {};
+                  window.console.info = function() {};
+                }
+              `,
+            }}
+          />
+        )}
         {children}
         {metaPixelId && (
           <>
