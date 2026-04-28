@@ -227,7 +227,8 @@ export default function AdminOrderDetailPage() {
         await fetchOrderDetails()
       }
 
-      const trackingCode = transferResult.tracking_code || transferResult.consignment_id
+      const transferData = result?.data?.transfer
+      const trackingCode = transferData?.tracking_code || transferData?.consignment_id || 'N/A'
 
       toast.success(
         `Order transferred to ${
