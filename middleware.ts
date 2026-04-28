@@ -72,12 +72,27 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
-  // Handle Admin routes - Force no cache to prevent 304 issues on specific IPs
+  // Handle Admin routes - Aggressively prevent 304/Caching issues
   if (pathname.startsWith('/admin')) {
-    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
-    response.headers.set('Pragma', 'no-cache')
-    response.headers.set('Expires', '0')
-    return response
+    // 1. Strip headers from the request so Vercel doesn't even see the cache tags
+    const requestHeaders = new Headers(request.headers)
+    requestHeaders.delete('if-none-match')
+    requestHeaders.delete('if-modified-since')
+
+    // 2. Create response with stripped request headers
+    const adminResponse = NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    })
+
+    // 3. Force the browser and Edge to NEVER cache the response
+    adminResponse.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+    adminResponse.headers.set('Pragma', 'no-cache')
+    adminResponse.headers.set('Expires', '0')
+    adminResponse.headers.set('Surrogate-Control', 'no-store')
+    
+    return adminResponse
   }
 
   if (!isPublicPath(pathname)) {
