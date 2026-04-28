@@ -231,6 +231,18 @@ export interface UpdateSliderItemData extends Partial<CreateSliderItemData> {
   updated_at?: string
 }
 
+// Site Settings Types
+export interface SiteSettings {
+  id: number
+  site_name: string
+  site_description: string
+  site_keywords: string
+  meta_title: string
+  meta_description: string
+  facebook_pixel_id: string
+  updated_at: string
+}
+
 // Cart Types
 export interface CartItem {
   product_id: string
@@ -342,6 +354,7 @@ export type DatabaseTables =
   | 'order_items'
   | 'districts'
   | 'slider_items'
+  | 'site_settings'
 
 export interface SelectOption {
   value: string

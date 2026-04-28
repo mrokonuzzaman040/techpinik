@@ -97,6 +97,10 @@ export default function OrderConfirmationPage() {
     )
   }
 
+  const safeOrderStatus = (order.order_status ?? order.status ?? 'pending') as string
+  const safePaymentStatus = (order.payment_status || 'pending') as string
+  const safePaymentMethod = order.payment_method || 'cash_on_delivery'
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending':
@@ -169,15 +173,14 @@ export default function OrderConfirmationPage() {
                   </div>
                   <div>
                     <p className="text-sm text-gray-600">Order Status</p>
-                    <Badge className={getStatusColor(order.order_status ?? order.status)}>
-                      {(order.order_status ?? order.status).charAt(0).toUpperCase() +
-                        (order.order_status ?? order.status).slice(1)}
+                    <Badge className={getStatusColor(safeOrderStatus)}>
+                      {safeOrderStatus.charAt(0).toUpperCase() + safeOrderStatus.slice(1)}
                     </Badge>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600">Payment Status</p>
-                    <Badge className={getPaymentStatusColor(order.payment_status)}>
-                      {order.payment_status.charAt(0).toUpperCase() + order.payment_status.slice(1)}
+                    <Badge className={getPaymentStatusColor(safePaymentStatus)}>
+                      {safePaymentStatus.charAt(0).toUpperCase() + safePaymentStatus.slice(1)}
                     </Badge>
                   </div>
                 </div>
@@ -195,7 +198,7 @@ export default function OrderConfirmationPage() {
               <CardContent className="space-y-3">
                 <div className="flex items-center gap-2">
                   <Mail className="h-4 w-4 text-gray-500" />
-                  <span>{order.customer_email}</span>
+                  <span>{order.customer_email || 'Not provided'}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Phone className="h-4 w-4 text-gray-500" />
@@ -299,9 +302,9 @@ export default function OrderConfirmationPage() {
                 <div className="pt-4 border-t">
                   <p className="text-sm text-gray-600 mb-2">Payment Method</p>
                   <p className="font-medium">
-                    {order.payment_method === 'cash_on_delivery'
+                    {safePaymentMethod === 'cash_on_delivery'
                       ? 'Cash on Delivery'
-                      : order.payment_method}
+                      : safePaymentMethod}
                   </p>
                 </div>
 

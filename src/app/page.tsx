@@ -270,14 +270,56 @@ export default function HomePage() {
     }, 1000)
   }
 
-  if (loading) {
-    return (
-      <MainLayout>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-yellow-600"></div>
+  const HomePageSkeleton = () => (
+    <MainLayout>
+      <section className="container mx-auto px-4 py-6">
+        <div className="h-[220px] sm:h-[300px] md:h-[360px] rounded-2xl bg-gray-200 animate-pulse" />
+      </section>
+
+      <section className="py-4 md:py-6 bg-linear-to-br from-gray-50 to-white overflow-hidden">
+        <div className="container mx-auto px-3 sm:px-4">
+          <div className="mb-4 space-y-2 animate-pulse">
+            <div className="h-8 w-56 rounded bg-gray-200" />
+            <div className="h-4 w-72 rounded bg-gray-200" />
+          </div>
+          <div className="grid grid-cols-2 gap-2.5 md:grid-cols-4 md:gap-4">
+            {Array.from({ length: 8 }).map((_, index) => (
+              <div
+                key={`category-skeleton-${index}`}
+                className="h-[90px] sm:h-[100px] md:h-[110px] rounded-xl border border-gray-200 bg-white shadow-sm animate-pulse"
+              >
+                <div className="h-full w-full rounded-xl bg-gray-200/80" />
+              </div>
+            ))}
+          </div>
         </div>
-      </MainLayout>
-    )
+      </section>
+
+      <section className="bg-gray-50 py-8 md:py-12">
+        <div className="container mx-auto px-3 sm:px-4">
+          <div className="mb-6 h-8 w-64 rounded bg-gray-200 animate-pulse" />
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+            {Array.from({ length: 12 }).map((_, index) => (
+              <div
+                key={`featured-skeleton-${index}`}
+                className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm animate-pulse"
+              >
+                <div className="aspect-square w-full bg-gray-200" />
+                <div className="space-y-3 p-3">
+                  <div className="h-4 w-2/3 rounded bg-gray-200" />
+                  <div className="h-3 w-1/2 rounded bg-gray-200" />
+                  <div className="h-4 w-1/3 rounded bg-gray-200" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </MainLayout>
+  )
+
+  if (loading) {
+    return <HomePageSkeleton />
   }
 
   return (

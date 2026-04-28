@@ -23,6 +23,7 @@ import MainLayout from '@/components/layout/MainLayout'
 import { useCartStore } from '@/store/cart'
 import { createClient } from '@/lib/supabase'
 import { District, CheckoutForm } from '@/types'
+import { toast } from 'sonner'
 
 export default function CheckoutPage() {
   const router = useRouter()
@@ -33,6 +34,7 @@ export default function CheckoutPage() {
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [validationErrors, setValidationErrors] = useState<Partial<Record<keyof CheckoutForm, string>>>({})
   const [orderSuccess, setOrderSuccess] = useState(false)
+  const [placedOrderId, setPlacedOrderId] = useState<string | null>(null)
   const [formData, setFormData] = useState<CheckoutForm>({
     customer_name: '',
     customer_phone: '',
@@ -42,8 +44,8 @@ export default function CheckoutPage() {
   })
 
   useEffect(() => {
-    // Redirect if cart is empty
-    if (items.length === 0) {
+    // Redirect to cart only when checkout hasn't completed.
+    if (items.length === 0 && !loading && !placedOrderId) {
       router.push('/cart')
       return
     }
@@ -61,11 +63,11 @@ export default function CheckoutPage() {
     }
 
     fetchDistricts()
-  }, [items.length, router])
+  }, [items.length, loading, placedOrderId, router])
 
   const selectedDistrict = districts.find((d) => d.id === formData.district_id)
   const subtotal = getTotalPrice()
-  const deliveryCharge = selectedDistrict?.delivery_charge || 60
+  const deliveryCharge = selectedDistrict?.delivery_charge || 0
   const total = subtotal + deliveryCharge
 
   const handleInputChange = (field: keyof CheckoutForm, value: string) => {
@@ -112,58 +114,47 @@ export default function CheckoutPage() {
     setValidationErrors({})
 
     if (!validateForm()) {
+      toast.error('Please fix the highlighted fields before placing order.')
       return
     }
 
     setLoading(true)
 
     try {
-      const supabase = createClient()
-
-      // Create order - use form data directly as it matches database schema
-      const orderData = {
-        customer_name: formData.customer_name,
-        customer_phone: formData.customer_phone,
-        customer_address: formData.customer_address,
+      const payload = {
+        customer_name: formData.customer_name.trim(),
+        customer_phone: formData.customer_phone.trim(),
+        customer_address: formData.customer_address.trim(),
         district_id: formData.district_id,
-        notes: formData.notes || '',
-        total_amount: total,
-        delivery_charge: deliveryCharge,
-        status: 'pending' as const,
+        notes: formData.notes?.trim() || null,
+        items: items.map((item) => ({
+          product_id: item.product.id,
+          quantity: item.quantity,
+        })),
       }
 
-      const { data: order, error: orderError } = await supabase
-        .from('orders')
-        .insert(orderData)
-        .select()
-        .single()
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
 
-      if (orderError) {
-        console.error('Order creation error:', orderError)
-        throw orderError
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok || !result?.success) {
+        throw new Error(result?.error || result?.message || 'Failed to place order. Please try again.')
       }
 
-      // Create order items - map to actual database schema
-      const orderItems = items.map((item) => ({
-        order_id: order.id,
-        product_id: item.product.id,
-        quantity: item.quantity,
-        unit_price: item.product.sale_price || item.product.price,
-      }))
-
-      const { error: itemsError } = await supabase.from('order_items').insert(orderItems)
-
-      if (itemsError) {
-        console.error('Order items creation error:', itemsError)
-        throw itemsError
+      const createdOrder = result?.data
+      if (!createdOrder?.id) {
+        throw new Error('Order was created but no order ID was returned.')
       }
 
-      clearCart()
+      setPlacedOrderId(createdOrder.id)
+      toast.success('Order placed successfully!')
       setOrderSuccess(true)
-      // Show confirmation message briefly then redirect
-      setTimeout(() => {
-        router.push(`/order-confirmation/${order.id}`)
-      }, 1500)
+      // Navigate first to avoid checkout empty-cart flicker, then clear cart.
+      router.replace(`/order-confirmation/${createdOrder.id}`)
+      clearCart()
     } catch (error) {
       console.error('Error placing order:', error)
 
@@ -188,10 +179,6 @@ export default function CheckoutPage() {
     )
   }
 
-  if (items.length === 0) {
-    return null // Will redirect
-  }
-
   if (orderSuccess) {
     return (
       <MainLayout>
@@ -208,6 +195,10 @@ export default function CheckoutPage() {
         </div>
       </MainLayout>
     )
+  }
+
+  if (items.length === 0) {
+    return null // Will redirect
   }
 
   return (

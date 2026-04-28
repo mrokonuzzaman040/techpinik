@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { ArrowLeft, Save, Globe, Mail, Phone, MapPin } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { ArrowLeft, Save, Globe, Phone } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -9,11 +9,11 @@ import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import AdminPageHeader from '@/components/admin/AdminPageHeader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
 import Link from 'next/link'
 import { toast } from 'sonner'
 
 export default function GeneralSettingsPage() {
+  const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
 
   const [settings, setSettings] = useState({
@@ -74,14 +74,61 @@ export default function GeneralSettingsPage() {
     }))
   }
 
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const res = await fetch('/api/admin/settings/general')
+        const payload = await res.json()
+
+        if (!res.ok || !payload.success || !payload.data) {
+          throw new Error(payload.error || 'Failed to load settings')
+        }
+
+        const dbSettings = payload.data
+        setSettings((prev) => ({
+          ...prev,
+          site_name: dbSettings.site_name ?? prev.site_name,
+          site_description: dbSettings.site_description ?? prev.site_description,
+          site_keywords: dbSettings.site_keywords ?? prev.site_keywords,
+          meta_title: dbSettings.meta_title ?? prev.meta_title,
+          meta_description: dbSettings.meta_description ?? prev.meta_description,
+          facebook_pixel_id: dbSettings.facebook_pixel_id ?? prev.facebook_pixel_id,
+        }))
+      } catch (error) {
+        console.error('Error loading settings:', error)
+        toast.error('Failed to load saved settings. Using defaults.')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadSettings()
+  }, [])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
 
     try {
-      // Here you would typically save to your backend/database
-      // For now, we'll just simulate a save operation
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const res = await fetch('/api/admin/settings/general', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          site_name: settings.site_name,
+          site_description: settings.site_description,
+          site_keywords: settings.site_keywords,
+          meta_title: settings.meta_title,
+          meta_description: settings.meta_description,
+          facebook_pixel_id: settings.facebook_pixel_id,
+        }),
+      })
+
+      const payload = await res.json()
+      if (!res.ok || !payload.success) {
+        throw new Error(payload.error || 'Failed to save settings')
+      }
 
       toast.success('Settings saved successfully!')
     } catch (error) {
@@ -90,6 +137,14 @@ export default function GeneralSettingsPage() {
     } finally {
       setSaving(false)
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
+      </div>
+    )
   }
 
   return (
@@ -413,12 +468,12 @@ export default function GeneralSettingsPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="facebook_pixel_id">Facebook Pixel ID</Label>
+                <Label htmlFor="facebook_pixel_id">Meta Pixel ID / Snippet</Label>
                 <Input
                   id="facebook_pixel_id"
                   value={settings.facebook_pixel_id}
                   onChange={(e) => handleInputChange('facebook_pixel_id', e.target.value)}
-                  placeholder="XXXXXXXXXXXXXXX"
+                  placeholder="123456789012345 or fbq('init', '123456789012345')"
                 />
               </div>
             </div>

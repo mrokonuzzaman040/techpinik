@@ -26,6 +26,7 @@ import ProductCard from '@/components/ui/product-card'
 import { createClient } from '@/lib/supabase'
 import { Product, Category } from '@/types'
 import { useCartStore } from '@/store/cart'
+import { toast } from 'sonner'
 
 export default function ProductDetailPage() {
   const params = useParams()
@@ -139,15 +140,17 @@ export default function ProductDetailPage() {
 
     try {
       addToCart(product, quantity)
+      toast.success(`${quantity} item${quantity > 1 ? 's' : ''} added to cart`)
     } catch (error) {
       console.error('Error adding to cart:', error)
-      alert('Failed to add product to cart. Please try again.')
+      toast.error('Failed to add product to cart. Please try again.')
     }
   }
 
   const handleOrderNow = () => {
     if (!product) return
     addToCart(product, quantity)
+    toast.success(`${quantity} item${quantity > 1 ? 's' : ''} added to cart`)
     router.push('/checkout')
   }
 

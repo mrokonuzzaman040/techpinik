@@ -243,6 +243,39 @@ export interface Database {
         }
         Relationships: []
       }
+      site_settings: {
+        Row: {
+          id: number
+          site_name: string
+          site_description: string
+          site_keywords: string
+          meta_title: string
+          meta_description: string
+          facebook_pixel_id: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          site_name?: string
+          site_description?: string
+          site_keywords?: string
+          meta_title?: string
+          meta_description?: string
+          facebook_pixel_id?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          site_name?: string
+          site_description?: string
+          site_keywords?: string
+          meta_title?: string
+          meta_description?: string
+          facebook_pixel_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -291,6 +324,10 @@ export type DistrictUpdate = TablesUpdate<'districts'>
 export type SliderItemRow = Tables<'slider_items'>
 export type SliderItemInsert = TablesInsert<'slider_items'>
 export type SliderItemUpdate = TablesUpdate<'slider_items'>
+
+export type SiteSettingsRow = Tables<'site_settings'>
+export type SiteSettingsInsert = TablesInsert<'site_settings'>
+export type SiteSettingsUpdate = TablesUpdate<'site_settings'>
 
 // Supabase Client Types
 export interface SupabaseError {

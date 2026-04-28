@@ -6,6 +6,7 @@ import Footer from './Footer'
 import MobileBottomNav from './MobileBottomNav'
 import FloatingCartButton from '@/components/ui/floating-cart-button'
 import FacebookMessengerButton from '@/components/ui/facebook-messenger-button'
+import { Toaster } from 'sonner'
 
 interface MainLayoutProps {
   children: ReactNode
@@ -18,6 +19,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
       <main className="flex-1 pb-16 lg:pb-0">{children}</main>
       <Footer />
       <MobileBottomNav />
+      <Toaster richColors position="top-right" />
       <div className="fixed bottom-20 right-4 lg:bottom-6 lg:right-6 z-40 flex flex-col gap-3">
         <FloatingCartButton />
         <div className="hidden lg:block">

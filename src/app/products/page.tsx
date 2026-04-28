@@ -17,12 +17,14 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
 import MainLayout from '@/components/layout/MainLayout'
 import ProductCard from '@/components/ui/product-card'
 import { createClient } from '@/lib/supabase'
 import { Product, Category } from '@/types'
 
 function ProductsPageContent() {
+  const PAGE_SIZE = 24
   const [products, setProducts] = useState<Product[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [brands, setBrands] = useState<string[]>([])
@@ -33,6 +35,8 @@ function ProductsPageContent() {
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null)
   const [priceRange, setPriceRange] = useState({ min: '', max: '' })
   const [searchQuery, setSearchQuery] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalProducts, setTotalProducts] = useState(0)
 
   const searchParams = useSearchParams()
   const categoryParam = searchParams.get('category')
@@ -82,12 +86,16 @@ function ProductsPageContent() {
   }, [categoryParam])
 
   useEffect(() => {
+    setCurrentPage(1)
+  }, [selectedCategories, selectedBrand, priceRange.min, priceRange.max, searchQuery, sortBy])
+
+  useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true)
       const supabase = createClient()
 
       try {
-        let query = supabase.from('products').select('*').eq('is_active', true)
+        let query = supabase.from('products').select('*', { count: 'exact' }).eq('is_active', true)
 
         // Apply category filter
         if (selectedCategories.length > 0) {
@@ -127,9 +135,14 @@ function ProductsPageContent() {
             query = query.order('created_at', { ascending: false })
         }
 
-        const { data: productsData } = await query
+        const from = (currentPage - 1) * PAGE_SIZE
+        const to = from + PAGE_SIZE - 1
+        query = query.range(from, to)
+
+        const { data: productsData, count } = await query
 
         setProducts(productsData || [])
+        setTotalProducts(count || 0)
       } catch (error) {
         console.error('Error fetching products:', error)
       } finally {
@@ -138,7 +151,7 @@ function ProductsPageContent() {
     }
 
     fetchProducts()
-  }, [selectedCategories, selectedBrand, priceRange, searchQuery, sortBy])
+  }, [selectedCategories, selectedBrand, priceRange, searchQuery, sortBy, currentPage])
 
   const handleCategoryChange = (categoryId: string, checked: boolean) => {
     if (checked) {
@@ -159,6 +172,17 @@ function ProductsPageContent() {
     setPriceRange({ min: '', max: '' })
     setSearchQuery('')
   }
+
+  const selectedCategoryNames = categories
+    .filter((category) => selectedCategories.includes(category.id))
+    .map((category) => category.name)
+
+  const activeFiltersCount =
+    selectedCategories.length +
+    (selectedBrand ? 1 : 0) +
+    (priceRange.min || priceRange.max ? 1 : 0) +
+    (searchQuery ? 1 : 0)
+  const totalPages = Math.max(1, Math.ceil(totalProducts / PAGE_SIZE))
 
   const FilterContent = () => (
     <div className="space-y-6">
@@ -242,164 +266,255 @@ function ProductsPageContent() {
     </div>
   )
 
+  const ProductGridSkeleton = () => (
+    <div
+      className={`grid gap-3 sm:gap-4 md:gap-6 ${
+        viewMode === 'grid' ? 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'
+      }`}
+    >
+      {Array.from({ length: viewMode === 'grid' ? 8 : 4 }).map((_, index) => (
+        <div
+          key={`product-skeleton-${index}`}
+          className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm animate-pulse"
+        >
+          <div className="aspect-square w-full bg-gray-200" />
+          <div className="space-y-3 p-4">
+            <div className="h-4 w-2/3 rounded bg-gray-200" />
+            <div className="h-3 w-1/2 rounded bg-gray-200" />
+            <div className="h-4 w-1/3 rounded bg-gray-200" />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+
   return (
     <MainLayout>
-      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
-        {/* Header */}
-        <div className="mb-4 sm:mb-6">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">
-            All Products
-          </h1>
-          <p className="text-sm sm:text-base text-gray-600">
-            Discover our complete range of electronics and gadgets
-          </p>
-        </div>
-
-        {/* Brand Filters - Top Section */}
-        {brands.length > 0 && (
-          <div className="mb-6">
-            <div className="flex items-center gap-2 mb-3">
-              <Label className="text-sm font-medium text-gray-700">Filter by Brand:</Label>
-              {selectedBrand && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSelectedBrand(null)}
-                  className="h-6 px-2 text-xs text-gray-500 hover:text-gray-700"
-                >
-                  Clear brand
-                </Button>
-              )}
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {brands.map((brand) => {
-                const isSelected = selectedBrand === brand
-                return (
-                  <Badge
-                    key={brand}
-                    variant={isSelected ? 'default' : 'outline'}
-                    className={`cursor-pointer px-3 py-1.5 text-sm font-medium transition-colors ${
-                      isSelected
-                        ? 'bg-yellow-600 hover:bg-yellow-700 text-white border-yellow-600'
-                        : 'bg-white hover:bg-yellow-50 text-gray-700 border-gray-300 hover:border-yellow-400'
-                    }`}
-                    onClick={() => handleBrandChange(brand)}
-                  >
-                    {brand}
-                  </Badge>
-                )
-              })}
+      <div className="bg-linear-to-b from-amber-50/70 via-white to-white">
+        <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
+          {/* Header */}
+          <div className="mb-6 rounded-2xl border border-amber-100/80 bg-white/90 p-4 shadow-sm sm:p-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+                  All Products
+                </h1>
+                <p className="mt-2 text-sm text-gray-600 sm:text-base">
+                  Discover our complete range of electronics and gadgets
+                </p>
+              </div>
+              <div className="inline-flex w-fit items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-800 sm:text-sm">
+                <span>{loading ? 'Loading products...' : `${totalProducts} products available`}</span>
+              </div>
             </div>
           </div>
-        )}
 
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* Desktop Filters */}
-          <aside className="hidden lg:block w-64 flex-shrink-0">
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Filter className="h-5 w-5" />
-                  <h3 className="font-semibold">Filters</h3>
-                </div>
-                <FilterContent />
-              </CardContent>
-            </Card>
-          </aside>
-
-          {/* Main Content */}
-          <div className="flex-1">
-            {/* Controls */}
-            <div className="flex items-center justify-between mb-6 gap-4">
-              <div className="flex items-center gap-2">
-                {/* Mobile Filter */}
-                <Sheet>
-                  <SheetTrigger asChild>
-                    <Button variant="outline" size="sm" className="lg:hidden">
-                      <SlidersHorizontal className="h-4 w-4 mr-2" />
-                      Filters
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent side="left" className="w-80">
-                    <SheetHeader>
-                      <SheetTitle>Filters</SheetTitle>
-                    </SheetHeader>
-                    <div className="mt-6">
-                      <FilterContent />
-                    </div>
-                  </SheetContent>
-                </Sheet>
-
-                <span className="text-sm sm:text-base text-gray-600">
-                  {products.length} products found
-                </span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                {/* Sort */}
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="w-40">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="newest">Newest</SelectItem>
-                    <SelectItem value="price-low">Price: Low to High</SelectItem>
-                    <SelectItem value="price-high">Price: High to Low</SelectItem>
-                    <SelectItem value="name">Name: A to Z</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                {/* View Mode */}
-                <div className="hidden md:flex border rounded-lg">
-                  <Button
-                    variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => setViewMode('grid')}
-                    className="rounded-r-none"
-                  >
-                    <Grid className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant={viewMode === 'list' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => setViewMode('list')}
-                    className="rounded-l-none"
-                  >
-                    <List className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            {/* Products Grid */}
-            {loading ? (
-              <div className="flex items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
-              </div>
-            ) : products.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-gray-500 text-lg">No products found</p>
-                <Button onClick={clearFilters} className="mt-4">
-                  Clear Filters
+          {/* Active Filters */}
+          {activeFiltersCount > 0 && (
+            <div className="mb-5 rounded-xl border border-gray-200 bg-white p-3 shadow-sm sm:p-4">
+              <div className="mb-3 flex items-center justify-between gap-2">
+                <p className="text-sm font-medium text-gray-700">
+                  Active filters <span className="text-gray-500">({activeFiltersCount})</span>
+                </p>
+                <Button variant="ghost" size="sm" onClick={clearFilters} className="h-8 px-2 text-xs">
+                  Clear all
                 </Button>
               </div>
-            ) : (
-              <div
-                className={`grid gap-3 sm:gap-4 md:gap-6 ${
-                  viewMode === 'grid'
-                    ? 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4'
-                    : 'grid-cols-1'
-                }`}
-              >
-                {products.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    className={viewMode === 'list' ? 'flex-row' : ''}
-                  />
+              <div className="flex flex-wrap gap-2">
+                {searchQuery && (
+                  <Badge variant="secondary" className="rounded-full">
+                    Search: {searchQuery}
+                  </Badge>
+                )}
+                {selectedCategoryNames.map((name) => (
+                  <Badge key={name} variant="secondary" className="rounded-full">
+                    {name}
+                  </Badge>
                 ))}
+                {selectedBrand && (
+                  <Badge variant="secondary" className="rounded-full">
+                    Brand: {selectedBrand}
+                  </Badge>
+                )}
+                {(priceRange.min || priceRange.max) && (
+                  <Badge variant="secondary" className="rounded-full">
+                    Price: {priceRange.min || 0} - {priceRange.max || 'Any'}
+                  </Badge>
+                )}
               </div>
-            )}
+            </div>
+          )}
+
+          {/* Brand Filters - Top Section */}
+          {brands.length > 0 && (
+            <div className="mb-5 rounded-xl border border-gray-200 bg-white p-3 shadow-sm sm:p-4">
+              <div className="mb-3 flex items-center gap-2">
+                <Label className="text-sm font-medium text-gray-700">Filter by Brand:</Label>
+                {selectedBrand && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedBrand(null)}
+                    className="h-6 px-2 text-xs text-gray-500 hover:text-gray-700"
+                  >
+                    Clear brand
+                  </Button>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {brands.map((brand) => {
+                  const isSelected = selectedBrand === brand
+                  return (
+                    <Badge
+                      key={brand}
+                      variant={isSelected ? 'default' : 'outline'}
+                      className={`cursor-pointer rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+                        isSelected
+                          ? 'bg-yellow-600 text-white hover:bg-yellow-700 border-yellow-600'
+                          : 'border-gray-300 bg-white text-gray-700 hover:border-yellow-400 hover:bg-yellow-50'
+                      }`}
+                      onClick={() => handleBrandChange(brand)}
+                    >
+                      {brand}
+                    </Badge>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-col gap-6 lg:flex-row">
+            {/* Desktop Filters */}
+            <aside className="hidden w-72 shrink-0 lg:block">
+              <Card className="sticky top-24 border-gray-200 shadow-sm">
+                <CardContent className="p-5">
+                  <div className="mb-4 flex items-center gap-2">
+                    <Filter className="h-5 w-5" />
+                    <h3 className="font-semibold">Filters</h3>
+                  </div>
+                  <Separator className="mb-4" />
+                  <FilterContent />
+                </CardContent>
+              </Card>
+            </aside>
+
+            {/* Main Content */}
+            <div className="flex-1">
+              {/* Controls */}
+              <div className="mb-6 flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-4">
+                <div className="flex items-center gap-2">
+                  {/* Mobile Filter */}
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button variant="outline" size="sm" className="lg:hidden">
+                        <SlidersHorizontal className="mr-2 h-4 w-4" />
+                        Filters
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent side="left" className="w-80">
+                      <SheetHeader>
+                        <SheetTitle>Filters</SheetTitle>
+                      </SheetHeader>
+                      <div className="mt-6">
+                        <FilterContent />
+                      </div>
+                    </SheetContent>
+                  </Sheet>
+
+                  <span className="text-sm text-gray-600 sm:text-base">
+                    {loading ? 'Loading...' : `${totalProducts} products found`}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {/* Sort */}
+                  <Select value={sortBy} onValueChange={setSortBy}>
+                    <SelectTrigger className="w-44">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="newest">Newest</SelectItem>
+                      <SelectItem value="price-low">Price: Low to High</SelectItem>
+                      <SelectItem value="price-high">Price: High to Low</SelectItem>
+                      <SelectItem value="name">Name: A to Z</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {/* View Mode */}
+                  <div className="hidden rounded-lg border bg-gray-50 p-0.5 md:flex">
+                    <Button
+                      variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                      size="sm"
+                      onClick={() => setViewMode('grid')}
+                      className="rounded-md"
+                    >
+                      <Grid className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant={viewMode === 'list' ? 'default' : 'ghost'}
+                      size="sm"
+                      onClick={() => setViewMode('list')}
+                      className="rounded-md"
+                    >
+                      <List className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Products Grid */}
+              {loading ? (
+                <ProductGridSkeleton />
+              ) : products.length === 0 ? (
+                <div className="rounded-xl border border-dashed border-gray-300 bg-white py-16 text-center">
+                  <p className="text-lg font-medium text-gray-700">No products found</p>
+                  <p className="mt-2 text-sm text-gray-500">
+                    Try adjusting your search or filters to find what you are looking for.
+                  </p>
+                  <Button onClick={clearFilters} className="mt-5">
+                    Clear Filters
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <div
+                    className={`grid gap-3 sm:gap-4 md:gap-6 ${
+                      viewMode === 'grid'
+                        ? 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4'
+                        : 'grid-cols-1'
+                    }`}
+                  >
+                    {products.map((product) => (
+                      <ProductCard key={product.id} product={product} layout={viewMode} />
+                    ))}
+                  </div>
+
+                  {totalPages > 1 && (
+                    <div className="mt-8 flex flex-col items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white p-4 sm:flex-row">
+                      <p className="text-sm text-gray-600">
+                        Page {currentPage} of {totalPages}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                          disabled={currentPage === 1}
+                        >
+                          Previous
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                          disabled={currentPage === totalPages}
+                        >
+                          Next
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
