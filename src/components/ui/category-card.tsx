@@ -33,7 +33,7 @@ export default function CategoryCard({ category, className }: CategoryCardProps)
   // Get the appropriate icon component
   const IconComponent = category.icon && iconMap[category.icon] ? iconMap[category.icon] : Package
 
-  const rawUrl = (category.image_url || category.banner_image_url || '').trim()
+  const rawUrl = (category.image_url || '').trim()
   const imageUrl = isUsableImageSrc(rawUrl) ? rawUrl : undefined
 
   return (

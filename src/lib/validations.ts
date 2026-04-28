@@ -10,7 +10,6 @@ export const categorySchema = z.object({
   description: z.string().optional().nullable(),
   icon: z.string().optional().nullable(),
   image_url: z.string().optional().nullable(),
-  banner_image_url: z.string().optional().nullable(),
   is_active: z.boolean().optional(),
   slug: z.string().min(1, 'Slug is required').max(255),
   parent_id: z.string().uuid().optional().nullable(),

@@ -54,7 +54,6 @@ export interface Category {
   name: string
   description?: string
   icon?: string
-  banner_image_url?: string
   image_url?: string
   slug: string
   parent_id?: string
@@ -71,7 +70,6 @@ export interface CreateCategoryData {
   name: string
   description?: string
   icon?: string
-  banner_image_url?: string
   image_url?: string
   slug: string
   parent_id?: string
@@ -86,7 +84,6 @@ export interface CategoryForm {
   name: string
   description: string
   image_url: string
-  banner_image_url: string
   is_active: boolean
 }
 

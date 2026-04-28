@@ -18,16 +18,13 @@ export default function AddCategoryPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [imagePreview, setImagePreview] = useState<string>('')
-  const [bannerPreview, setBannerPreview] = useState<string>('')
 
   const [formData, setFormData] = useState<CategoryForm>({
     name: '',
     description: '',
     image_url: '',
-    banner_image_url: '',
     is_active: true,
   })
-  const bannerInputRef = useRef<HTMLInputElement>(null)
   const iconInputRef = useRef<HTMLInputElement>(null)
 
   const handleInputChange = (field: keyof CategoryForm, value: any) => {
@@ -37,32 +34,22 @@ export default function AddCategoryPage() {
     }))
   }
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, type: 'image' | 'banner') => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
       const reader = new FileReader()
       reader.onload = (e) => {
         const result = e.target?.result as string
-        if (type === 'image') {
-          setImagePreview(result)
-          setFormData((prev) => ({ ...prev, image_url: result }))
-        } else {
-          setBannerPreview(result)
-          setFormData((prev) => ({ ...prev, banner_image_url: result }))
-        }
+        setImagePreview(result)
+        setFormData((prev) => ({ ...prev, image_url: result }))
       }
       reader.readAsDataURL(file)
     }
   }
 
-  const removeImage = (type: 'image' | 'banner') => {
-    if (type === 'image') {
-      setImagePreview('')
-      setFormData((prev) => ({ ...prev, image_url: '' }))
-    } else {
-      setBannerPreview('')
-      setFormData((prev) => ({ ...prev, banner_image_url: '' }))
-    }
+  const removeImage = () => {
+    setImagePreview('')
+    setFormData((prev) => ({ ...prev, image_url: '' }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -131,57 +118,6 @@ export default function AddCategoryPage() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Banner Image</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <p className="text-sm text-gray-600">
-                    Upload a banner image for the category page header (recommended: 1200x400px)
-                  </p>
-                  {bannerPreview ? (
-                    <div className="relative">
-                      <img
-                        src={bannerPreview}
-                        alt="Banner Preview"
-                        className="w-full h-32 object-cover rounded-lg"
-                      />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="sm"
-                        className="absolute top-2 right-2"
-                        onClick={() => removeImage('banner')}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-5 sm:p-6 text-center">
-                      <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                      <p className="text-sm text-gray-600 mb-2">Upload banner image</p>
-                      <Input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleImageUpload(e, 'banner')}
-                        className="hidden"
-                        id="banner-upload"
-                        ref={bannerInputRef}
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => bannerInputRef.current?.click()}
-                      >
-                        Choose File
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
           </div>
 
           {/* Sidebar */}
@@ -207,7 +143,7 @@ export default function AddCategoryPage() {
                         variant="destructive"
                         size="sm"
                         className="absolute top-2 right-2"
-                        onClick={() => removeImage('image')}
+                        onClick={removeImage}
                       >
                         <X className="h-4 w-4" />
                       </Button>
@@ -219,7 +155,7 @@ export default function AddCategoryPage() {
                       <Input
                         type="file"
                         accept="image/*"
-                        onChange={(e) => handleImageUpload(e, 'image')}
+                        onChange={handleImageUpload}
                         className="hidden"
                         id="image-upload"
                         ref={iconInputRef}

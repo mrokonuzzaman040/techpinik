@@ -108,8 +108,6 @@ const sampleCategories = [
     description: 'Latest electronic gadgets and devices',
     image_url:
       'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20electronic%20devices%20icon%20minimalist%20blue&image_size=square',
-    banner_image_url:
-      'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=electronics%20banner%20modern%20tech%20gadgets&image_size=landscape_16_9',
     is_active: true,
   },
   {
@@ -118,8 +116,6 @@ const sampleCategories = [
     description: 'Trendy clothing and accessories',
     image_url:
       'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=fashion%20clothing%20icon%20minimalist%20pink&image_size=square',
-    banner_image_url:
-      'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=fashion%20banner%20trendy%20clothing%20collection&image_size=landscape_16_9',
     is_active: true,
   },
   {
@@ -128,8 +124,6 @@ const sampleCategories = [
     description: 'Home improvement and garden essentials',
     image_url:
       'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=home%20garden%20icon%20minimalist%20green&image_size=square',
-    banner_image_url:
-      'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=home%20garden%20banner%20cozy%20living%20space&image_size=landscape_16_9',
     is_active: true,
   },
   {
@@ -138,8 +132,6 @@ const sampleCategories = [
     description: 'Educational and entertainment books',
     image_url:
       'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=books%20icon%20minimalist%20brown&image_size=square',
-    banner_image_url:
-      'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=books%20banner%20library%20knowledge&image_size=landscape_16_9',
     is_active: true,
   },
   {
@@ -148,8 +140,6 @@ const sampleCategories = [
     description: 'Sports equipment and accessories',
     image_url:
       'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=sports%20equipment%20icon%20minimalist%20orange&image_size=square',
-    banner_image_url:
-      'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=sports%20banner%20athletic%20equipment&image_size=landscape_16_9',
     is_active: true,
   },
 ]

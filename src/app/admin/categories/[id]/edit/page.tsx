@@ -23,11 +23,8 @@ export default function EditCategoryPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [iconPreview, setIconPreview] = useState<string>('')
-  const [bannerPreview, setBannerPreview] = useState<string>('')
   const [iconFile, setIconFile] = useState<File | null>(null)
-  const [bannerFile, setBannerFile] = useState<File | null>(null)
   const iconInputRef = useRef<HTMLInputElement>(null)
-  const bannerInputRef = useRef<HTMLInputElement>(null)
 
   const [formData, setFormData] = useState({
     name: '',
@@ -53,7 +50,6 @@ export default function EditCategoryPage() {
 
       setCategory(data)
       setIconPreview(data.image_url || data.icon || '')
-      setBannerPreview(data.banner_image_url || '')
 
       setFormData({
         name: data.name || '',
@@ -87,26 +83,9 @@ export default function EditCategoryPage() {
     }
   }
 
-  const handleBannerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setBannerFile(file)
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setBannerPreview(e.target?.result as string)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
   const removeIcon = () => {
     setIconFile(null)
     setIconPreview('')
-  }
-
-  const removeBanner = () => {
-    setBannerFile(null)
-    setBannerPreview('')
   }
 
   const uploadImage = async (file: File, folder: string): Promise<string> => {
@@ -134,7 +113,6 @@ export default function EditCategoryPage() {
       const supabase = createClient()
 
       let iconUrl = category?.image_url || category?.icon || ''
-      let bannerUrl = category?.banner_image_url || ''
 
       // Upload new icon if selected
       if (iconFile) {
@@ -143,20 +121,12 @@ export default function EditCategoryPage() {
         iconUrl = ''
       }
 
-      // Upload new banner if selected
-      if (bannerFile) {
-        bannerUrl = await uploadImage(bannerFile, 'categories/banners')
-      } else if (!bannerPreview) {
-        bannerUrl = ''
-      }
-
       const updateData = {
         name: formData.name,
         description: formData.description,
         image_url: iconUrl,
         // Keep legacy field in sync for older reads.
         icon: iconUrl,
-        banner_image_url: bannerUrl,
         is_active: formData.is_active,
       }
 
@@ -306,59 +276,6 @@ export default function EditCategoryPage() {
                   </Button>
                   <span className="text-sm text-gray-500">
                     Square image recommended (e.g., 200x200px)
-                  </span>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Category Banner */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Category Banner</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {bannerPreview && (
-                <div className="relative inline-block max-w-full">
-                  <img
-                    src={bannerPreview}
-                    alt="Banner preview"
-                    className="h-32 w-full max-w-md object-cover rounded-lg border"
-                  />
-                  <button
-                    type="button"
-                    onClick={removeBanner}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                </div>
-              )}
-
-              <div>
-                <Label htmlFor="banner">Upload New Banner</Label>
-                <div className="mt-1 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
-                  <Input
-                    id="banner"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleBannerChange}
-                    className="hidden"
-                    ref={bannerInputRef}
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="w-full sm:w-auto"
-                    onClick={() => bannerInputRef.current?.click()}
-                  >
-                    <Upload className="h-4 w-4 mr-2" />
-                    Choose Banner
-                  </Button>
-                  <span className="text-sm text-gray-500">
-                    Wide image recommended (e.g., 1200x400px)
                   </span>
                 </div>
               </div>

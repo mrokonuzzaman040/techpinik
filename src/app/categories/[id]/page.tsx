@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
 import { ArrowLeft, Filter, Grid, List, SlidersHorizontal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -255,33 +254,10 @@ export default function CategoryDetailPage() {
         {/* Category Header */}
         {category && (
           <div className="mb-8">
-            {category.banner_image_url && (
-              <div className="relative h-48 md:h-64 rounded-lg overflow-hidden mb-6">
-                <Image
-                  src={category.banner_image_url}
-                  alt={category.name}
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                  <div className="text-center text-white">
-                    <h1 className="text-3xl md:text-4xl font-bold mb-2">{category.name}</h1>
-                    {category.description && (
-                      <p className="text-lg opacity-90">{category.description}</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {!category.banner_image_url && (
-              <div className="text-center mb-6">
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-                  {category.name}
-                </h1>
-                {category.description && <p className="text-gray-600">{category.description}</p>}
-              </div>
-            )}
+            <div className="text-center mb-6">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{category.name}</h1>
+              {category.description && <p className="text-gray-600">{category.description}</p>}
+            </div>
           </div>
         )}
 
